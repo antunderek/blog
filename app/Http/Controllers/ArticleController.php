@@ -7,6 +7,8 @@ use App\Http\Helpers\PermissionHandler;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class ArticleController extends Controller
 {
@@ -42,7 +44,7 @@ class ArticleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -55,9 +57,8 @@ class ArticleController extends Controller
         $article->text = $request->text;
         $article->user_id = Auth::user()->id;
 
-        if ($request->file('image'))
-        {
-            $article->image_path = $request->file('image')->store('images');
+        if ($request->file('image')) {
+            $article->image_path = $request->file('image')->store('public/images');
         }
 
         $article->save();
@@ -68,24 +69,25 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Article  $article
+     * @param \App\Article $article
      * @return \Illuminate\Http\Response
      */
     public function show(Article $article)
     {
         //
+        return view('article.show', compact('article'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Article  $article
+     * @param \App\Article $article
      * @return \Illuminate\Http\Response
      */
     public function edit(Article $article)
     {
         //
-        $this->noEditingPermissionsAbort($article);
+        PermissionHandler::noEditingPermissionsAbort($article);
 
         return view('article.edit', compact('article'));
     }
@@ -93,8 +95,8 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Article  $article
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Article $article
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Article $article)
@@ -106,8 +108,7 @@ class ArticleController extends Controller
         $article->text = $request->text;
         $article->user_id = Auth::user()->id;
 
-        if ($request->file('image'))
-        {
+        if ($request->file('image')) {
             $article->image_path = $request->file('image')->store('images');
         }
 
@@ -119,28 +120,19 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Article  $article
+     * @param \App\Article $article
      * @return \Illuminate\Http\Response
      */
     public function destroy(Article $article)
     {
         //
-        $this->noDestroyPermissionsAbort($article);
-    }
+        PermissionHandler::noDestroyPermissionsAbort($article);
+        Article::where('id', $article->id)->delete();
 
-    private function noEditingPermissionsAbort(Article $article)
-    {
-        if (!(PermissionHandler::isWriter() && PermissionHandler::articleOwner($article)))
+        if (URL::previous() === URL::route('panel.articles'))
         {
-            PermissionHandler::notEditArticlesAbort();
+            return redirect()->back();
         }
-    }
-
-    private function noDestroyPermissionsAbort(Article $article)
-    {
-        if (!(PermissionHandler::isWriter() && PermissionHandler::articleOwner($article)))
-        {
-            PermissionHandler::notDeleteArticlesAbort();
-        }
+        return redirect()->route('article.index');
     }
 }

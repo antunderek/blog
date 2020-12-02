@@ -87,6 +87,7 @@
                 <div class="links">
                     <a href="article">Articles</a>
                     <a href="article/create">Create article</a>
+                    <a href="panel">Panel</a>
                 </div>
             </div>
         </div>

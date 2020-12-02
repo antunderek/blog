@@ -20,3 +20,9 @@ Route::resource('article', 'ArticleController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/panel', 'PanelController@index')->name('panel.index');
+
+Route::get('/panel/articles', 'PanelController@articles')->name('panel.articles');
+
+Route::get('/panel/roles', 'PanelController@roles')->name('panel.roles');
