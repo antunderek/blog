@@ -19,6 +19,11 @@ class RolesTableSeeder extends Seeder
                 'writer' => true,
                 'edit_article' => true,
                 'delete_article' => true,
+
+                'create_role' => true,
+                'edit_role' => true,
+                'delete_role' => true,
+
                 'create_user' => true,
                 'edit_user' => true,
                 'delete_user' => true,
@@ -29,6 +34,11 @@ class RolesTableSeeder extends Seeder
                 'writer' => true,
                 'edit_article' => true,
                 'delete_article' => true,
+
+                'create_role' => false,
+                'edit_role' => false,
+                'delete_role' => false,
+
                 'create_user' => false,
                 'edit_user' => true,
                 'delete_user' => false,
@@ -39,6 +49,11 @@ class RolesTableSeeder extends Seeder
                 'writer' => true,
                 'edit_article' => false,
                 'delete_article' => false,
+
+                'create_role' => false,
+                'edit_role' => false,
+                'delete_role' => false,
+
                 'create_user' => false,
                 'edit_user' => false,
                 'delete_user' => false,
@@ -49,6 +64,11 @@ class RolesTableSeeder extends Seeder
                 'writer' => false,
                 'edit_article' => false,
                 'delete_article' => false,
+
+                'create_role' => false,
+                'edit_role' => false,
+                'delete_role' => false,
+
                 'create_user' => false,
                 'edit_user' => false,
                 'delete_user' => false,

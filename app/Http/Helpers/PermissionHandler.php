@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PermissionHandler
 {
+    // Article functions
     public static function articleOwner(Article $article)
     {
         return $article->user_id === Auth::user()->id;
@@ -28,12 +29,43 @@ class PermissionHandler
         return Role::where('id', Auth::user()->role_id)->pluck('delete_article')->first();
     }
 
-    public static function isEditor()
+    public static function isArticleEditor()
     {
         if (self::canDestroyArticles() || self::canEditArticles())
         {
             return true;
         }
+    }
+
+    // Role functions
+    public static function canCreateRoles()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('create_role')->first();
+    }
+
+    public static function canEditRoles()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('edit_role')->first();
+    }
+
+    public static function canDeleteRoles()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('delete_role')->first();
+    }
+
+    public static function isRoleEditor()
+    {
+        if (self::canCreateRoles() || self::canEditRoles() || self::canDeleteRoles())
+        {
+            return true;
+        }
+    }
+
+
+    // User functions
+    public static function canCreateUsers()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('create_user')->first();
     }
 
     public static function canEditUsers()
@@ -48,7 +80,7 @@ class PermissionHandler
 
     public static function isUserEditor()
     {
-        if (self::canEditUsers() || self::canDeleteUsers())
+        if (self::canCreateUsers() || self::canEditUsers() || self::canDeleteUsers())
         {
             return true;
         }
@@ -107,9 +139,49 @@ class PermissionHandler
     }
 
 
+    // Roles
+    public static function notCreateRolesAbort()
+    {
+        if (!self::canCreateRoles())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function notEditRolesAbort()
+    {
+        if (!self::canEditRoles())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function notDeleteRolesAbort()
+    {
+        if (!self::canDeleteRoles())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function noRoleEditorAbort()
+    {
+        if (!self::isRoleEditor())
+        {
+            return abort(404);
+        }
+    }
 
 
     // Users
+    public static function notCreateUsersAbort()
+    {
+        if (!self::canCreateUsers())
+        {
+            return abort(404);
+        }
+    }
+
     public static function notEditUsersAbort()
     {
         if (!self::canEditUsers())
