@@ -48,14 +48,9 @@ class UserController extends Controller
     {
         //
         PermissionHandler::notCreateUsersAbort();
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
         $registerController = App::make('App\Http\Controllers\Auth\RegisterController');
         $registerController->callAction('register', [$request]);
-        return redirect()->route('panel.users'); //redirect na RegisterController.register provjeriti parametre i sve ostalo
+        return redirect()->route('panel.users');
     }
 
     /**
