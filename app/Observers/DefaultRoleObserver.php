@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\DefaultRole;
+use App\Http\Helpers\RoleCreator;
 use App\Role;
 
 class DefaultRoleObserver
@@ -18,6 +19,7 @@ class DefaultRoleObserver
         //
         if (!$defaultRole->role_id)
         {
+<<<<<<< HEAD
             $role = new Role();
             $role->role = "default_user";
             $role->writer = false;
@@ -34,6 +36,9 @@ class DefaultRoleObserver
 
             $role->save();
 
+=======
+            $role = RoleCreator::DefaultUserRole();
+>>>>>>> master
             $defaultRole->role_id = $role->id;
             $defaultRole->save();
         }
