@@ -15,11 +15,11 @@ class DefaultRoleObserver
      */
     public function created(DefaultRole $defaultRole)
     {
-        // If default role doesn't
+        //
         if (!$defaultRole->role_id)
         {
             $role = new Role();
-            $role->role = "default_user" . rand(0, 1000);
+            $role->role = "default_user";
             $role->writer = false;
             $role->edit_article = false;
             $role->delete_article = false;
@@ -48,7 +48,6 @@ class DefaultRoleObserver
     public function updated(DefaultRole $defaultRole)
     {
         //
-        // Ako se update-a provjeriti da li je vrijednost null ako je stvoriti novu rolu za default vrijednost
         if (!$defaultRole->role_id)
         {
             $role = new Role();

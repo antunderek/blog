@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\DefaultRole;
+use App\Http\Helpers\UserCreator;
+use App\Role;
 use App\User;
 
 class UserObserver
@@ -15,20 +17,10 @@ class UserObserver
      */
     public function created(User $user)
     {
-        //
+        // Ako user nema postavljeni role_id, automatski staviti role_id iz tablice DefaultRole
         if (!$user->role_id)
         {
-            $defaultRole = DefaultRole::first();
-            if (empty($defaultRole))
-            {
-                $defaultRole = new DefaultRole();
-                $defaultRole->save();
-                $user->role_id = $defaultRole->role_id;
-            }
-            else
-            {
-                $user->role_id = DefaultRole::first()->pluck('role_id')[0];
-            }
+            $user->role_id = DefaultRole::first()->pluck('role_id')[0];
             $user->save();
         }
     }
@@ -41,21 +33,17 @@ class UserObserver
      */
     public function updated(User $user)
     {
-        //
+        // Isto kao i createad(), provjera da li postoji superuser, ako ne stvoriti novog
+        $superuserRoleId = Role::where('role', 'superuser')->first()->pluck('id');
+
         if (!$user->role_id)
         {
-            $defaultRole = DefaultRole::first();
-            if (empty($defaultRole))
-            {
-                $defaultRole = new DefaultRole();
-                $defaultRole->save();
-                $user->role_id = $defaultRole->role_id;
-            }
-            else
-            {
-                $user->role_id = DefaultRole::first()->pluck('role_id')[0];
-            }
+            $user->role_id = DefaultRole::first()->pluck('role_id')[0];
             $user->save();
+        }
+        if (User::where('role_id', $superuserRoleId)->count() === 0)
+        {
+            UserCreator::CreateSuperuser();
         }
     }
 
@@ -67,12 +55,14 @@ class UserObserver
      */
     public function deleted(User $user)
     {
-        //
-        if ($user->role === 'superuser')
+        // Provjera da li postoji superuser, ako ne stvoriti novog
+        $superuserRoleId = Role::where('role', 'superuser')->first()->pluck('id');
+
+        if ($user->role_id === $superuserRoleId)
         {
-            if (User::where('role', 'superuser')->count() === 0)
+            if (User::where('role_id', $superuserRoleId)->count() === 0)
             {
-                // Create new superuser
+                UserCreator::CreateSuperuser();
             }
         }
     }
