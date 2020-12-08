@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\DefaultRole;
+use App\Http\Helpers\RoleCreator;
 use App\Role;
 
 class DefaultRoleObserver
@@ -18,22 +19,7 @@ class DefaultRoleObserver
         // If default role doesn't
         if (!$defaultRole->role_id)
         {
-            $role = new Role();
-            $role->role = "default_user" . rand(0, 1000);
-            $role->writer = false;
-            $role->edit_article = false;
-            $role->delete_article = false;
-
-            $role->create_role = false;
-            $role->edit_role = false;
-            $role->delete_role = false;
-
-            $role->create_user = false;
-            $role->edit_user = false;
-            $role->delete_user = false;
-
-            $role->save();
-
+            $role = RoleCreator::DefaultUserRole();
             $defaultRole->role_id = $role->id;
             $defaultRole->save();
         }
