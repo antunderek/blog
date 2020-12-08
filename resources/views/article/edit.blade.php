@@ -1,4 +1,5 @@
-Edit view
+@extends('layouts.default')
+@section('content')
 <form method="POST" action="{{ route('article.update', $article) }}" enctype="multipart/form-data">
     @csrf
     @method('PUT')
@@ -21,3 +22,4 @@ Edit view
     @method('DELETE')
     <button type="submit" class="btn btn-primary">Delete</button>
 </form>
+@endsection

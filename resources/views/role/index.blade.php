@@ -33,6 +33,11 @@
                 <td>{{ $role->created_at }}</td>
                 <td>{{ $role->updated_at }}</td>
                 <td>
+                    @if (\App\DefaultRole::where('role_id', $role->id)->first())
+                        Default role
+                    @endif
+                </td>
+                <td>
                     <a href="{{ route('role.edit', $role) }}" class="btn btn-primary">Edit</a>
                     <button>Hide</button>
                     <form method="POST" action="{{ route('role.destroy', $role) }}">

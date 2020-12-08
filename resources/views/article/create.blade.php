@@ -1,4 +1,5 @@
-Create view
+@extends('layouts.default')
+@section('content')
 <form method="POST" action="{{ route('article.store') }}" enctype="multipart/form-data">
     @csrf
     @method('POST')
@@ -14,3 +15,4 @@ Create view
         Save
     </button>
 </form>
+@endsection
