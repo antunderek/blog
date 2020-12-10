@@ -2,8 +2,10 @@
 
 namespace App\Observers;
 
-use App\Http\Helpers\UserCreator;
+use App\DefaultRole;
+use App\Http\Helpers\RoleCreator;
 use App\Role;
+use App\User;
 
 class RoleObserver
 {
@@ -29,6 +31,12 @@ class RoleObserver
         //
         if (!Role::where('role', 'superuser')->first())
         {
+            RoleCreator::SuperuserRole();
+        }
+
+        if (!Role::where('role', 'default_user')->first())
+        {
+            RoleCreator::DefaultUserRole();
         }
     }
 
@@ -43,7 +51,27 @@ class RoleObserver
         //
         if (!Role::where('role', 'superuser')->first())
         {
+            RoleCreator::SuperuserRole();
         }
+
+        if (!Role::where('role', 'default_user')->first())
+        {
+            RoleCreator::DefaultUserRole();
+        }
+
+        $defaultRole = DefaultRole::get();
+        if ($defaultRole->isEmpty())
+        {
+            $defaultRole = new DefaultRole();
+            $defaultRole->role_id = Role::where('role', 'default_user')->pluck('id')[0];
+            $defaultRole->save();
+        }
+        else
+        {
+            $defaultRole = DefaultRole::first();
+        }
+
+        User::where('role_id', null)->update(['role_id' => $defaultRole->role_id]);
     }
 
     /**

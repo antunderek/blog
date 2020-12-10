@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.app')
 @section('content')
     <table border="1">
         <thead>
@@ -39,15 +39,18 @@
                 </td>
                 <td>
                     <a href="{{ route('role.edit', $role) }}" class="btn btn-primary">Edit</a>
-                    <button>Hide</button>
+                    @if ($currentUserRole->delete_role)
                     <form method="POST" action="{{ route('role.destroy', $role) }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-primary">Delete</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
+                    @endif
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
+    <a href="{{ route('role.create') }}" class="btn btn-primary">New role</a>
+    <a href="{{ route('role.default') }}" class="btn btn-danger">Default role</a>
 @endsection

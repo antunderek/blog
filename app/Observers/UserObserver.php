@@ -34,7 +34,7 @@ class UserObserver
     public function updated(User $user)
     {
         // Isto kao i createad(), provjera da li postoji superuser, ako ne stvoriti novog
-        $superuserRoleId = Role::where('role', 'superuser')->first()->pluck('id');
+        $superuserRoleId = Role::where('role', 'superuser')->pluck('id')[0];
 
         if (!$user->role_id)
         {
@@ -56,7 +56,7 @@ class UserObserver
     public function deleted(User $user)
     {
         // Provjera da li postoji superuser, ako ne stvoriti novog
-        $superuserRoleId = Role::where('role', 'superuser')->first()->pluck('id');
+        $superuserRoleId = Role::where('role', 'superuser')->pluck('id')[0];
 
         if ($user->role_id === $superuserRoleId)
         {

@@ -1,3 +1,5 @@
+@extends('layouts.app')
+@section('content')
 <form method="POST" action="{{ route('role.update', $role) }}">
     @csrf
     @method('PUT')
@@ -20,7 +22,7 @@
     <label for="">Can edit existing roles:</label>
     @include('includes.role.edit', ['name' => 'edit_role', 'value' => $role->edit_role])
 
-    <label for="writer">Can delete any role</label>
+    <label for="">Can delete any role</label>
     @include('includes.role.edit', ['name' => 'delete_role', 'value' => $role->delete_role])
 
     <label for="">Can create a new user</label>
@@ -32,7 +34,8 @@
     <label for="">Can delete any user</label>
     @include('includes.role.edit', ['name' => 'delete_user', 'value' => $role->delete_user])
 
-    <button type="submit">
+    <button class='btn btn-primary' type="submit">
         Save
     </button>
 </form>
+@endsection

@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.app')
 @section('content')
 <label for="role">Role</label>
 <input id="title" type="role" name="role" value="{{ $role->role }}" disabled>

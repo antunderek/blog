@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helpers\PermissionHandler;
+use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -23,7 +26,8 @@ class UserController extends Controller
         //
         PermissionHandler::notEditUsersAbort();
         $users = User::all();
-        return view('user.index', compact('users'));
+        $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
+        return view('user.index', compact('users', 'currentUserRole'));
     }
 
     /**
@@ -62,6 +66,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         //
+        return view('user.show', compact('user'));
     }
 
     /**
@@ -74,7 +79,8 @@ class UserController extends Controller
     {
         //
         PermissionHandler::notEditUsersAbort();
-        return view('user.edit', compact('user'));
+        $roles = Role::all();
+        return view('user.edit', compact('user', 'roles'));
     }
 
     /**
@@ -88,6 +94,41 @@ class UserController extends Controller
     {
         //
         PermissionHandler::notEditUsersAbort();
+
+        $validData = $request->validate([
+            'name' => 'required|string|max:255',
+            'role' => 'required|integer',
+        ]);
+
+        if ($request->password !== null)
+        {
+            $passwordValid = $request->validate([
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+            $user->password = Hash::make($passwordValid['password']);
+        }
+
+        if ($user->email !== $request->email)
+        {
+            $emailValid = $request->validate([
+                'email' => 'string|email|unique:users|max:255',
+            ]);
+            $user->email = $emailValid['email'];
+        }
+        else
+        {
+            $emailValid = $request->validate([
+                'email' => 'string|email|max:255',
+            ]);
+            $user->email = $emailValid['email'];
+        }
+
+        $user->name = $validData['name'];
+        $user->role_id = $validData['role'];
+
+        $user->save();
+
+        return redirect()->route('panel.users');
     }
 
     /**
@@ -100,7 +141,7 @@ class UserController extends Controller
     {
         //
         PermissionHandler::notDeleteUsersAbort();
-        User::where('id', $user->id)->delete();
+        User::where('id', $user->id)->first()->delete();
         return redirect()->route('panel.users');
     }
 }

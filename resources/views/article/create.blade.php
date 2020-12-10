@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.app')
 @section('content')
 <form method="POST" action="{{ route('article.store') }}" enctype="multipart/form-data">
     @csrf
@@ -11,7 +11,7 @@
     <label for="image">Select an image for upload:</label>
     <input id="image" type="file" name="image">
 
-    <button type="submit">
+    <button type="submit" class="btn btn-primary">
         Save
     </button>
 </form>

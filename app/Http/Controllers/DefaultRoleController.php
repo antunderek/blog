@@ -44,5 +44,7 @@ class DefaultRoleController extends Controller
         }
         $defaultRole->role_id = $request->role;
         $defaultRole->save();
+
+        return redirect()->route('panel.roles');
     }
 }

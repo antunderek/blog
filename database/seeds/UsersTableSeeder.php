@@ -36,5 +36,11 @@ class UsersTableSeeder extends Seeder
             'email' => 'user@email.com',
             'role_id' => '4',
         ]);
+
+        $users[] = factory(App\User::class)->create([
+            'name' => 'superuser',
+            'email' => 'superuser@email.com',
+            'role_id' => '5',
+        ]);
     }
 }

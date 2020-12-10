@@ -1,6 +1,5 @@
-@extends('layouts.default')
+@extends('layouts.app')
 @section('content')
-    Show view
     <div class="container-fluid" style="display: flex; justify-content: center">
         @include('includes.article.show')
     </div>

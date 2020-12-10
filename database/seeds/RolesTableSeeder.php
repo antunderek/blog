@@ -73,6 +73,21 @@ class RolesTableSeeder extends Seeder
                 'edit_user' => false,
                 'delete_user' => false,
             ],
+            [
+                'id' => '5',
+                'role' => 'superuser',
+                'writer' => true,
+                'edit_article' => true,
+                'delete_article' => true,
+
+                'create_role' => true,
+                'edit_role' => true,
+                'delete_role' => true,
+
+                'create_user' => true,
+                'edit_user' => true,
+                'delete_user' => true,
+            ],
         ]);
     }
 }

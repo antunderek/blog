@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Helpers\PermissionHandler;
 use App\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -24,7 +25,8 @@ class RoleController extends Controller
         PermissionHandler::noRoleEditorAbort();
 
         $roles = Role::all();
-        return view('role.index', compact('roles'));
+        $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
+        return view('role.index', compact('roles', 'currentUserRole'));
     }
 
     /**
@@ -79,7 +81,7 @@ class RoleController extends Controller
     {
         //
         PermissionHandler::noRoleEditorAbort();
-        return view('role.index', compact('role'));
+        return view('role.show', compact('role'));
     }
 
     /**
@@ -135,7 +137,7 @@ class RoleController extends Controller
     {
         //
         PermissionHandler::notDeleteRolesAbort();
-        Role::where('id', $role->id)->delete();
+        Role::where('id', $role->id)->first()->delete();
         return redirect()->route('panel.roles');
     }
 }

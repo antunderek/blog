@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.app')
 @section('content')
 <form method="POST" action="{{ route('article.update', $article) }}" enctype="multipart/form-data">
     @csrf
@@ -12,7 +12,7 @@
     <img src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($article)) }}">
     <input id="image" type="file" name="image">
 
-    <button type="submit">
+    <button type="submit" class="btn btn-primary">
         Save
     </button>
 </form>
@@ -20,6 +20,6 @@
 <form method="POST" action="{{ route('article.destroy', $article) }}">
     @csrf
     @method('DELETE')
-    <button type="submit" class="btn btn-primary">Delete</button>
+    <button type="submit" class="btn btn-danger">Delete</button>
 </form>
 @endsection

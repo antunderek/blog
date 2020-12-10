@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\DefaultRole;
 use App\Observers\DefaultRoleObserver;
+use App\Observers\RoleObserver;
 use App\Observers\UserObserver;
+use App\Role;
 use App\User;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,6 +31,6 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         User::observe(UserObserver::class);
-        DefaultRole::observe(DefaultRoleObserver::class);
+        Role::observe(RoleObserver::class);
     }
 }

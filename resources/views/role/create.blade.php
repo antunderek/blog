@@ -1,8 +1,10 @@
+@extends('layouts.app')
+@section('content')
 <form method="POST" action="{{ route('role.store') }}">
     @csrf
     @method('POST')
     <label for="role">Role</label>
-    <input id="title" type="role" name="role">
+    <input id="title" type="text" name="role" required>
     <br>
 
     <label for="writer">User can create, edit and delete articles that they own:</label>
@@ -36,3 +38,4 @@
         Save
     </button>
 </form>
+@endsection

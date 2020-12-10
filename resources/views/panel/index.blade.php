@@ -1,15 +1,35 @@
+@extends('layouts.app')
+@section('content')
 
-Profile
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <a href="{{ route('user.show', \Illuminate\Support\Facades\Auth::user()) }}">Profile</a>
+    </div>
+</div>
+
 @if (\App\Http\Helpers\PermissionHandler::isWriter() || \App\Http\Helpers\PermissionHandler::isArticleEditor())
-    <a href="{{ route('panel.articles') }}">Articles</a>
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <a href="{{ route('panel.articles') }}">Articles</a>
+        </div>
+    </div>
 @endif
 
 @if (\App\Http\Helpers\PermissionHandler::isUserEditor())
-Users
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <a href="{{ route('panel.users') }}">Users</a>
+        </div>
+    </div>
 @endif
-<!-- Assets, images...? -->
-Comments
 
 @if (\App\Http\Helpers\PermissionHandler::isRoleEditor())
-    <a href="{{ route('panel.roles') }}">Roles</a>
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <a href="{{ route('panel.roles') }}" class="card-link">Roles</a>
+        </div>
+    </div>
 @endif
+
+<!-- Assets, images, comments...? -->
+@endsection

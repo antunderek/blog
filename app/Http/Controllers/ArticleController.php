@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Http\Helpers\PermissionHandler;
 
+use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
@@ -24,8 +25,13 @@ class ArticleController extends Controller
     public function index()
     {
         //
+        $writer = false;
+        if (Auth::check())
+        {
+            $writer = Role::where('id', Auth::user()->role_id)->first()->pluck('writer');
+        }
         $articles = Article::all();
-        return view('article.index', compact('articles'));
+        return view('article.index', compact('articles', 'writer'));
     }
 
     /**
