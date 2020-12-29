@@ -14,8 +14,14 @@
         @foreach($comments as $comment)
             <tr>
                 <td><a href="{{ route('comment.show', $comment) }}">{{ $comment->id }}</td>
-                <td><a href="{{ route('article.show', $comment->article_id) }}">{{ $comment->article_id }}</a></td>
-                <td><a href="{{ route('user.show', $comment->user_id ) }}">{{ $comment->user->name }}</a></td>
+                <td><a href="{{ route('article.show', App\Article::where('id', $comment->article_id)->get()[0]) }}">{{ $comment->article_id }}</a></td>
+                <td>
+                    @if ($comment->user !== null)
+                        <a href="{{ route('user.show', $comment->user_id ) }}">{{ $comment->user->name }}</a>
+                    @else
+                        <p>deleted</p>
+                    @endif
+                </td>
 
                 <td>
                     @if ($comment->parent_id !== null)
@@ -29,15 +35,24 @@
                 <td>{{ $comment->updated_at }}</td>
                 <td>
                     <a href="{{ route('comment.edit', $comment) }}" class="btn btn-primary">Edit</a>
+                    @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
+                        <form method="POST" action="{{ route('comment.delete', ['comment' => $comment]) }}">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-warning">Delete</button>
+                        </form>
+                    @endif
+
+                    @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment)
                         <form method="POST" action="{{ route('comment.destroy', $comment) }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger">Destroy</button>
                         </form>
+                    @endif
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
-    <a href="{{ route('user.create') }}" class="btn btn-primary">New user</a>
 @endsection

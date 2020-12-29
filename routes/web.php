@@ -23,6 +23,7 @@ Route::resource('role', 'RoleController')->except(['index', 'default']);
 
 Route::resource('user', 'UserController')->except(['index']);
 
+Route::put('comment/{comment}/delete', 'CommentController@delete')->name('comment.delete');
 Route::resource('comment', 'CommentController')->except(['index']);
 
 Route::get('/home', 'HomeController@index')->name('home');

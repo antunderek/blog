@@ -1,11 +1,27 @@
 @foreach ($comments as $comment)
     <div style="padding: 1vw">
         <div>
-            {{ $comment->user->name }}
+            @if ($comment->user !== null)
+                <b style="padding-right: 1vw">{{ $comment->user->name }}</b>
+            @else
+                <b style="padding-right: 1vw">deleted<b>
+            @endif
             {{ $comment->created_at }}
+            @if ($comment->created_at != $comment->updated_at)
+                Edited: {{ $comment->updated_at}}
+            @endif
         </div>
-        <img style="width: 64px; height: 64px" src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($comment->user->image_path, 'avatars/')) }}">
+        @if ($comment->user !== null)
+            <img style="width: 64px; height: 64px" src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($comment->user->image_path, 'avatars/')) }}">
+        @endif
         {{ $comment->comment }}
+        @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
+            <form method="POST" action="{{ route('comment.delete', ['comment' => $comment]) }}">
+                @csrf
+                @method('PUT')
+                <button type="submit" class="btn btn-warning">Delete</button>
+            </form>
+        @endif
         <form method="post" action="{{ route('comment.store') }}">
             @csrf
             <input id="comment" type="text" name="comment">

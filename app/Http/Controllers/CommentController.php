@@ -119,17 +119,33 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
-        if ($comment->user_id !== Auth::id())
-        {
-            PermissionHandler::notDeleteCommentAbort();
-        }
+        // Should be avoided, as it causes cascade delete on child comments.
+        PermissionHandler::notDeleteCommentAbort();
         Comment::where('id', $comment->id)->delete();
 
-        if (URL::previous() !== URL::route('comment.show'))
+        if (URL::previous() !== URL::route('comment.show', $comment))
         {
             return redirect()->route('panel.comments');
         }
+        return redirect()->back();
+    }
+
+   /**
+    * @param  \Illuminate\Http\Request  $request
+    * @param  \App\Comment  $comment
+    * @return \Illuminate\Http\Response
+    */
+    public function delete(Request $request, Comment $comment)
+    {
+        // Default way to delete comments, this is a non destructive of deleting comments in order to preserve child comments.
+        if ($comment->user_id !== Auth::id())
+        {
+            PermissionHandler::notEditCommentAbort();
+        }
+        $comment->comment = "Comment has been deleted.";
+
+        $comment->save();
+
         return redirect()->back();
     }
 }

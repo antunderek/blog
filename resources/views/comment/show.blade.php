@@ -11,7 +11,11 @@
                             <label for="User" class="col-md-4 col-form-label text-md-right">User:</label>
 
                             <div class="col-md-6">
-                                <p>{{ $comment->user->name }}</p>
+                                @if ($comment->user !== null)
+                                    <p>{{ $comment->user->name }}</p>
+                                @else
+                                    <p>deleted</p>
+                                @endif
                             </div>
                         </div>
 
@@ -27,7 +31,7 @@
                             <label for="edited" class="col-md-4 col-form-label text-md-right">Edited at:</label>
 
                             <div class="col-md-6">
-                                <p id="edited">{{ $comment->edited_at }}</p>
+                                <p id="edited">{{ $comment->updated_at }}</p>
                             </div>
                         </div>
 
