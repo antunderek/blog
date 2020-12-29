@@ -2,6 +2,7 @@
 
 namespace App\Http\Helpers;
 
+use App\Comment;
 use App\Role;
 use App\Article;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,7 @@ class PermissionHandler
             return true;
         }
     }
+
 
     // Role functions
     public static function canCreateRoles()
@@ -85,6 +87,27 @@ class PermissionHandler
             return true;
         }
     }
+
+
+    // Comment functions
+    public static function canEditComments()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('edit_comment')->first();
+    }
+
+    public static function canDeleteComments()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('delete_comment')->first();
+    }
+
+    public static function isCommentEditor()
+    {
+        if (self::canEditComments() || self::canDeleteComments())
+        {
+            return true;
+        }
+    }
+
 
     // Abort functions
     // Articles
@@ -193,6 +216,32 @@ class PermissionHandler
     public static function notDeleteUsersAbort()
     {
         if (!self::canDeleteUsers())
+        {
+            return abort(404);
+        }
+    }
+
+
+    // Comments
+    public static function notEditCommentAbort()
+    {
+        if (!self::canEditComments())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function notDeleteCommentAbort()
+    {
+        if (!self::canDeleteComments())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function noCommentEditorAbort()
+    {
+        if (!self::isCommentEditor())
         {
             return abort(404);
         }

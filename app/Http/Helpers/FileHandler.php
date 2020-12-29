@@ -6,15 +6,19 @@ use App\Article;
 
 class FileHandler
 {
-    public static function getFileName(Article $article)
+    public static function getFileName($imageURL)
     {
-        $path = explode('/', $article->image_path);
-        return end($path);
+        $explodedURL = explode('/', $imageURL);
+        return end($explodedURL);
     }
 
-    public static function returnImagePublicPath(Article $article)
+    public static function returnImagePublicPath($imageURL, string $path="")
     {
-        $fileName = self::getFileName($article);
-        return "storage/images/$fileName";
+        if ($imageURL == null)
+        {
+            return '';
+        }
+        $fileName = self::getFileName($imageURL);
+        return "storage/images/$path$fileName";
     }
 }

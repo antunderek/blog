@@ -9,7 +9,7 @@
     <textarea id="text" name="text" rows="4" cols="50">{{ $article->text }}</textarea>
 
     <label for="image">Select an image for upload:</label>
-    <img src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($article)) }}">
+    <img src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($article->image_path)) }}">
     <input id="image" type="file" name="image">
 
     <button type="submit" class="btn btn-primary">

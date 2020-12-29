@@ -14,6 +14,7 @@
         @foreach($users as $user)
             <tr>
                 <td>
+                    <img style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($user->image_path, 'avatars/')) }}">
                 </td>
                 <td><a href="{{ route('user.show', $user) }}">{{ $user->id }}</td>
                 <td><a href="{{ route('user.show', $user) }}">{{ $user->name }}</a></td>

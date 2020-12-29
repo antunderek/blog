@@ -78,7 +78,11 @@ class UserController extends Controller
     public function edit(User $user)
     {
         //
-        PermissionHandler::notEditUsersAbort();
+        if (Auth::id() !== $user->id)
+        {
+            PermissionHandler::notEditUsersAbort();
+        }
+
         $roles = Role::all();
         return view('user.edit', compact('user', 'roles'));
     }
@@ -93,7 +97,10 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         //
-        PermissionHandler::notEditUsersAbort();
+        if (Auth::id() !== $user->id)
+        {
+            PermissionHandler::notEditUsersAbort();
+        }
 
         $validData = $request->validate([
             'name' => 'required|string|max:255',
@@ -123,12 +130,23 @@ class UserController extends Controller
             $user->email = $emailValid['email'];
         }
 
+        if ($request->file('image'))
+        {
+            $imageValid = $request->validate([
+                'image' => 'mimes:jpeg,jpg,png,gif'
+            ]);
+            $user->image_path = $imageValid['image']->store('public/images/avatars');
+        }
+
         $user->name = $validData['name'];
-        $user->role_id = $validData['role'];
+
+        if (PermissionHandler::isUserEditor()) {
+            $user->role_id = $validData['role'];
+        }
 
         $user->save();
 
-        return redirect()->route('panel.users');
+        return redirect()->route('user.show', compact('user'));
     }
 
     /**
@@ -140,8 +158,13 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
-        PermissionHandler::notDeleteUsersAbort();
+        if (Auth::id() !== $user->id) {
+            PermissionHandler::notDeleteUsersAbort();
+        }
+
         User::where('id', $user->id)->first()->delete();
         return redirect()->route('panel.users');
     }
+
+    // articles() vraca article usera ako je user writer (view od article index)
 }

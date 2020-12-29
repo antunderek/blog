@@ -7,6 +7,12 @@
     </div>
 </div>
 
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <a href="{{ route('panel.comments') }}">Comments</a>
+    </div>
+</div>
+
 @if (\App\Http\Helpers\PermissionHandler::isWriter() || \App\Http\Helpers\PermissionHandler::isArticleEditor())
     <div class="card" style="width: 18rem;">
         <div class="card-body">

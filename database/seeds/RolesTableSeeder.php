@@ -27,6 +27,9 @@ class RolesTableSeeder extends Seeder
                 'create_user' => true,
                 'edit_user' => true,
                 'delete_user' => true,
+
+                'edit_comment' => true,
+                'delete_comment' => true,
             ],
             [
                 'id' => '2',
@@ -42,6 +45,9 @@ class RolesTableSeeder extends Seeder
                 'create_user' => false,
                 'edit_user' => true,
                 'delete_user' => false,
+
+                'edit_comment' => false,
+                'delete_comment' => true,
             ],
             [
                 'id' => '3',
@@ -57,6 +63,9 @@ class RolesTableSeeder extends Seeder
                 'create_user' => false,
                 'edit_user' => false,
                 'delete_user' => false,
+
+                'edit_comment' => false,
+                'delete_comment' => false,
             ],
             [
                 'id' => '4',
@@ -72,6 +81,9 @@ class RolesTableSeeder extends Seeder
                 'create_user' => false,
                 'edit_user' => false,
                 'delete_user' => false,
+
+                'edit_comment' => false,
+                'delete_comment' => false,
             ],
             [
                 'id' => '5',
@@ -87,6 +99,9 @@ class RolesTableSeeder extends Seeder
                 'create_user' => true,
                 'edit_user' => true,
                 'delete_user' => true,
+
+                'edit_comment' => true,
+                'delete_comment' => true,
             ],
         ]);
     }

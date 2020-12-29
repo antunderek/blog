@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Comment extends Model
 {
     //
     public function user()
@@ -12,8 +12,8 @@ class Article extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function comments()
+    public function replies()
     {
-        return $this->hasMany(Comment::class)->whereNull('parent_id');
+        return $this->hasMany('App\Comment', 'parent_id');
     }
 }

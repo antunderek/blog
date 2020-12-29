@@ -7,9 +7,19 @@
                     <div class="card-header">{{ __('Register') }}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('user.update', $user) }}">
+                        <form method="POST" action="{{ route('user.update', $user) }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
+
+                            <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($user->image_path, 'avatars/')) }}">
+
+                            <div class="form-group row">
+                                <label for="image" class="col-md-4 col-form-label text-md-right">Change avatar</label>
+
+                                <div class="col-md-6">
+                                    <input id="image" type="file" name="image">
+                                </div>
+                            </div>
 
                             <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
@@ -61,21 +71,23 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="role" class="col-md-4 col-form-label text-md-right">Role</label>
+                            @if (\App\Http\Helpers\PermissionHandler::isUserEditor())
+                                <div class="form-group row">
+                                    <label for="role" class="col-md-4 col-form-label text-md-right">Role</label>
 
-                                <div class="col-md-6">
-                                    <select id="role" name="role">
-                                        @foreach ($roles as $role)
-                                            @if ($user->role_id === $role->id)
-                                                <option value="{{ $role->id }}" selected>{{ $role->role }}</option>
-                                            @else
-                                                <option value="{{ $role->id }}">{{ $role->role }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
+                                    <div class="col-md-6">
+                                        <select id="role" name="role">
+                                            @foreach ($roles as $role)
+                                                @if ($user->role_id === $role->id)
+                                                    <option value="{{ $role->id }}" selected>{{ $role->role }}</option>
+                                                @else
+                                                    <option value="{{ $role->id }}">{{ $role->role }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">

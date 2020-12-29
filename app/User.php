@@ -41,4 +41,14 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Role');
     }
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

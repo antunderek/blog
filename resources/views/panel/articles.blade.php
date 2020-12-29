@@ -15,7 +15,7 @@
 @foreach($articles as $article)
     <tr data-url="{{ route('article.show', $article) }}">
         <td>
-            <img src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($article)) }}" style="width: 10vw">
+            <img src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($article->image_path)) }}" style="width: 10vw">
         </td>
         <td><a href="{{ route('article.show', $article) }}">{{ $article->id }}</td>
         @if ($article->user_id === null)

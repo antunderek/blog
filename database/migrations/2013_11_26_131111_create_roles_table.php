@@ -32,6 +32,10 @@ class CreateRolesTable extends Migration
             $table->boolean('edit_user')->default(false); // can edit any user
             $table->boolean('delete_user')->default(false); // can delete any user
 
+            // Comment permissions
+            $table->boolean('edit_comment')->default(false);
+            $table->boolean('delete_comment')->default(false);
+
             $table->timestamps();
         });
     }
