@@ -16,4 +16,9 @@ class Article extends Model
     {
         return $this->hasMany(Comment::class)->whereNull('parent_id');
     }
+
+    public function image()
+    {
+        return $this->hasOne(Gallery::class, 'id', 'image_id');
+    }
 }

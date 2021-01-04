@@ -1,7 +1,9 @@
 @extends('layouts.app')
 @section('content')
     <div class="container-fluid" style="display: flex; justify-content: center; flex-direction: column; align-items: center">
+        <div style="width: 80vw">
         @include('includes.article.show')
+        </div>
         <div class="card" style="width: 80vw">
             <div class="card-body">
                 <h1>Comments:</h1>

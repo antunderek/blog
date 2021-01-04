@@ -15,12 +15,14 @@
             <img style="width: 64px; height: 64px" src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($comment->user->image_path, 'avatars/')) }}">
         @endif
         {{ $comment->comment }}
-        @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
-            <form method="POST" action="{{ route('comment.delete', ['comment' => $comment]) }}">
-                @csrf
-                @method('PUT')
-                <button type="submit" class="btn btn-warning">Delete</button>
-            </form>
+        @if (\Illuminate\Support\Facades\Auth::user())
+            @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
+                <form method="POST" action="{{ route('comment.delete', ['comment' => $comment]) }}">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-warning">Delete</button>
+                </form>
+            @endif
         @endif
         <form method="post" action="{{ route('comment.store') }}">
             @csrf

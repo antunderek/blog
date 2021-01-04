@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use App\Gallery;
 use App\Http\Helpers\PermissionHandler;
 
 use App\Role;
@@ -63,7 +64,11 @@ class ArticleController extends Controller
         $article->user_id = Auth::user()->id;
 
         if ($request->file('image')) {
-            $article->image_path = $request->file('image')->store('public/images');
+            //$article->image_path = $request->file('image')->store('public/images');
+            $image = new Gallery();
+            $image->image_path = $request->file('image')->store('public/images');
+            $image->save();
+            $article->image_id = $image->id;
         }
 
         $article->save();
@@ -107,17 +112,33 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         //
-        $this->noEditingPermissionsAbort($article);
+        PermissionHandler::noEditingPermissionsAbort($article);
 
         $article->title = $request->title;
         $article->text = $request->text;
         $article->user_id = Auth::user()->id;
 
-        if ($request->file('image')) {
-            $article->image_path = $request->file('image')->store('images');
+        if ($request->file('image'))
+        {
+            if ($article->image !== null)
+            {
+                //$article->image_path = $request->file('image')->store('images');
+                $image = Gallery::where('id', $article->image_id)->get()->first();
+                $image->image_path = $request->file('image')->store('public/images');
+                $image->save();
+                $article->image_id = $image->id;
+            }
+            else {
+                // Repeating code
+                $image = new Gallery();
+                $image->image_path = $request->file('image')->store('public/images');
+                $image->save();
+                $article->image_id = $image->id;
+            }
         }
 
         $article->save();
+
 
         return redirect()->route('article.index');
     }

@@ -26,6 +26,8 @@ Route::resource('user', 'UserController')->except(['index']);
 Route::put('comment/{comment}/delete', 'CommentController@delete')->name('comment.delete');
 Route::resource('comment', 'CommentController')->except(['index']);
 
+Route::resource('gallery', 'GalleryController')->except(['index']);
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/panel', 'PanelController@index')->name('panel.index');
@@ -37,6 +39,8 @@ Route::get('/panel/roles', 'RoleController@index')->name('panel.roles');
 Route::get('/panel/users', 'UserController@index')->name('panel.users');
 
 Route::get('/panel/comments', 'CommentController@index')->name('panel.comments');
+
+Route::get('/panel/gallery', 'GalleryController@index')->name('panel.gallery');
 
 Route::get('/panel/role/default', 'DefaultRoleController@edit')->name('role.default');
 

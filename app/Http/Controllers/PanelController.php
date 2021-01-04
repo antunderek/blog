@@ -30,6 +30,4 @@ class PanelController extends Controller
         $users = User::all();
         return view('panel.users', compact('users'));
     }
-
-    //public function comments()
 }

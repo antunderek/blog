@@ -30,6 +30,10 @@ class RolesTableSeeder extends Seeder
 
                 'edit_comment' => true,
                 'delete_comment' => true,
+
+                'create_gallery' => true,
+                'edit_gallery' => true,
+                'delete_gallery' => true,
             ],
             [
                 'id' => '2',
@@ -48,6 +52,10 @@ class RolesTableSeeder extends Seeder
 
                 'edit_comment' => false,
                 'delete_comment' => true,
+
+                'create_gallery' => true,
+                'edit_gallery' => true,
+                'delete_gallery' => true,
             ],
             [
                 'id' => '3',
@@ -66,6 +74,10 @@ class RolesTableSeeder extends Seeder
 
                 'edit_comment' => false,
                 'delete_comment' => false,
+
+                'create_gallery' => false,
+                'edit_gallery' => false,
+                'delete_gallery' => false,
             ],
             [
                 'id' => '4',
@@ -84,6 +96,10 @@ class RolesTableSeeder extends Seeder
 
                 'edit_comment' => false,
                 'delete_comment' => false,
+
+                'create_gallery' => false,
+                'edit_gallery' => false,
+                'delete_gallery' => false,
             ],
             [
                 'id' => '5',
@@ -102,6 +118,10 @@ class RolesTableSeeder extends Seeder
 
                 'edit_comment' => true,
                 'delete_comment' => true,
+
+                'create_gallery' => true,
+                'edit_gallery' => true,
+                'delete_gallery' => true,
             ],
         ]);
     }

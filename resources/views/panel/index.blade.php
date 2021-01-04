@@ -37,5 +37,13 @@
     </div>
 @endif
 
-<!-- Assets, images, comments...? -->
+
+@if (\App\Http\Helpers\PermissionHandler::isGalleryEditor())
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <a href="{{ route('panel.gallery') }}" class="card-link">Gallery</a>
+        </div>
+    </div>
+@endif
+
 @endsection

@@ -2,7 +2,6 @@
 
 namespace App\Http\Helpers;
 
-use App\Comment;
 use App\Role;
 use App\Article;
 use Illuminate\Support\Facades\Auth;
@@ -103,6 +102,31 @@ class PermissionHandler
     public static function isCommentEditor()
     {
         if (self::canEditComments() || self::canDeleteComments())
+        {
+            return true;
+        }
+    }
+
+
+    // Comment functions
+    public static function canCreateGallery()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('create_gallery')->first();
+    }
+
+    public static function canEditGallery()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('edit_gallery')->first();
+    }
+
+    public static function canDeleteGallery()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('delete_gallery')->first();
+    }
+
+    public static function isGalleryEditor()
+    {
+        if (self::canCreateGallery() || self::canEditGallery() || self::canDeleteGallery())
         {
             return true;
         }
@@ -242,6 +266,40 @@ class PermissionHandler
     public static function noCommentEditorAbort()
     {
         if (!self::isCommentEditor())
+        {
+            return abort(404);
+        }
+    }
+
+
+    // Gallery
+    public static function notCreateGalleryAbort()
+    {
+        if (!self::canCreateGallery())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function notEditGalleryAbort()
+    {
+        if (!self::canEditGallery())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function notDeleteGalleryAbort()
+    {
+        if (!self::canDeleteGallery())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function noGalleryEditorAbort()
+    {
+        if (!self::isGalleryEditor())
         {
             return abort(404);
         }

@@ -162,7 +162,8 @@ class UserController extends Controller
             PermissionHandler::notDeleteUsersAbort();
         }
 
-        User::where('id', $user->id)->first()->delete();
+        //User::where('id', $user->id)->first()->delete();
+        $user->delete();
         return redirect()->route('panel.users');
     }
 
