@@ -108,25 +108,25 @@ class PermissionHandler
     }
 
 
-    // Comment functions
-    public static function canCreateGallery()
+    // Media functions
+    public static function canCreateMedia()
     {
-        return Role::where('id', Auth::user()->role_id)->pluck('create_gallery')->first();
+        return Role::where('id', Auth::user()->role_id)->pluck('create_media')->first();
     }
 
-    public static function canEditGallery()
+    public static function canEditMedia()
     {
-        return Role::where('id', Auth::user()->role_id)->pluck('edit_gallery')->first();
+        return Role::where('id', Auth::user()->role_id)->pluck('edit_media')->first();
     }
 
-    public static function canDeleteGallery()
+    public static function canDeleteMedia()
     {
-        return Role::where('id', Auth::user()->role_id)->pluck('delete_gallery')->first();
+        return Role::where('id', Auth::user()->role_id)->pluck('delete_media')->first();
     }
 
-    public static function isGalleryEditor()
+    public static function isMediaEditor()
     {
-        if (self::canCreateGallery() || self::canEditGallery() || self::canDeleteGallery())
+        if (self::canCreateMedia() || self::canEditMedia() || self::canDeleteMedia())
         {
             return true;
         }
@@ -272,34 +272,34 @@ class PermissionHandler
     }
 
 
-    // Gallery
-    public static function notCreateGalleryAbort()
+    // Media
+    public static function notCreateMediaAbort()
     {
-        if (!self::canCreateGallery())
+        if (!self::canCreateMedia())
         {
             return abort(404);
         }
     }
 
-    public static function notEditGalleryAbort()
+    public static function notEditMediaAbort()
     {
-        if (!self::canEditGallery())
+        if (!self::canEditMedia())
         {
             return abort(404);
         }
     }
 
-    public static function notDeleteGalleryAbort()
+    public static function notDeleteMediaAbort()
     {
-        if (!self::canDeleteGallery())
+        if (!self::canDeleteMedia())
         {
             return abort(404);
         }
     }
 
-    public static function noGalleryEditorAbort()
+    public static function noMediaEditorAbort()
     {
-        if (!self::isGalleryEditor())
+        if (!self::isMediaEditor())
         {
             return abort(404);
         }

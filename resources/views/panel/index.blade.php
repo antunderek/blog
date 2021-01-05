@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<div class="container d-flex flex-row flex-wrap">
 
 <div class="card" style="width: 18rem;">
     <div class="card-body">
@@ -38,12 +39,23 @@
 @endif
 
 
-@if (\App\Http\Helpers\PermissionHandler::isGalleryEditor())
+@if (\App\Http\Helpers\PermissionHandler::isMediaEditor())
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <a href="{{ route('panel.gallery') }}" class="card-link">Gallery</a>
         </div>
     </div>
 @endif
+
+
+@if (\App\Http\Helpers\PermissionHandler::isMediaEditor())
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <a href="{{ route('panel.avatar') }}" class="card-link">Avatar</a>
+        </div>
+    </div>
+@endif
+
+</div>
 
 @endsection

@@ -11,7 +11,9 @@
                             @csrf
                             @method('PUT')
 
-                            <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($user->image_path, 'avatars/')) }}">
+                            @if ($user->image !== null)
+                                <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                            @endif
 
                             <div class="form-group row">
                                 <label for="image" class="col-md-4 col-form-label text-md-right">Change avatar</label>

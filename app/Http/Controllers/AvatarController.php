@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Gallery;
+use App\Avatar;
 use App\Http\Helpers\PermissionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class GalleryController extends Controller
+class AvatarController extends Controller
 {
     public function __construct()
     {
@@ -23,8 +23,8 @@ class GalleryController extends Controller
     {
         //
         PermissionHandler::noMediaEditorAbort();
-        $images = Gallery::all();
-        return view('gallery.index', compact('images'));
+        $images = Avatar::all();
+        return view('avatar.index', compact('images'));
     }
 
     /**
@@ -50,9 +50,11 @@ class GalleryController extends Controller
         PermissionHandler::notCreateMediaAbort();
 
         if ($request->file('image')) {
-            $image = new Gallery();
-            $image->image_path = $request->file('image')->store('public/images');
-            $image->save();
+            $avatar = new Avatar();
+            $avatar->image_path = $request->file('image')->store('public/avatars');
+            $avatar->size = $avatar->image_path->getSize();
+            $avatar->resolution = implode('x', getimagesize($avatar->image_path));
+            $avatar->save();
         }
 
         return redirect()->back();
@@ -61,43 +63,49 @@ class GalleryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Gallery  $gallery
+     * @param  \App\Avatar  $avatar
      * @return \Illuminate\Http\Response
      */
-    public function show(Gallery $gallery)
+    public function show(Avatar $avatar)
     {
         //
-        return view('gallery.show', compact('gallery'));
+        return view('avatar.show', compact('avatar'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Gallery  $gallery
+     * @param  \App\Avatar  $avatar
      * @return \Illuminate\Http\Response
      */
-    public function edit(Gallery $gallery)
+    public function edit(Avatar $avatar)
     {
         //
         PermissionHandler::notEditMediaAbort();
-        return view('gallery.edit', compact('gallery'));
+        return view('avatar.edit', compact('avatar'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Gallery  $image
+     * @param  \App\Avatar  $avatar
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Gallery $image)
+    public function update(Request $request, Avatar $avatar)
     {
         //
         PermissionHandler::notEditMediaAbort();
         if ($request->file('image')) {
-            Storage::delete($image->image_path);
-            $image->image_path = $request->file('image')->store('public/images');
-            $image->save();
+            if (($avatar->image !== null) && !$avatar->image->default)
+            {
+                Storage::delete($avatar->image_path);
+            }
+            $avatar->image_path = $request->file('image')->store('public/avatars');
+            $avatar->size = $request->file('image')->getSize();
+            $imageresolution = getimagesize($request->file('image'));
+            $avatar->resolution = "{$imageresolution[0]}x{$imageresolution[1]}";
+            $avatar->save();
         }
 
         return redirect()->back();
@@ -106,16 +114,16 @@ class GalleryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Gallery  $gallery
+     * @param  \App\Avatar  $avatar
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Gallery $gallery)
+    public function destroy(Avatar $avatar)
     {
         //
         PermissionHandler::notDeleteMediaAbort();
-        Storage::delete($gallery->image_path);
-        $gallery->delete();
+        Storage::delete($avatar->image_path);
+        $avatar->delete();
 
-        return redirect()->route('panel.gallery');
+        return redirect()->route('panel.avatar');
     }
 }

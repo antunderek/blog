@@ -28,6 +28,8 @@ Route::resource('comment', 'CommentController')->except(['index']);
 
 Route::resource('gallery', 'GalleryController')->except(['index']);
 
+Route::resource('avatar', 'AvatarController')->except(['index']);
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/panel', 'PanelController@index')->name('panel.index');
@@ -41,6 +43,8 @@ Route::get('/panel/users', 'UserController@index')->name('panel.users');
 Route::get('/panel/comments', 'CommentController@index')->name('panel.comments');
 
 Route::get('/panel/gallery', 'GalleryController@index')->name('panel.gallery');
+
+Route::get('/panel/avatar', 'AvatarController@index')->name('panel.avatar');
 
 Route::get('/panel/role/default', 'DefaultRoleController@edit')->name('role.default');
 

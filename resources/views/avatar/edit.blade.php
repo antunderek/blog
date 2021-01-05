@@ -7,17 +7,26 @@
                     <div class="card-header">Edit</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('gallery.update', $gallery) }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('avatar.update', $avatar) }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
-                            <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($gallery->image_path)) }}">
+                            <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
+
+                            <div class="form-group row">
+                                <label for="image" class="col-md-4 col-form-label text-md-right">Change avatar</label>
+
+                                <div class="col-md-6">
+                                    <input id="image" type="file" name="image">
+                                </div>
+                            </div>
+
 
                             <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">Image path</label>
 
                                 <div class="col-md-6">
-                                    <p>{{ $gallery->image_path}}</p>
+                                    <p>{{ $avatar->image_path}}</p>
                                 </div>
                             </div>
 
@@ -25,7 +34,7 @@
                                 <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
                                 <div class="col-md-6">
-                                    <p>{{ $gallery->name() }}</p>
+                                    <p>{{ $avatar->name() }}</p>
                                 </div>
                             </div>
 
@@ -39,7 +48,7 @@
                         </form>
 
                         <div class="col-md-6 offset-md-4" style="display: inline-flex; margin-top: 2vw">
-                            <form method="POST" action="{{ route('gallery.destroy', $gallery) }}">
+                            <form method="POST" action="{{ route('avatar.destroy', $avatar) }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>

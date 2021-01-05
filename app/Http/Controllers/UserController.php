@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Avatar;
 use App\Http\Helpers\PermissionHandler;
 use App\Role;
 use App\User;
@@ -135,7 +136,10 @@ class UserController extends Controller
             $imageValid = $request->validate([
                 'image' => 'mimes:jpeg,jpg,png,gif'
             ]);
-            $user->image_path = $imageValid['image']->store('public/images/avatars');
+            $image = new Avatar();
+            $image->image_path = $imageValid['image']->store('public/avatars');
+            $image->save();
+            $user->image_id = $image->id;
         }
 
         $user->name = $validData['name'];

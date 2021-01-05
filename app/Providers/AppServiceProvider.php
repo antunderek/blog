@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\DefaultRole;
-use App\Observers\DefaultRoleObserver;
+//use App\DefaultRole;
+//use App\Observers\DefaultRoleObserver;
 use App\Observers\RoleObserver;
 use App\Observers\UserObserver;
 use App\Role;

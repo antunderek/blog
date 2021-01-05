@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGalleriesTable extends Migration
+class CreateAvatarsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateGalleriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('galleries', function (Blueprint $table) {
+        Schema::create('avatars', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('image_path')->nullable();
+            $table->string('size')->nullable();
+            $table->string('resolution')->nullable();
+            $table->boolean('default')->default(false);
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ class CreateGalleriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('galleries');
+        Schema::dropIfExists('avatars');
     }
 }
