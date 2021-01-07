@@ -22,7 +22,7 @@
                             <td><a href="{{ route('avatar.show', $image) }}">{{ $image->id }}</td>
                             <td><a href="{{ route('avatar.show', $image) }}">{{ $image->image_path }}</a></td>
                             <td>
-                                @if ($image->default_avatar)
+                                @if ($image->default)
                                     Default
                                 @endif
                             </td>

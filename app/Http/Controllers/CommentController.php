@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Comment;
 use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\TestFormValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
@@ -47,6 +48,9 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         //
+        $validator = new TestFormValidator();
+        $validator->validate($request, 'comment');
+
         $comment = new Comment();
         $comment->article_id = $request->article;
         $comment->user_id = Auth::id();
@@ -99,6 +103,9 @@ class CommentController extends Controller
     public function update(Request $request, Comment $comment)
     {
         //
+        $validator = new TestFormValidator();
+        $validator->validate($request, 'update_comment');
+
         if ($comment->user_id !== Auth::id())
         {
             PermissionHandler::notEditCommentAbort();

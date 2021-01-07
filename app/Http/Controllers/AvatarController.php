@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Avatar;
+use App\Http\Helpers\AvatarCreator;
 use App\Http\Helpers\PermissionHandler;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -36,6 +38,7 @@ class AvatarController extends Controller
     {
         //
         PermissionHandler::notCreateMediaAbort();
+        return view('avatar.create');
     }
 
     /**
@@ -52,12 +55,21 @@ class AvatarController extends Controller
         if ($request->file('image')) {
             $avatar = new Avatar();
             $avatar->image_path = $request->file('image')->store('public/avatars');
-            $avatar->size = $avatar->image_path->getSize();
-            $avatar->resolution = implode('x', getimagesize($avatar->image_path));
+            $avatar->size = $request->file('image')->getSize();
+            $imageresolution = getimagesize($request->file('image'));
+            $avatar->resolution = "{$imageresolution[0]}x{$imageresolution[1]}";
+
+            if ($request->default == 1) {
+                $defaultAvatar = Avatar::where('default', true)->get();
+                if ($defaultAvatar) {
+                    $defaultAvatar->default = false;
+                }
+                $avatar->default = true;
+            }
             $avatar->save();
         }
 
-        return redirect()->back();
+        return redirect()->route('panel.avatar');
     }
 
     /**
@@ -96,8 +108,9 @@ class AvatarController extends Controller
     {
         //
         PermissionHandler::notEditMediaAbort();
+
         if ($request->file('image')) {
-            if (($avatar->image !== null) && !$avatar->image->default)
+            if (($avatar->image !== null) && !$avatar->default)
             {
                 Storage::delete($avatar->image_path);
             }
@@ -105,10 +118,28 @@ class AvatarController extends Controller
             $avatar->size = $request->file('image')->getSize();
             $imageresolution = getimagesize($request->file('image'));
             $avatar->resolution = "{$imageresolution[0]}x{$imageresolution[1]}";
+
             $avatar->save();
         }
 
-        return redirect()->back();
+        if (($request->default == 1) && ($avatar->default != true)) {
+            $defaultAvatar = Avatar::where('default', true)->get()->first();
+            if ($defaultAvatar !== null) {
+                $defaultAvatar->default = false;
+                $defaultAvatar->save();
+            }
+            $avatar->default = true;
+            $avatar->save();
+        }
+
+        if (($avatar->default == true) && ($request->default === null))
+        {
+            $avatar->default = false;
+            $avatar->save();
+            AvatarCreator::defaultAvatar();
+        }
+
+        return redirect()->route('panel.avatar');
     }
 
     /**
@@ -121,8 +152,16 @@ class AvatarController extends Controller
     {
         //
         PermissionHandler::notDeleteMediaAbort();
+
         Storage::delete($avatar->image_path);
         $avatar->delete();
+
+        if ($avatar->default == true)
+        {
+            AvatarCreator::defaultAvatar();
+        }
+        $defaultAvatar = Avatar::where('default', true)->get()->first();
+        User::where('image_id', null)->update(['image_id' => $defaultAvatar->id]);
 
         return redirect()->route('panel.avatar');
     }

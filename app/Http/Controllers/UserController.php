@@ -139,6 +139,14 @@ class UserController extends Controller
             $image = new Avatar();
             $image->image_path = $imageValid['image']->store('public/avatars');
             $image->save();
+            // delete old avatar if not default
+            if ($user->image !== null)
+            {
+                if(!$user->image->default)
+                {
+                    $user->image->delete();
+                }
+            }
             $user->image_id = $image->id;
         }
 
@@ -166,7 +174,6 @@ class UserController extends Controller
             PermissionHandler::notDeleteUsersAbort();
         }
 
-        //User::where('id', $user->id)->first()->delete();
         $user->delete();
         return redirect()->route('panel.users');
     }

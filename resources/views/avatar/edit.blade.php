@@ -21,6 +21,17 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                <label for="default" class="col-md-4 col-form-label text-md-right">Default</label>
+
+                                <div class="col-md-6">
+                                    @if ($avatar->default)
+                                        <input id="default" type="checkbox" name="default" value="1" checked>
+                                    @else
+                                        <input id="default" type="checkbox" name="default" value="1">
+                                    @endif
+                                </div>
+                            </div>
 
                             <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">Image path</label>

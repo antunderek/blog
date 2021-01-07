@@ -3,6 +3,10 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
+                <br>
+                <a href="{{ route('panel.index') }}">panel</a>
+                /
+                <a href="{{ route('panel.users') }}">users</a>
                 <table class="table">
                     <thead>
                     <th>Image</th>

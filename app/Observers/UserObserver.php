@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Avatar;
 use App\DefaultRole;
 use App\Http\Helpers\UserCreator;
 use App\Role;
@@ -21,8 +22,10 @@ class UserObserver
         if (!$user->role_id)
         {
             $user->role_id = DefaultRole::first()->pluck('role_id')[0];
-            $user->save();
         }
+
+        $user->image_id = Avatar::where('default', true)->first()->pluck('id')[0];
+        $user->save();
     }
 
     /**
@@ -63,6 +66,14 @@ class UserObserver
             if (User::where('role_id', $superuserRoleId)->count() === 0)
             {
                 UserCreator::CreateSuperuser();
+            }
+        }
+
+        if ($user->image !== null)
+        {
+            if(!$user->image->default)
+            {
+                $user->image->delete();
             }
         }
     }

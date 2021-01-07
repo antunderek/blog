@@ -7,6 +7,7 @@
                     <div class="card-header">{{ __('Register') }}</div>
 
                     <div class="card-body">
+
                         <form method="POST" action="{{ route('user.update', $user) }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
