@@ -30,6 +30,12 @@ Route::resource('gallery', 'GalleryController')->except(['index']);
 
 Route::resource('avatar', 'AvatarController')->except(['index']);
 
+Route::resource('menu', 'MenuController')->except(['index']);
+
+//Provjeriti da li treba
+Route::get('item/{menu}/{parent?}', 'MenuItemController@create')->name('item.create');
+Route::resource('item', 'MenuItemController')->except(['create']);
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/panel', 'PanelController@index')->name('panel.index');
@@ -45,6 +51,8 @@ Route::get('/panel/comments', 'CommentController@index')->name('panel.comments')
 Route::get('/panel/gallery', 'GalleryController@index')->name('panel.gallery');
 
 Route::get('/panel/avatar', 'AvatarController@index')->name('panel.avatar');
+
+Route::get('/panel/menu', 'MenuController@index')->name('panel.menu');
 
 Route::get('/panel/role/default', 'DefaultRoleController@edit')->name('role.default');
 

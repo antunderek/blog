@@ -56,6 +56,12 @@
     </div>
 @endif
 
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <a href="{{ route('panel.menu') }}" class="card-link">Menu</a>
+        </div>
+    </div>
+
 </div>
 
 @endsection

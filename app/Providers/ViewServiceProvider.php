@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Menu;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 
@@ -25,10 +26,10 @@ class ViewServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-        View::composer('user.*', function ($view) {
+        View::composer('*', function ($view) {
             //
-            $userPath = ['user', 'path'];
-            $view->with('userPath', $userPath);
+            $menus = Menu::all();
+            $view->with('navMenus', $menus);
         });
     }
 }

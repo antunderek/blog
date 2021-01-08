@@ -15,6 +15,12 @@ class CreateMenuItemsTable extends Migration
     {
         Schema::create('menu_items', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('menu_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->string('item');
+            $table->string('link');
+            $table->foreign('parent_id')->references('id')->on('menu_items')->onDelete('cascade');
+            $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +19,8 @@ class MenuController extends Controller
     public function index()
     {
         //
+        $menus = Menu::all();
+        return view('menu.index', compact('menus'));
     }
 
     /**
@@ -25,6 +31,7 @@ class MenuController extends Controller
     public function create()
     {
         //
+        return view('menu.create');
     }
 
     /**
@@ -36,6 +43,13 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         //
+        $menu = new Menu();
+        $menu->title = $request->title;
+        $menu->order = $request->order;
+
+        $menu->save();
+
+        return redirect()->route('panel.menu');
     }
 
     /**
@@ -47,6 +61,7 @@ class MenuController extends Controller
     public function show(Menu $menu)
     {
         //
+        return view('menu.show', compact('menu'));
     }
 
     /**
@@ -58,6 +73,7 @@ class MenuController extends Controller
     public function edit(Menu $menu)
     {
         //
+        return view('menu.edit', compact('menu'));
     }
 
     /**
@@ -70,6 +86,10 @@ class MenuController extends Controller
     public function update(Request $request, Menu $menu)
     {
         //
+        $menu->title = $request->title;
+        $menu->order = $request->order;
+
+        $menu->save();
     }
 
     /**
@@ -81,5 +101,7 @@ class MenuController extends Controller
     public function destroy(Menu $menu)
     {
         //
+        $menu->delete();
+        return redirect()->route('panel.menu');
     }
 }
