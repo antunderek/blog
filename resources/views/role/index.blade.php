@@ -16,6 +16,14 @@
                 <th>Create users</th>
                 <th>Edit users</th>
                 <th>Delete users</th>
+                <th>Edit comments</th>
+                <th>Delete comments</th>
+                <th>Edit media</th>
+                <th>Delete media</th>
+                <th>Create media</th>
+                <th>Edit menus</th>
+                <th>Delete menus</th>
+                <th>Create menus</th>
                 <th>Created at</th>
                 <th>Updated at</th>
                 <th>Default</th>
@@ -35,6 +43,14 @@
                         <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->create_user) }}</td>
                         <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_user) }}</td>
                         <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_user) }}</td>
+                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_comment) }}</td>
+                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_comment) }}</td>
+                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->create_media) }}</td>
+                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_media) }}</td>
+                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_media) }}</td>
+                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->create_menu) }}</td>
+                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_menu) }}</td>
+                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_menu) }}</td>
                         <td>{{ $role->created_at }}</td>
                         <td>{{ $role->updated_at }}</td>
                         <td>

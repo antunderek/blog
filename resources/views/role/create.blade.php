@@ -34,6 +34,31 @@
     <label for="">Can delete any user</label>
     @include('includes.role.create', ['name' => 'delete_user'])
 
+    <label for="">Can edit existing comments</label>
+    @include('includes.role.create', ['name' => 'edit_comment'])
+
+    <label for="">Can delete any comment</label>
+    @include('includes.role.create', ['name' => 'delete_comment'])
+
+    <label for="">Can create media</label>
+    @include('includes.role.create', ['name' => 'create_media'])
+
+    <label for="">Can edit existing media</label>
+    @include('includes.role.create', ['name' => 'edit_media'])
+
+    <label for="">Can delete media</label>
+    @include('includes.role.create', ['name' => 'delete_media'])
+
+    <label for="">Can create menus</label>
+    @include('includes.role.create', ['name' => 'create_menu'])
+
+    <label for="">Can edit existing menus</label>
+    @include('includes.role.create', ['name' => 'edit_menu'])
+
+    <label for="">Can delete menus</label>
+    @include('includes.role.create', ['name' => 'delete_menu'])
+
+
     <button type="submit">
         Save
     </button>

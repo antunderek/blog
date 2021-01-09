@@ -82,6 +82,7 @@ class AvatarController extends Controller
     public function show(Avatar $avatar)
     {
         //
+        PermissionHandler::noMediaEditorAbort();
         return view('avatar.show', compact('avatar'));
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\PermissionHandler;
 use App\Http\Helpers\Validator;
 use App\Menu;
 use App\MenuItem;
@@ -21,6 +22,7 @@ class MenuItemController extends Controller
     public function index()
     {
         //
+        PermissionHandler::noMenuEditorAbort();
         $items = MenuItem::all();
         return view('menu_items.index', compact('items'));
     }
@@ -35,6 +37,7 @@ class MenuItemController extends Controller
     public function create(Menu $menu = null, MenuItem $parent = null)
     {
         //
+        PermissionHandler::notCreateMenuAbort();
         return view('menu_items.create', compact('menu', 'parent'));
     }
 
@@ -47,6 +50,7 @@ class MenuItemController extends Controller
     public function store(Request $request)
     {
         //
+        PermissionHandler::notCreateMenuAbort();
         Validator::validate($request, 'menu_item');
 
         $item = new MenuItem();
@@ -69,6 +73,7 @@ class MenuItemController extends Controller
     public function show(MenuItem $item)
     {
         //
+        PermissionHandler::noMenuEditorAbort();
         return view('menu_items.show', compact('item'));
     }
 
@@ -81,6 +86,7 @@ class MenuItemController extends Controller
     public function edit(MenuItem $item)
     {
         //
+        PermissionHandler::notEditMenuAbort();
         return view('menu_items.edit', compact('item'));
     }
 
@@ -94,6 +100,7 @@ class MenuItemController extends Controller
     public function update(Request $request, MenuItem $item)
     {
         //
+        PermissionHandler::notEditMenuAbort();
         Validator::validate($request, 'menu_item_update');
 
         $item->item = $request->item;
@@ -112,6 +119,7 @@ class MenuItemController extends Controller
     public function destroy(MenuItem $item)
     {
         //
+        PermissionHandler::notDeleteMenuAbort();
         $item->delete();
         return redirect()->back();
     }

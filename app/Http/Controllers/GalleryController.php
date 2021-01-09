@@ -68,6 +68,7 @@ class GalleryController extends Controller
     public function show(Gallery $gallery)
     {
         //
+        PermissionHandler::noMediaEditorAbort();
         return view('gallery.show', compact('gallery'));
     }
 
@@ -88,18 +89,18 @@ class GalleryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Gallery  $image
+     * @param  \App\Gallery  $gallery
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Gallery $image)
+    public function update(Request $request, Gallery $gallery)
     {
         //
         PermissionHandler::notEditMediaAbort();
         Validator::validate($request, 'gallery');
 
-        Storage::delete($image->image_path);
-        $image->image_path = $request->file('image')->store('public/images');
-        $image->save();
+        Storage::delete($gallery->image_path);
+        $gallery->image_path = $request->file('image')->store('public/images');
+        $gallery->save();
 
         return redirect()->route('panel.gallery');
     }

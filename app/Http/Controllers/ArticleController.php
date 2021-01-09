@@ -10,6 +10,7 @@ use App\Http\Helpers\Validator;
 use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
 class ArticleController extends Controller
@@ -127,6 +128,7 @@ class ArticleController extends Controller
             {
                 //$article->image_path = $request->file('image')->store('images');
                 $image = Gallery::where('id', $article->image_id)->get()->first();
+                Storage::delete($image->image_path);
                 $image->image_path = $request->file('image')->store('public/images');
                 $image->save();
                 $article->image_id = $image->id;

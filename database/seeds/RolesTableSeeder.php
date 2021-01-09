@@ -34,6 +34,10 @@ class RolesTableSeeder extends Seeder
                 'create_media' => true,
                 'edit_media' => true,
                 'delete_media' => true,
+
+                'create_menu' => true,
+                'edit_menu' => true,
+                'delete_menu' => true,
             ],
             [
                 'id' => '2',
@@ -56,6 +60,10 @@ class RolesTableSeeder extends Seeder
                 'create_media' => true,
                 'edit_media' => true,
                 'delete_media' => true,
+
+                'create_menu' => false,
+                'edit_menu' => false,
+                'delete_menu' => false,
             ],
             [
                 'id' => '3',
@@ -78,6 +86,10 @@ class RolesTableSeeder extends Seeder
                 'create_media' => false,
                 'edit_media' => false,
                 'delete_media' => false,
+
+                'create_menu' => false,
+                'edit_menu' => false,
+                'delete_menu' => false,
             ],
             [
                 'id' => '4',
@@ -100,6 +112,10 @@ class RolesTableSeeder extends Seeder
                 'create_media' => false,
                 'edit_media' => false,
                 'delete_media' => false,
+
+                'create_menu' => false,
+                'edit_menu' => false,
+                'delete_menu' => false,
             ],
             [
                 'id' => '5',
@@ -122,6 +138,10 @@ class RolesTableSeeder extends Seeder
                 'create_media' => true,
                 'edit_media' => true,
                 'delete_media' => true,
+
+                'create_menu' => true,
+                'edit_menu' => true,
+                'delete_menu' => true,
             ],
         ]);
     }

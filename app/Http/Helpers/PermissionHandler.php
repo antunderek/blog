@@ -133,6 +133,31 @@ class PermissionHandler
     }
 
 
+    // Menu functions
+    public static function canCreateMenus()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('create_menu')->first();
+    }
+
+    public static function canEditMenus()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('edit_menu')->first();
+    }
+
+    public static function canDeleteMenus()
+    {
+        return Role::where('id', Auth::user()->role_id)->pluck('delete_menu')->first();
+    }
+
+    public static function isMenuEditor()
+    {
+        if (self::canCreateMenus() || self::canEditMenus() || self::canDeleteMenus())
+        {
+            return true;
+        }
+    }
+
+
     // Abort functions
     // Articles
     public static function notArticleOwnerAbort(Article $article)
@@ -300,6 +325,40 @@ class PermissionHandler
     public static function noMediaEditorAbort()
     {
         if (!self::isMediaEditor())
+        {
+            return abort(404);
+        }
+    }
+
+
+    // Menu
+    public static function notCreateMenuAbort()
+    {
+        if (!self::canCreateMenus())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function notEditMenuAbort()
+    {
+        if (!self::canEditMenus())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function notDeleteMenuAbort()
+    {
+        if (!self::canDeleteMenus())
+        {
+            return abort(404);
+        }
+    }
+
+    public static function noMenuEditorAbort()
+    {
+        if (!self::isMenuEditor())
         {
             return abort(404);
         }

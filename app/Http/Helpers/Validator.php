@@ -36,12 +36,25 @@ abstract class Validator {
             'role' => 'required|string|max:255',
             'edit_article' => 'required|integer|min:0|max:1',
             'delete_article' => 'required|integer|min:0|max:1',
+
             'create_role' => 'required|integer|min:0|max:1',
             'edit_role' => 'required|integer|min:0|max:1',
             'delete_role' => 'required|integer|min:0|max:1',
+
             'create_user' => 'required|integer|min:0|max:1',
             'edit_user' => 'required|integer|min:0|max:1',
             'delete_user' => 'required|integer|min:0|max:1',
+
+            'edit_comment' => 'required|integer|min:0|max:1',
+            'delete_comment' => 'required|integer|min:0|max:1',
+
+            'create_media' => 'required|integer|min:0|max:1',
+            'edit_media' => 'required|integer|min:0|max:1',
+            'delete_media' => 'required|integer|min:0|max:1',
+
+            'create_menu' => 'required|integer|min:0|max:1',
+            'edit_menu' => 'required|integer|min:0|max:1',
+            'delete_menu' => 'required|integer|min:0|max:1',
         ],
 
         'default_role' => [

@@ -36,10 +36,15 @@ class CreateRolesTable extends Migration
             $table->boolean('edit_comment')->default(false);
             $table->boolean('delete_comment')->default(false);
 
-            // Gallery permissions
+            // Media permissions
             $table->boolean('create_media')->default(false);
             $table->boolean('edit_media')->default(false);
             $table->boolean('delete_media')->default(false);
+
+            // Menu permissions
+            $table->boolean('create_menu')->default(false);
+            $table->boolean('edit_menu')->default(false);
+            $table->boolean('delete_menu')->default(false);
 
             $table->timestamps();
         });

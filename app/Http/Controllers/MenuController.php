@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\PermissionHandler;
 use App\Http\Helpers\Validator;
 use App\Menu;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class MenuController extends Controller
     public function index()
     {
         //
+        PermissionHandler::noMenuEditorAbort();
         $menus = Menu::all();
         return view('menu.index', compact('menus'));
     }
@@ -32,6 +34,7 @@ class MenuController extends Controller
     public function create()
     {
         //
+        PermissionHandler::notCreateMenuAbort();
         return view('menu.create');
     }
 
@@ -44,6 +47,7 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         //
+        PermissionHandler::notCreateMenuAbort();
         Validator::validate($request, 'menu');
 
         $menu = new Menu();
@@ -64,6 +68,7 @@ class MenuController extends Controller
     public function show(Menu $menu)
     {
         //
+        PermissionHandler::noMenuEditorAbort();
         return view('menu.show', compact('menu'));
     }
 
@@ -76,6 +81,7 @@ class MenuController extends Controller
     public function edit(Menu $menu)
     {
         //
+        PermissionHandler::notEditMenuAbort();
         return view('menu.edit', compact('menu'));
     }
 
@@ -89,6 +95,7 @@ class MenuController extends Controller
     public function update(Request $request, Menu $menu)
     {
         //
+        PermissionHandler::notEditMenuAbort();
         Validator::validate($request, 'menu_update');
 
         $menu->title = $request->title;
@@ -107,6 +114,7 @@ class MenuController extends Controller
     public function destroy(Menu $menu)
     {
         //
+        PermissionHandler::notDeleteMenuAbort();
         $menu->delete();
         return redirect()->route('panel.menu');
     }
