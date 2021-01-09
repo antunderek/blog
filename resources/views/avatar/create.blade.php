@@ -11,7 +11,7 @@
                             @csrf
 
                             <div class="form-group row">
-                                <label for="image" class="col-md-4 col-form-label text-md-right">Change avatar</label>
+                                <label for="image" class="col-md-4 col-form-label text-md-right">Select avatar</label>
 
                                 <div class="col-md-6">
                                     <input id="image" type="file" name="image">
@@ -29,7 +29,7 @@
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
-                                        Save changes
+                                        Upload
                                     </button>
                                 </div>
                             </div>

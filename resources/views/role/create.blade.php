@@ -23,7 +23,7 @@
     @include('includes.role.create', ['name' => 'edit_role'])
 
     <label for="writer">Can delete any role</label>
-    @include('includes.role.create', ['name' => 'edit_article'])
+    @include('includes.role.create', ['name' => 'delete_role'])
 
     <label for="">Can create a new user</label>
     @include('includes.role.create', ['name' => 'create_user'])

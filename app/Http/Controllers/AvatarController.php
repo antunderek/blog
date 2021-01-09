@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Avatar;
 use App\Http\Helpers\AvatarCreator;
 use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\Validator;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -51,23 +52,23 @@ class AvatarController extends Controller
     {
         //
         PermissionHandler::notCreateMediaAbort();
+        Validator::validate($request, 'avatar');
 
-        if ($request->file('image')) {
-            $avatar = new Avatar();
-            $avatar->image_path = $request->file('image')->store('public/avatars');
-            $avatar->size = $request->file('image')->getSize();
-            $imageresolution = getimagesize($request->file('image'));
-            $avatar->resolution = "{$imageresolution[0]}x{$imageresolution[1]}";
+        $avatar = new Avatar();
+        $avatar->image_path = $request->file('image')->store('public/avatars');
+        $avatar->size = $request->file('image')->getSize();
+        $imageresolution = getimagesize($request->file('image'));
+        $avatar->resolution = "{$imageresolution[0]}x{$imageresolution[1]}";
 
-            if ($request->default == 1) {
-                $defaultAvatar = Avatar::where('default', true)->get();
-                if ($defaultAvatar) {
-                    $defaultAvatar->default = false;
-                }
-                $avatar->default = true;
+        if ($request->default == 1) {
+            $defaultAvatar = Avatar::where('default', true)->get()->first();
+            if ($defaultAvatar) {
+                $defaultAvatar->default = false;
+                $defaultAvatar->save();
             }
-            $avatar->save();
+            $avatar->default = true;
         }
+        $avatar->save();
 
         return redirect()->route('panel.avatar');
     }
@@ -108,6 +109,7 @@ class AvatarController extends Controller
     {
         //
         PermissionHandler::notEditMediaAbort();
+        Validator::validate($request, 'avatar_update');
 
         if ($request->file('image')) {
             if (($avatar->image !== null) && !$avatar->default)

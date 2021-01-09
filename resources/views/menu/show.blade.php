@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Edit</div>
+                    <div class="card-header">Show</div>
 
                     <div class="card-body">
 
@@ -30,10 +30,13 @@
                             </div>
                             <div class="card-body">
                                 @include('includes.menu_items.show', ['items' => $menu->menuItems])
+                                <a style="margin-top: 20px" href="{{ route('item.create', $menu) }}" class="btn btn-primary">New item</a>
                             </div>
                         </div>
 
-                        <a href="{{ route('item.create', $menu) }}" class="btn btn-primary">New item</a>
+
+                        <br>
+                        <a href="{{ route('menu.edit', $menu) }}" class="btn btn-primary">Edit</a>
                     </div>
                 </div>
             </div>

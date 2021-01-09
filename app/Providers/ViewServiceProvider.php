@@ -28,7 +28,7 @@ class ViewServiceProvider extends ServiceProvider
         //
         View::composer('*', function ($view) {
             //
-            $menus = Menu::all();
+            $menus = Menu::orderBy('order')->get();
             $view->with('navMenus', $menus);
         });
     }

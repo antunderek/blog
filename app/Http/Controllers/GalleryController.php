@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Gallery;
 use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -36,6 +37,7 @@ class GalleryController extends Controller
     {
         //
         PermissionHandler::notCreateMediaAbort();
+        return view('gallery.create');
     }
 
     /**
@@ -48,14 +50,13 @@ class GalleryController extends Controller
     {
         //
         PermissionHandler::notCreateMediaAbort();
+        Validator::validate($request, 'gallery');
 
-        if ($request->file('image')) {
-            $image = new Gallery();
-            $image->image_path = $request->file('image')->store('public/images');
-            $image->save();
-        }
+        $image = new Gallery();
+        $image->image_path = $request->file('image')->store('public/images');
+        $image->save();
 
-        return redirect()->back();
+        return redirect()->route('panel.gallery');
     }
 
     /**
@@ -94,13 +95,13 @@ class GalleryController extends Controller
     {
         //
         PermissionHandler::notEditMediaAbort();
-        if ($request->file('image')) {
-            Storage::delete($image->image_path);
-            $image->image_path = $request->file('image')->store('public/images');
-            $image->save();
-        }
+        Validator::validate($request, 'gallery');
 
-        return redirect()->back();
+        Storage::delete($image->image_path);
+        $image->image_path = $request->file('image')->store('public/images');
+        $image->save();
+
+        return redirect()->route('panel.gallery');
     }
 
     /**

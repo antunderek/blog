@@ -14,6 +14,14 @@
                             <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($gallery->image_path)) }}">
 
                             <div class="form-group row">
+                                <label for="image" class="col-md-4 col-form-label text-md-right">Select image</label>
+
+                                <div class="col-md-6">
+                                    <input id="image" type="file" name="image">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">Image path</label>
 
                                 <div class="col-md-6">

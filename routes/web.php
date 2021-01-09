@@ -33,7 +33,7 @@ Route::resource('avatar', 'AvatarController')->except(['index']);
 Route::resource('menu', 'MenuController')->except(['index']);
 
 //Provjeriti da li treba
-Route::get('item/{menu}/{parent?}', 'MenuItemController@create')->name('item.create');
+Route::get('item/create/{menu}/{parent?}', 'MenuItemController@create')->name('item.create');
 Route::resource('item', 'MenuItemController')->except(['create']);
 
 Route::get('/home', 'HomeController@index')->name('home');

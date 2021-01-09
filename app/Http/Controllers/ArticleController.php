@@ -6,7 +6,7 @@ use App\Article;
 use App\Gallery;
 use App\Http\Helpers\PermissionHandler;
 
-use App\Http\Helpers\TestFormValidator;
+use App\Http\Helpers\Validator;
 use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,8 +58,7 @@ class ArticleController extends Controller
     {
         //
         PermissionHandler::notWriterAbort();
-        $validator = new TestFormValidator();
-        $validator->validate($request, 'article');
+        Validator::validate($request, 'article');
 
         $article = new Article();
         $article->title = $request->title;
@@ -116,8 +115,7 @@ class ArticleController extends Controller
     {
         //
         PermissionHandler::noEditingPermissionsAbort($article);
-        $validator = new TestFormValidator();
-        $validator->validate($request, 'article');
+        Validator::validate($request, 'article');
 
         $article->title = $request->title;
         $article->text = $request->text;

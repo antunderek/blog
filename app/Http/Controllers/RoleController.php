@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\Validator;
 use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,6 +52,7 @@ class RoleController extends Controller
     {
         //
         PermissionHandler::notCreateRolesAbort();
+        Validator::validate($request, 'role');
 
         $role = new Role();
         $role->role = $request->role;
@@ -108,6 +110,7 @@ class RoleController extends Controller
     {
         //
         PermissionHandler::notEditRolesAbort();
+        Validator::validate($request, 'role');
 
         $role->role = $request->role;
         $role->writer = (int)$request->writer;

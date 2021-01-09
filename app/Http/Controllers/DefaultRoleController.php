@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DefaultRole;
 use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\Validator;
 use App\Role;
 use Illuminate\Http\Request;
 
@@ -37,6 +38,8 @@ class DefaultRoleController extends Controller
     {
         //
         PermissionHandler::notEditRolesAbort();
+        Validator::validate($request, 'default_role');
+
         $defaultRole = DefaultRole::first();
         if (!$defaultRole)
         {

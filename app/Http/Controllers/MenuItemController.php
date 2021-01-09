@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\Validator;
 use App\Menu;
 use App\MenuItem;
 use Illuminate\Http\Request;
@@ -46,6 +47,8 @@ class MenuItemController extends Controller
     public function store(Request $request)
     {
         //
+        Validator::validate($request, 'menu_item');
+
         $item = new MenuItem();
         $item->menu_id = $request->menu_id;
         $item->parent_id = $request->parent_id;
@@ -54,47 +57,49 @@ class MenuItemController extends Controller
 
         $item->save();
 
-        return redirect()->back();
+        return redirect()->route('menu.edit', $item->menu_id);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\MenuItem  $menuItem
+     * @param  \App\MenuItem  $item
      * @return \Illuminate\Http\Response
      */
-    public function show(MenuItem $menuItem)
+    public function show(MenuItem $item)
     {
         //
-        return view('menu_items.show', compact('menuItem'));
+        return view('menu_items.show', compact('item'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\MenuItem  $menuItem
+     * @param  \App\MenuItem  $item
      * @return \Illuminate\Http\Response
      */
-    public function edit(MenuItem $menuItem)
+    public function edit(MenuItem $item)
     {
         //
-        return view('menu_items.edit', compact('menuItem'));
+        return view('menu_items.edit', compact('item'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\MenuItem  $menuItem
+     * @param  \App\MenuItem  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, MenuItem $menuItem)
+    public function update(Request $request, MenuItem $item)
     {
         //
-        $menuItem->item = $request->item;
-        $menuItem->link = $request->link;
+        Validator::validate($request, 'menu_item_update');
 
-        $menuItem->save();
+        $item->item = $request->item;
+        $item->link = $request->link;
+
+        $item->save();
         return redirect()->back();
     }
 

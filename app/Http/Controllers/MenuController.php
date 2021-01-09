@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\Validator;
 use App\Menu;
 use Illuminate\Http\Request;
 
@@ -43,6 +44,8 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         //
+        Validator::validate($request, 'menu');
+
         $menu = new Menu();
         $menu->title = $request->title;
         $menu->order = $request->order;
@@ -86,10 +89,13 @@ class MenuController extends Controller
     public function update(Request $request, Menu $menu)
     {
         //
+        Validator::validate($request, 'menu_update');
+
         $menu->title = $request->title;
         $menu->order = $request->order;
 
         $menu->save();
+        return view('menu.show', compact('menu'));
     }
 
     /**
