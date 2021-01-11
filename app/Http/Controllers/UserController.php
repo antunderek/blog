@@ -16,6 +16,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except('show');
+        $this->authorizeResource(User::class, 'user');
     }
     /**
      * Display a listing of the resource.
@@ -25,7 +26,9 @@ class UserController extends Controller
     public function index()
     {
         //
-        PermissionHandler::notEditUsersAbort();
+        //PermissionHandler::notEditUsersAbort();
+        $this->authorize('viewAny', User::class);
+
         $users = User::all();
         $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
         return view('user.index', compact('users', 'currentUserRole'));
@@ -39,7 +42,7 @@ class UserController extends Controller
     public function create()
     {
         //
-        PermissionHandler::notCreateUsersAbort();
+        //PermissionHandler::notCreateUsersAbort();
         return view('user.create');
     }
 
@@ -52,7 +55,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
-        PermissionHandler::notCreateUsersAbort();
+        //PermissionHandler::notCreateUsersAbort();
         $registerController = App::make('App\Http\Controllers\Auth\RegisterController');
         $registerController->callAction('register', [$request]);
         return redirect()->route('panel.users');
@@ -179,4 +182,5 @@ class UserController extends Controller
     }
 
     // articles() vraca article usera ako je user writer (view od article index)
+
 }

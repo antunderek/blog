@@ -25,9 +25,11 @@ class PanelController extends Controller
         return view('panel.articles', compact('articles'));
     }
 
+    /*
     public function users()
     {
         $users = User::all();
         return view('panel.users', compact('users'));
     }
+    */
 }

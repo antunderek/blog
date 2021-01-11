@@ -23,7 +23,9 @@ class DefaultRoleController extends Controller
     public function edit()
     {
         //
-        PermissionHandler::notEditRolesAbort();
+        //PermissionHandler::notEditRolesAbort();
+        $this->authorize('update', DefaultRole::class);
+
         $roles = Role::all();
         return view('default_role.edit', compact('roles'));
     }
@@ -37,8 +39,10 @@ class DefaultRoleController extends Controller
     public function update(Request $request)
     {
         //
-        PermissionHandler::notEditRolesAbort();
+        //PermissionHandler::notEditRolesAbort();
+        $this->authorize('update', DefaultRole::class);
         Validator::validate($request, 'default_role');
+
 
         $defaultRole = DefaultRole::first();
         if (!$defaultRole)

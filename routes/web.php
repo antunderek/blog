@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::resource('article', 'ArticleController');
+Route::resource('article', 'ArticleController')->except(['allArticles', 'userArticles']);
 
 Route::resource('role', 'RoleController')->except(['index', 'default']);
 
@@ -40,7 +40,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/panel', 'PanelController@index')->name('panel.index');
 
-Route::get('/panel/articles', 'PanelController@articles')->name('panel.articles');
+Route::get('/panel/articles', 'ArticleController@allArticles')->name('panel.articles');
+
+Route::get('/panel/articles/user', 'ArticleController@userArticles')->name('panel.articles.user');
 
 Route::get('/panel/roles', 'RoleController@index')->name('panel.roles');
 

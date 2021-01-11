@@ -13,6 +13,7 @@ class MenuItemController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->authorizeResource(MenuItem::class, 'item');
     }
     /**
      * Display a listing of the resource.
@@ -22,7 +23,8 @@ class MenuItemController extends Controller
     public function index()
     {
         //
-        PermissionHandler::noMenuEditorAbort();
+        //PermissionHandler::noMenuEditorAbort();
+        $this->authorize('viewAny', MenuItem::class);
         $items = MenuItem::all();
         return view('menu_items.index', compact('items'));
     }
@@ -50,7 +52,7 @@ class MenuItemController extends Controller
     public function store(Request $request)
     {
         //
-        PermissionHandler::notCreateMenuAbort();
+        //PermissionHandler::notCreateMenuAbort();
         Validator::validate($request, 'menu_item');
 
         $item = new MenuItem();
@@ -73,7 +75,7 @@ class MenuItemController extends Controller
     public function show(MenuItem $item)
     {
         //
-        PermissionHandler::noMenuEditorAbort();
+        //PermissionHandler::noMenuEditorAbort();
         return view('menu_items.show', compact('item'));
     }
 
@@ -86,7 +88,7 @@ class MenuItemController extends Controller
     public function edit(MenuItem $item)
     {
         //
-        PermissionHandler::notEditMenuAbort();
+        //PermissionHandler::notEditMenuAbort();
         return view('menu_items.edit', compact('item'));
     }
 
@@ -100,7 +102,7 @@ class MenuItemController extends Controller
     public function update(Request $request, MenuItem $item)
     {
         //
-        PermissionHandler::notEditMenuAbort();
+        //PermissionHandler::notEditMenuAbort();
         Validator::validate($request, 'menu_item_update');
 
         $item->item = $request->item;
@@ -119,7 +121,7 @@ class MenuItemController extends Controller
     public function destroy(MenuItem $item)
     {
         //
-        PermissionHandler::notDeleteMenuAbort();
+        //PermissionHandler::notDeleteMenuAbort();
         $item->delete();
         return redirect()->back();
     }

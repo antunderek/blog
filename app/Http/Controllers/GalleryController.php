@@ -13,6 +13,7 @@ class GalleryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->authorizeResource(Gallery::class, 'gallery');
     }
 
     /**
@@ -23,7 +24,8 @@ class GalleryController extends Controller
     public function index()
     {
         //
-        PermissionHandler::noMediaEditorAbort();
+        //PermissionHandler::noMediaEditorAbort();
+        $this->authorize('viewAny', Gallery::class);
         $images = Gallery::all();
         return view('gallery.index', compact('images'));
     }
@@ -36,7 +38,7 @@ class GalleryController extends Controller
     public function create()
     {
         //
-        PermissionHandler::notCreateMediaAbort();
+        //PermissionHandler::notCreateMediaAbort();
         return view('gallery.create');
     }
 
@@ -49,7 +51,7 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         //
-        PermissionHandler::notCreateMediaAbort();
+        //PermissionHandler::notCreateMediaAbort();
         Validator::validate($request, 'gallery');
 
         $image = new Gallery();
@@ -68,7 +70,7 @@ class GalleryController extends Controller
     public function show(Gallery $gallery)
     {
         //
-        PermissionHandler::noMediaEditorAbort();
+        //PermissionHandler::noMediaEditorAbort();
         return view('gallery.show', compact('gallery'));
     }
 
@@ -81,7 +83,7 @@ class GalleryController extends Controller
     public function edit(Gallery $gallery)
     {
         //
-        PermissionHandler::notEditMediaAbort();
+        //PermissionHandler::notEditMediaAbort();
         return view('gallery.edit', compact('gallery'));
     }
 
@@ -95,7 +97,7 @@ class GalleryController extends Controller
     public function update(Request $request, Gallery $gallery)
     {
         //
-        PermissionHandler::notEditMediaAbort();
+        //PermissionHandler::notEditMediaAbort();
         Validator::validate($request, 'gallery');
 
         Storage::delete($gallery->image_path);
@@ -114,7 +116,7 @@ class GalleryController extends Controller
     public function destroy(Gallery $gallery)
     {
         //
-        PermissionHandler::notDeleteMediaAbort();
+        //PermissionHandler::notDeleteMediaAbort();
         Storage::delete($gallery->image_path);
         $gallery->delete();
 

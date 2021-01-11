@@ -24,7 +24,9 @@ class CommentController extends Controller
     public function index()
     {
         //
-        PermissionHandler::noCommentEditorAbort();
+        //PermissionHandler::noCommentEditorAbort();
+        $this->authorize('viewAny', Comment::class);
+
         $comments = Comment::all();
         return view('comment.index', compact('comments'));
     }
@@ -85,10 +87,7 @@ class CommentController extends Controller
     public function edit(Comment $comment)
     {
         //
-        if ($comment->user_id !== Auth::id())
-        {
-            PermissionHandler::notEditCommentAbort();
-        }
+        $this->authorize('update', $comment);
         return view('comment.edit', compact('comment'));
     }
 
@@ -102,12 +101,8 @@ class CommentController extends Controller
     public function update(Request $request, Comment $comment)
     {
         //
+        $this->authorize('update', $comment);
         Validator::validate($request, 'comment_update');
-
-        if ($comment->user_id !== Auth::id())
-        {
-            PermissionHandler::notEditCommentAbort();
-        }
 
         $comment->comment = $request->comment;
 
@@ -125,6 +120,7 @@ class CommentController extends Controller
     public function destroy(Comment $comment)
     {
         // Should be avoided, as it causes cascade delete on child comments.
+        $this->authorize('delete', Comment::class);
         PermissionHandler::notDeleteCommentAbort();
         Comment::where('id', $comment->id)->delete();
 
@@ -143,12 +139,9 @@ class CommentController extends Controller
     public function delete(Request $request, Comment $comment)
     {
         // Default way to delete comments, this is a non destructive of deleting comments in order to preserve child comments.
-        if ($comment->user_id !== Auth::id())
-        {
-            PermissionHandler::notEditCommentAbort();
-        }
-        $comment->comment = "Comment has been deleted.";
+        $this->authorize('update', $comment);
 
+        $comment->comment = "Comment has been deleted.";
         $comment->save();
 
         return redirect()->back();

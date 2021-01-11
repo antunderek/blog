@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Avatar;
 use App\Http\Helpers\AvatarCreator;
+use App\Http\Helpers\FileHandler;
 use App\Http\Helpers\PermissionHandler;
 use App\Http\Helpers\Validator;
 use App\User;
@@ -15,6 +16,7 @@ class AvatarController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->authorizeResource(Avatar::class, 'avatar');
     }
 
     /**
@@ -25,7 +27,8 @@ class AvatarController extends Controller
     public function index()
     {
         //
-        PermissionHandler::noMediaEditorAbort();
+        //PermissionHandler::noMediaEditorAbort();
+        $this->authorize('viewAny', Avatar::class);
         $images = Avatar::all();
         return view('avatar.index', compact('images'));
     }
@@ -38,7 +41,7 @@ class AvatarController extends Controller
     public function create()
     {
         //
-        PermissionHandler::notCreateMediaAbort();
+        //PermissionHandler::notCreateMediaAbort();
         return view('avatar.create');
     }
 
@@ -51,14 +54,16 @@ class AvatarController extends Controller
     public function store(Request $request)
     {
         //
-        PermissionHandler::notCreateMediaAbort();
+        //PermissionHandler::notCreateMediaAbort();
         Validator::validate($request, 'avatar');
 
         $avatar = new Avatar();
         $avatar->image_path = $request->file('image')->store('public/avatars');
-        $avatar->size = $request->file('image')->getSize();
-        $imageresolution = getimagesize($request->file('image'));
-        $avatar->resolution = "{$imageresolution[0]}x{$imageresolution[1]}";
+        //$avatar->size = $request->file('image')->getSize();
+        //$imageresolution = getimagesize($request->file('image'));
+        //$avatar->resolution = "{$imageresolution[0]}x{$imageresolution[1]}";
+        $avatar->size = FileHandler::imageSize($request->file('image'));
+        $avatar->resolution = FileHandler::imageResolution($request->file('image'));
 
         if ($request->default == 1) {
             $defaultAvatar = Avatar::where('default', true)->get()->first();
@@ -82,7 +87,7 @@ class AvatarController extends Controller
     public function show(Avatar $avatar)
     {
         //
-        PermissionHandler::noMediaEditorAbort();
+        //PermissionHandler::noMediaEditorAbort();
         return view('avatar.show', compact('avatar'));
     }
 
@@ -95,7 +100,7 @@ class AvatarController extends Controller
     public function edit(Avatar $avatar)
     {
         //
-        PermissionHandler::notEditMediaAbort();
+        //PermissionHandler::notEditMediaAbort();
         return view('avatar.edit', compact('avatar'));
     }
 
@@ -109,7 +114,7 @@ class AvatarController extends Controller
     public function update(Request $request, Avatar $avatar)
     {
         //
-        PermissionHandler::notEditMediaAbort();
+        //PermissionHandler::notEditMediaAbort();
         Validator::validate($request, 'avatar_update');
 
         if ($request->file('image')) {
@@ -154,7 +159,7 @@ class AvatarController extends Controller
     public function destroy(Avatar $avatar)
     {
         //
-        PermissionHandler::notDeleteMediaAbort();
+        //PermissionHandler::notDeleteMediaAbort();
 
         Storage::delete($avatar->image_path);
         $avatar->delete();

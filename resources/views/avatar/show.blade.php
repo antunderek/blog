@@ -24,6 +24,23 @@
                                 <p>{{ $avatar->name() }}</p>
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">Resolion</label>
+
+                            <div class="col-md-6">
+                                <p>{{ $avatar->resolution }}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">Size</label>
+
+                            <div class="col-md-6">
+                                <p>{{ $avatar->size }}</p>
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <a href="{{ route('avatar.edit', $avatar) }}" class="btn btn-primary">

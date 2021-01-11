@@ -13,6 +13,7 @@ class RoleController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->authorizeResource(Role::class, 'role');
     }
 
     /**
@@ -23,7 +24,8 @@ class RoleController extends Controller
     public function index()
     {
         //
-        PermissionHandler::noRoleEditorAbort();
+        //PermissionHandler::noRoleEditorAbort();
+        $this->authorize('viewAny', Role::class);
 
         $roles = Role::all();
         $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
@@ -38,7 +40,7 @@ class RoleController extends Controller
     public function create()
     {
         //
-        PermissionHandler::notCreateRolesAbort();
+        //PermissionHandler::notCreateRolesAbort();
         return view('role.create');
     }
 
@@ -51,7 +53,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
-        PermissionHandler::notCreateRolesAbort();
+        //PermissionHandler::notCreateRolesAbort();
         Validator::validate($request, 'role');
 
         $role = new Role();
@@ -69,7 +71,7 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         //
-        PermissionHandler::noRoleEditorAbort();
+        //PermissionHandler::noRoleEditorAbort();
         return view('role.show', compact('role'));
     }
 
@@ -82,7 +84,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         //
-        PermissionHandler::notEditRolesAbort();
+        //PermissionHandler::notEditRolesAbort();
         return view('role.edit', compact('role'));
     }
 
@@ -96,7 +98,7 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         //
-        PermissionHandler::notEditRolesAbort();
+        //PermissionHandler::notEditRolesAbort();
         Validator::validate($request, 'role');
 
         $this->setRoles($request, $role);
@@ -113,7 +115,7 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         //
-        PermissionHandler::notDeleteRolesAbort();
+        //PermissionHandler::notDeleteRolesAbort();
         Role::where('id', $role->id)->first()->delete();
         return redirect()->route('panel.roles');
     }

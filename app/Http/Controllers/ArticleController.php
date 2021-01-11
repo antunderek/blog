@@ -45,7 +45,9 @@ class ArticleController extends Controller
     public function create()
     {
         //
-        PermissionHandler::notWriterAbort();
+        //PermissionHandler::notWriterAbort();
+        $this->authorize('create', Article::class);
+
         return view('article.create');
     }
 
@@ -58,7 +60,8 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         //
-        PermissionHandler::notWriterAbort();
+        //PermissionHandler::notWriterAbort();
+        $this->authorize('create', Article::class);
         Validator::validate($request, 'article');
 
         $article = new Article();
@@ -100,7 +103,8 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         //
-        PermissionHandler::noEditingPermissionsAbort($article);
+        //PermissionHandler::noEditingPermissionsAbort($article);
+        $this->authorize('update', $article);
 
         return view('article.edit', compact('article'));
     }
@@ -115,7 +119,8 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         //
-        PermissionHandler::noEditingPermissionsAbort($article);
+        //PermissionHandler::noEditingPermissionsAbort($article);
+        $this->authorize('update', $article);
         Validator::validate($request, 'article');
 
         $article->title = $request->title;
@@ -157,7 +162,8 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         //
-        PermissionHandler::noDestroyPermissionsAbort($article);
+        //PermissionHandler::noDestroyPermissionsAbort($article);
+        $this->authorize('delete', $article);
         Article::where('id', $article->id)->delete();
 
         if (URL::previous() === URL::route('panel.articles'))
@@ -165,5 +171,19 @@ class ArticleController extends Controller
             return redirect()->back();
         }
         return redirect()->route('article.index');
+    }
+
+    public function allArticles()
+    {
+        $this->authorize('panelArticles', Article::class);
+        $articles = Article::all();
+        return view('panel.articles', compact('articles'));
+    }
+
+    public function userArticles()
+    {
+        $this->authorize('panelUserArticles', Article::class);
+        $articles = Article::where('user_id', Auth::id())->get();
+        return view('panel.articles', compact('articles'));
     }
 }

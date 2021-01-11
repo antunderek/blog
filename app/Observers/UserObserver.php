@@ -38,6 +38,11 @@ class UserObserver
     {
         // Isto kao i createad(), provjera da li postoji superuser, ako ne stvoriti novog
         $superuserRoleId = Role::where('role', 'superuser')->pluck('id')[0];
+        $superuserUser = User::where('email', 'superuser@email.com')->get()->first();
+        if ($superuserUser->role_id !== $superuserRoleId) {
+            $superuserUser->role_id = $superuserRoleId;
+            $superuserUser->save();
+        }
 
         if (!$user->role_id)
         {

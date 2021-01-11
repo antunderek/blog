@@ -15,7 +15,10 @@ class AvatarCreator
 
         if ($defaultAvatar === null)
         {
-            Storage::copy('images/default_avatar.png', $destinationFile);
+            if (!Storage::disk('public')->exists($destinationFile))
+            {
+                Storage::copy('images/default_avatar.png', $destinationFile);
+            }
             $defaultAvatar = new Avatar();
             $defaultAvatar->image_path = $destinationFile;
         }
