@@ -24,6 +24,23 @@
                                 <p>{{ $gallery->name() }}</p>
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">Resolution</label>
+
+                            <div class="col-md-6">
+                                <p>{{ $gallery->resolution }}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">Size</label>
+
+                            <div class="col-md-6">
+                                <p>{{ $gallery->size }}</p>
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <a href="{{ route('gallery.edit', $gallery) }}" class="btn btn-primary">

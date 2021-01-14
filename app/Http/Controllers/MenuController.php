@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Helpers\PermissionHandler;
 use App\Http\Helpers\Validator;
 use App\Menu;
+use App\Role;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -38,7 +39,8 @@ class MenuController extends Controller
     {
         //
         //PermissionHandler::notCreateMenuAbort();
-        return view('menu.create');
+        $roles = Role::all();
+        return view('menu.create', compact('roles'));
     }
 
     /**
@@ -56,6 +58,12 @@ class MenuController extends Controller
         $menu = new Menu();
         $menu->title = $request->title;
         $menu->order = $request->order;
+
+        $menu->save();
+
+        foreach ($request->roles as $role) {
+            $menu->roles()->attach($role);
+        }
 
         $menu->save();
 
@@ -85,7 +93,8 @@ class MenuController extends Controller
     {
         //
         //PermissionHandler::notEditMenuAbort();
-        return view('menu.edit', compact('menu'));
+        $roles = Role::all();
+        return view('menu.edit', compact('menu', 'roles'));
     }
 
     /**
@@ -103,6 +112,11 @@ class MenuController extends Controller
 
         $menu->title = $request->title;
         $menu->order = $request->order;
+
+        $menu->roles()->detach();
+        foreach ($request->roles as $role) {
+            $menu->roles()->attach($role);
+        }
 
         $menu->save();
         return view('menu.show', compact('menu'));

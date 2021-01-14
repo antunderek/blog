@@ -33,7 +33,8 @@ class ArticleController extends Controller
         {
             $writer = Role::where('id', Auth::user()->role_id)->first()->pluck('writer');
         }
-        $articles = Article::all();
+        $articles = Article::paginate(10);
+
         return view('article.index', compact('articles', 'writer'));
     }
 
@@ -170,20 +171,21 @@ class ArticleController extends Controller
         {
             return redirect()->back();
         }
+
         return redirect()->route('article.index');
     }
 
     public function allArticles()
     {
         $this->authorize('panelArticles', Article::class);
-        $articles = Article::all();
+        $articles = Article::paginate(50);
         return view('panel.articles', compact('articles'));
     }
 
     public function userArticles()
     {
         $this->authorize('panelUserArticles', Article::class);
-        $articles = Article::where('user_id', Auth::id())->get();
+        $articles = Article::where('user_id', Auth::id())->paginate(50);
         return view('panel.articles', compact('articles'));
     }
 }

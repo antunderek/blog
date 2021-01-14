@@ -7,6 +7,9 @@
                 <a href="{{ route('panel.index') }}">panel</a>
                 /
                 <a href="{{ route('panel.users') }}">users</a>
+                <br>
+
+                <a href="{{ route('user.create') }}" class="btn btn-primary">New user</a>
                 <table class="table">
                     <thead>
                     <th>Image</th>
@@ -46,6 +49,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                {{ $users->links() }}
                 <a href="{{ route('user.create') }}" class="btn btn-primary">New user</a>
             </div>
         </div>

@@ -26,7 +26,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">Resolion</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">Resolution</label>
 
                             <div class="col-md-6">
                                 <p>{{ $avatar->resolution }}</p>

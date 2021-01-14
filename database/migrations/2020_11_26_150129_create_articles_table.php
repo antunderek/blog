@@ -20,6 +20,7 @@ class CreateArticlesTable extends Migration
             $table->mediumText('text');
             $table->unsignedBigInteger('image_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('image_id')->references('id')->on('galleries')->onDelete('set null');
         });

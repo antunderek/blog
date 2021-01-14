@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Gallery;
+use App\Http\Helpers\FileHandler;
 use App\Http\Helpers\PermissionHandler;
 use App\Http\Helpers\Validator;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class GalleryController extends Controller
         //
         //PermissionHandler::noMediaEditorAbort();
         $this->authorize('viewAny', Gallery::class);
-        $images = Gallery::all();
+        $images = Gallery::paginate(30);
         return view('gallery.index', compact('images'));
     }
 
@@ -56,6 +57,8 @@ class GalleryController extends Controller
 
         $image = new Gallery();
         $image->image_path = $request->file('image')->store('public/images');
+        $image->size = FileHandler::imageSize($request->file('image'));
+        $image->resolution = FileHandler::imageResolution($request->file('image'));
         $image->save();
 
         return redirect()->route('panel.gallery');
@@ -102,6 +105,8 @@ class GalleryController extends Controller
 
         Storage::delete($gallery->image_path);
         $gallery->image_path = $request->file('image')->store('public/images');
+        $gallery->size = FileHandler::imageSize($request->file('image'));
+        $gallery->resolution = FileHandler::imageResolution($request->file('image'));
         $gallery->save();
 
         return redirect()->route('panel.gallery');

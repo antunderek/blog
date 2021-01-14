@@ -25,7 +25,7 @@ class MenuItemController extends Controller
         //
         //PermissionHandler::noMenuEditorAbort();
         $this->authorize('viewAny', MenuItem::class);
-        $items = MenuItem::all();
+        $items = MenuItem::paginate(50);
         return view('menu_items.index', compact('items'));
     }
 

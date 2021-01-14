@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('image_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
             $table->foreign('image_id')->references('id')->on('avatars')->onDelete('set null');
         });

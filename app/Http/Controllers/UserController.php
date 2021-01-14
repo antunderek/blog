@@ -29,7 +29,7 @@ class UserController extends Controller
         //PermissionHandler::notEditUsersAbort();
         $this->authorize('viewAny', User::class);
 
-        $users = User::all();
+        $users = User::paginate(50);
         $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
         return view('user.index', compact('users', 'currentUserRole'));
     }

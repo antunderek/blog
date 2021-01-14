@@ -29,7 +29,8 @@ class AvatarController extends Controller
         //
         //PermissionHandler::noMediaEditorAbort();
         $this->authorize('viewAny', Avatar::class);
-        $images = Avatar::all();
+        $images = Avatar::paginate(30);
+
         return view('avatar.index', compact('images'));
     }
 
@@ -59,9 +60,6 @@ class AvatarController extends Controller
 
         $avatar = new Avatar();
         $avatar->image_path = $request->file('image')->store('public/avatars');
-        //$avatar->size = $request->file('image')->getSize();
-        //$imageresolution = getimagesize($request->file('image'));
-        //$avatar->resolution = "{$imageresolution[0]}x{$imageresolution[1]}";
         $avatar->size = FileHandler::imageSize($request->file('image'));
         $avatar->resolution = FileHandler::imageResolution($request->file('image'));
 
@@ -123,9 +121,8 @@ class AvatarController extends Controller
                 Storage::delete($avatar->image_path);
             }
             $avatar->image_path = $request->file('image')->store('public/avatars');
-            $avatar->size = $request->file('image')->getSize();
-            $imageresolution = getimagesize($request->file('image'));
-            $avatar->resolution = "{$imageresolution[0]}x{$imageresolution[1]}";
+            $avatar->size = FileHandler::imageSize($request->file('image'));
+            $avatar->resolution = FileHandler::imageResolution($request->file('image'));
 
             $avatar->save();
         }

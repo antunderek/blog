@@ -35,6 +35,7 @@
                         </tr>
                     @endforeach
                     </tbody>
+                    {{ $items->links() }}
                 </table>
             </div>
         </div>

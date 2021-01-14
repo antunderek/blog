@@ -18,7 +18,11 @@
                     @foreach($comments as $comment)
                         <tr>
                             <td><a href="{{ route('comment.show', $comment) }}">{{ $comment->id }}</td>
-                            <td><a href="{{ route('article.show', App\Article::where('id', $comment->article_id)->get()[0]) }}">{{ $comment->article_id }}</a></td>
+                            @if (App\Article::where('id', $comment->article_id)->get()->count() !== 0)
+                                <td><a href="{{ route('article.show', App\Article::where('id', $comment->article_id)->get()[0]) }}">{{ $comment->article_id }}</a></td>
+                            @else
+                                <td>Temp deleted</td>
+                            @endif
                             <td>
                                 @if ($comment->user !== null)
                                     <a href="{{ route('user.show', $comment->user_id ) }}">{{ $comment->user->name }}</a>
@@ -59,6 +63,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                {{ $comments->links() }}
             </div>
         </div>
     </div>

@@ -4,6 +4,7 @@
         <div class="card">
             <div class="card-body">
                 <table class="table">
+                    <a href="{{ route('avatar.create') }}" class="btn btn-primary">Upload image</a>
                     <thead>
                     <th>Image</th>
                     <th>Id</th>
@@ -41,6 +42,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                {{ $images->links() }}
                 <a href="{{ route('avatar.create') }}" class="btn btn-primary">Upload image</a>
             </div>
         </div>

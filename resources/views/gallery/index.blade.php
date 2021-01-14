@@ -4,11 +4,11 @@
         <div class="card">
             <div class="card-body">
                 <table class="table">
+                    <a href="{{ route('gallery.create') }}" class="btn btn-primary">Upload image</a>
                     <thead>
                     <th>Image</th>
                     <th>Id</th>
                     <th>Image path</th>
-                    <th>Default avatar</th>
                     <th>Created at</th>
                     <th>Last edited</th>
                     <th>Actions</th>
@@ -21,11 +21,6 @@
                             </td>
                             <td><a href="{{ route('gallery.show', $image) }}">{{ $image->id }}</td>
                             <td><a href="{{ route('gallery.show', $image) }}">{{ $image->image_path }}</a></td>
-                            <td>
-                                @if ($image->default_avatar)
-                                    Default
-                                @endif
-                            </td>
                             <td>{{ $image->created_at }}</td>
                             <td>{{ $image->updated_at }}</td>
                             <td>
@@ -42,6 +37,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                {{ $images->links() }}
                 <a href="{{ route('gallery.create') }}" class="btn btn-primary">Upload image</a>
             </div>
         </div>

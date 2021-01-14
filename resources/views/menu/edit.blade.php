@@ -33,6 +33,20 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                @foreach ($roles as $role)
+                                    <label for="{{ $role->id }}" class="col-md-4 col-form-label text-md-right">{{ $role->role }}</label>
+
+                                    <div class="col-md-6">
+                                        @if ($menu->roles()->where('role_id', $role->id)->count() == 1)
+                                            <input id="{{ $role->id }}" type="checkbox" checked name="roles[]" value="{{ $role->id }}">
+                                        @else
+                                            <input id="{{ $role->id }}" type="checkbox" name="roles[]" value="{{ $role->id }}">
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary" style="margin-bottom: 20px">

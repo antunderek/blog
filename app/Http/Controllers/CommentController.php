@@ -27,7 +27,7 @@ class CommentController extends Controller
         //PermissionHandler::noCommentEditorAbort();
         $this->authorize('viewAny', Comment::class);
 
-        $comments = Comment::all();
+        $comments = Comment::paginate(50);
         return view('comment.index', compact('comments'));
     }
 
