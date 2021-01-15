@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Helpers\PermissionHandler;
-use App\Http\Helpers\Validator;
 use App\Menu;
 use App\Role;
+use App\Http\Helpers\Validator;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -15,6 +14,7 @@ class MenuController extends Controller
         $this->middleware('auth');
         $this->authorizeResource(Menu::class, 'menu');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +23,6 @@ class MenuController extends Controller
     public function index()
     {
         //
-        //PermissionHandler::noMenuEditorAbort();
         $this->authorize('viewAny', Menu::class);
 
         $menus = Menu::all();
@@ -38,7 +37,6 @@ class MenuController extends Controller
     public function create()
     {
         //
-        //PermissionHandler::notCreateMenuAbort();
         $roles = Role::all();
         return view('menu.create', compact('roles'));
     }
@@ -52,7 +50,6 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         //
-        //PermissionHandler::notCreateMenuAbort();
         Validator::validate($request, 'menu');
 
         $menu = new Menu();
@@ -79,7 +76,6 @@ class MenuController extends Controller
     public function show(Menu $menu)
     {
         //
-        //PermissionHandler::noMenuEditorAbort();
         return view('menu.show', compact('menu'));
     }
 
@@ -92,7 +88,6 @@ class MenuController extends Controller
     public function edit(Menu $menu)
     {
         //
-        //PermissionHandler::notEditMenuAbort();
         $roles = Role::all();
         return view('menu.edit', compact('menu', 'roles'));
     }
@@ -107,7 +102,6 @@ class MenuController extends Controller
     public function update(Request $request, Menu $menu)
     {
         //
-        //PermissionHandler::notEditMenuAbort();
         Validator::validate($request, 'menu_update');
 
         $menu->title = $request->title;
@@ -131,7 +125,6 @@ class MenuController extends Controller
     public function destroy(Menu $menu)
     {
         //
-        //PermissionHandler::notDeleteMenuAbort();
         $menu->delete();
         return redirect()->route('panel.menu');
     }

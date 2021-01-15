@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Gallery;
-use App\Http\Helpers\FileHandler;
-use App\Http\Helpers\PermissionHandler;
 use App\Http\Helpers\Validator;
+use App\Http\Traits\ArticleGalleryTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
+    use ArticleGalleryTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -25,7 +26,6 @@ class GalleryController extends Controller
     public function index()
     {
         //
-        //PermissionHandler::noMediaEditorAbort();
         $this->authorize('viewAny', Gallery::class);
         $images = Gallery::paginate(30);
         return view('gallery.index', compact('images'));
@@ -39,7 +39,6 @@ class GalleryController extends Controller
     public function create()
     {
         //
-        //PermissionHandler::notCreateMediaAbort();
         return view('gallery.create');
     }
 
@@ -52,15 +51,10 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         //
-        //PermissionHandler::notCreateMediaAbort();
         Validator::validate($request, 'gallery');
 
         $image = new Gallery();
-        $image->image_path = $request->file('image')->store('public/images');
-        $image->size = FileHandler::imageSize($request->file('image'));
-        $image->resolution = FileHandler::imageResolution($request->file('image'));
-        $image->save();
-
+        $this->storeParameters($request, $image);
         return redirect()->route('panel.gallery');
     }
 
@@ -73,7 +67,6 @@ class GalleryController extends Controller
     public function show(Gallery $gallery)
     {
         //
-        //PermissionHandler::noMediaEditorAbort();
         return view('gallery.show', compact('gallery'));
     }
 
@@ -86,7 +79,6 @@ class GalleryController extends Controller
     public function edit(Gallery $gallery)
     {
         //
-        //PermissionHandler::notEditMediaAbort();
         return view('gallery.edit', compact('gallery'));
     }
 
@@ -100,14 +92,10 @@ class GalleryController extends Controller
     public function update(Request $request, Gallery $gallery)
     {
         //
-        //PermissionHandler::notEditMediaAbort();
         Validator::validate($request, 'gallery');
 
         Storage::delete($gallery->image_path);
-        $gallery->image_path = $request->file('image')->store('public/images');
-        $gallery->size = FileHandler::imageSize($request->file('image'));
-        $gallery->resolution = FileHandler::imageResolution($request->file('image'));
-        $gallery->save();
+        $this->storeParameters($request, $gallery);
 
         return redirect()->route('panel.gallery');
     }
@@ -121,7 +109,6 @@ class GalleryController extends Controller
     public function destroy(Gallery $gallery)
     {
         //
-        //PermissionHandler::notDeleteMediaAbort();
         Storage::delete($gallery->image_path);
         $gallery->delete();
 

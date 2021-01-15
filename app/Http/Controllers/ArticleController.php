@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Article;
 use App\Gallery;
-use App\Http\Helpers\PermissionHandler;
-
-use App\Http\Helpers\Validator;
 use App\Role;
+use App\Http\Helpers\Validator;
+use App\Http\Traits\ArticleGalleryTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +14,8 @@ use Illuminate\Support\Facades\URL;
 
 class ArticleController extends Controller
 {
+    use ArticleGalleryTrait;
+
     public function __construct()
     {
         $this->middleware('auth')->except('index', 'show');
@@ -46,7 +47,6 @@ class ArticleController extends Controller
     public function create()
     {
         //
-        //PermissionHandler::notWriterAbort();
         $this->authorize('create', Article::class);
 
         return view('article.create');
@@ -61,21 +61,16 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         //
-        //PermissionHandler::notWriterAbort();
         $this->authorize('create', Article::class);
         Validator::validate($request, 'article');
 
         $article = new Article();
         $article->title = $request->title;
         $article->text = $request->text;
-        $article->user_id = Auth::user()->id;
+        $article->user_id = Auth::id();
 
         if ($request->file('image')) {
-            //$article->image_path = $request->file('image')->store('public/images');
-            $image = new Gallery();
-            $image->image_path = $request->file('image')->store('public/images');
-            $image->save();
-            $article->image_id = $image->id;
+            $article->image_id = $this->createStoreImage($request);
         }
 
         $article->save();
@@ -104,7 +99,6 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         //
-        //PermissionHandler::noEditingPermissionsAbort($article);
         $this->authorize('update', $article);
 
         return view('article.edit', compact('article'));
@@ -120,19 +114,17 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         //
-        //PermissionHandler::noEditingPermissionsAbort($article);
         $this->authorize('update', $article);
         Validator::validate($request, 'article');
 
         $article->title = $request->title;
         $article->text = $request->text;
-        $article->user_id = Auth::user()->id;
+        $article->user_id = Auth::id();
 
         if ($request->file('image'))
         {
             if ($article->image !== null)
             {
-                //$article->image_path = $request->file('image')->store('images');
                 $image = Gallery::where('id', $article->image_id)->get()->first();
                 Storage::delete($image->image_path);
                 $image->image_path = $request->file('image')->store('public/images');
@@ -140,16 +132,11 @@ class ArticleController extends Controller
                 $article->image_id = $image->id;
             }
             else {
-                // Repeating code
-                $image = new Gallery();
-                $image->image_path = $request->file('image')->store('public/images');
-                $image->save();
-                $article->image_id = $image->id;
+                $article->image_id = $this->createStoreImage($request);
             }
         }
 
         $article->save();
-
 
         return redirect()->route('article.index');
     }
@@ -163,7 +150,6 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         //
-        //PermissionHandler::noDestroyPermissionsAbort($article);
         $this->authorize('delete', $article);
         Article::where('id', $article->id)->delete();
 
@@ -187,5 +173,11 @@ class ArticleController extends Controller
         $this->authorize('panelUserArticles', Article::class);
         $articles = Article::where('user_id', Auth::id())->paginate(50);
         return view('panel.articles', compact('articles'));
+    }
+
+    private function createStoreImage(Request $request) {
+        $image = new Gallery();
+        $image = $this->storeParameters($request, $image);
+        return $image->id;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Helpers\PermissionHandler;
 use App\Http\Helpers\Validator;
 use App\Role;
 use Illuminate\Http\Request;
@@ -24,7 +23,6 @@ class RoleController extends Controller
     public function index()
     {
         //
-        //PermissionHandler::noRoleEditorAbort();
         $this->authorize('viewAny', Role::class);
 
         $roles = Role::all();
@@ -40,7 +38,6 @@ class RoleController extends Controller
     public function create()
     {
         //
-        //PermissionHandler::notCreateRolesAbort();
         return view('role.create');
     }
 
@@ -53,7 +50,6 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
-        //PermissionHandler::notCreateRolesAbort();
         Validator::validate($request, 'role');
 
         $role = new Role();
@@ -71,7 +67,6 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         //
-        //PermissionHandler::noRoleEditorAbort();
         return view('role.show', compact('role'));
     }
 
@@ -84,7 +79,6 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         //
-        //PermissionHandler::notEditRolesAbort();
         return view('role.edit', compact('role'));
     }
 
@@ -98,7 +92,6 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         //
-        //PermissionHandler::notEditRolesAbort();
         Validator::validate($request, 'role');
 
         $this->setRoles($request, $role);
@@ -115,7 +108,6 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         //
-        //PermissionHandler::notDeleteRolesAbort();
         Role::where('id', $role->id)->first()->delete();
         return redirect()->route('panel.roles');
     }

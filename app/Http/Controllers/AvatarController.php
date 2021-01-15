@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\UserAvatarTrait;
+use App\User;
 use App\Avatar;
 use App\Http\Helpers\AvatarCreator;
-use App\Http\Helpers\FileHandler;
-use App\Http\Helpers\PermissionHandler;
 use App\Http\Helpers\Validator;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AvatarController extends Controller
 {
+    use UserAvatarTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -27,7 +28,6 @@ class AvatarController extends Controller
     public function index()
     {
         //
-        //PermissionHandler::noMediaEditorAbort();
         $this->authorize('viewAny', Avatar::class);
         $images = Avatar::paginate(30);
 
@@ -42,7 +42,6 @@ class AvatarController extends Controller
     public function create()
     {
         //
-        //PermissionHandler::notCreateMediaAbort();
         return view('avatar.create');
     }
 
@@ -55,20 +54,13 @@ class AvatarController extends Controller
     public function store(Request $request)
     {
         //
-        //PermissionHandler::notCreateMediaAbort();
         Validator::validate($request, 'avatar');
 
         $avatar = new Avatar();
-        $avatar->image_path = $request->file('image')->store('public/avatars');
-        $avatar->size = FileHandler::imageSize($request->file('image'));
-        $avatar->resolution = FileHandler::imageResolution($request->file('image'));
+        $avatar = $this->setPathResolutionSizeAvatar($request, $avatar);
 
         if ($request->default == 1) {
-            $defaultAvatar = Avatar::where('default', true)->get()->first();
-            if ($defaultAvatar) {
-                $defaultAvatar->default = false;
-                $defaultAvatar->save();
-            }
+            $this->unsetDefaultAvatar();
             $avatar->default = true;
         }
         $avatar->save();
@@ -85,7 +77,6 @@ class AvatarController extends Controller
     public function show(Avatar $avatar)
     {
         //
-        //PermissionHandler::noMediaEditorAbort();
         return view('avatar.show', compact('avatar'));
     }
 
@@ -98,7 +89,6 @@ class AvatarController extends Controller
     public function edit(Avatar $avatar)
     {
         //
-        //PermissionHandler::notEditMediaAbort();
         return view('avatar.edit', compact('avatar'));
     }
 
@@ -112,32 +102,27 @@ class AvatarController extends Controller
     public function update(Request $request, Avatar $avatar)
     {
         //
-        //PermissionHandler::notEditMediaAbort();
         Validator::validate($request, 'avatar_update');
 
         if ($request->file('image')) {
-            if (($avatar->image !== null) && !$avatar->default)
+            if (($avatar->image_path !== null) && !$avatar->default)
             {
                 Storage::delete($avatar->image_path);
             }
-            $avatar->image_path = $request->file('image')->store('public/avatars');
-            $avatar->size = FileHandler::imageSize($request->file('image'));
-            $avatar->resolution = FileHandler::imageResolution($request->file('image'));
+            $avatar = $this->setPathResolutionSizeAvatar($request, $avatar);
 
             $avatar->save();
         }
 
+        // If default
         if (($request->default == 1) && ($avatar->default != true)) {
-            $defaultAvatar = Avatar::where('default', true)->get()->first();
-            if ($defaultAvatar !== null) {
-                $defaultAvatar->default = false;
-                $defaultAvatar->save();
-            }
+            $this->unsetDefaultAvatar();
             $avatar->default = true;
             $avatar->save();
         }
 
-        if (($avatar->default == true) && ($request->default === null))
+        // If no longer default avatar
+        if (($request->default === null) && ($avatar->default == true))
         {
             $avatar->default = false;
             $avatar->save();
@@ -156,8 +141,6 @@ class AvatarController extends Controller
     public function destroy(Avatar $avatar)
     {
         //
-        //PermissionHandler::notDeleteMediaAbort();
-
         Storage::delete($avatar->image_path);
         $avatar->delete();
 
@@ -169,5 +152,14 @@ class AvatarController extends Controller
         User::where('image_id', null)->update(['image_id' => $defaultAvatar->id]);
 
         return redirect()->route('panel.avatar');
+    }
+
+    private function unsetDefaultAvatar()
+    {
+        $defaultAvatar = Avatar::where('default', true)->get()->first();
+        if ($defaultAvatar !== null) {
+            $defaultAvatar->default = false;
+            $defaultAvatar->save();
+        }
     }
 }

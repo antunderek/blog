@@ -13,15 +13,32 @@ abstract class Validator {
     }
 
     public static $rules = [
-        'user' => [
+        // User
+        'user_name' => [
+            'name' => 'required|string|max:255',
+        ],
+        'user_password' => [
             'password' => 'required|string|min:8|confirmed',
         ],
+        'user_email' => [
+            'email' => 'required|string|email|unique:users|max:255',
+        ],
+        'user_avatar' => [
+            'image' => 'required|max:10000|mimes:jpeg,jpg,png,gif',
+        ],
+        'user_role' => [
+            'role' => 'required|integer',
+        ],
 
+
+        // Article
         'article' => [
             'title' => 'required|string|max:255',
             'image' => 'max:10000|mimes:jpeg,jpg,png,gif',
         ],
 
+
+        // Comment
         'comment' => [
             'article' => 'required|integer',
             'comment' => 'required|string|max:255',
@@ -32,6 +49,8 @@ abstract class Validator {
             'comment' => 'required|string|max:255',
         ],
 
+
+        // Role
         'role' => [
             'role' => 'required|string|max:255',
             'edit_article' => 'required|integer|min:0|max:1',
@@ -57,14 +76,20 @@ abstract class Validator {
             'delete_menu' => 'required|integer|min:0|max:1',
         ],
 
+
+        // DefaultRole
         'default_role' => [
             'role' => 'required|integer',
         ],
 
+
+        // Gallery
         'gallery' => [
             'image' => 'required|max:10000|mimes:jpeg,jpg,png,gif',
         ],
 
+
+        // Avatar
         'avatar' => [
             'image' => 'required|max:10000|mimes:jpeg,jpg,png,gif',
             'default' => 'integer|max:1'
@@ -75,6 +100,8 @@ abstract class Validator {
             'default' => 'integer|max:1'
         ],
 
+
+        // Menu
         'menu' => [
             'title' => 'required|string|max:255',
             'order' => 'required|integer|min:0'

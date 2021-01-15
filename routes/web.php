@@ -24,7 +24,7 @@ Route::resource('role', 'RoleController')->except(['index', 'default']);
 Route::resource('user', 'UserController')->except(['index']);
 
 Route::put('comment/{comment}/delete', 'CommentController@delete')->name('comment.delete');
-Route::resource('comment', 'CommentController')->except(['index']);
+Route::resource('comment', 'CommentController')->except(['index', 'create']);
 
 Route::resource('gallery', 'GalleryController')->except(['index']);
 
@@ -32,7 +32,6 @@ Route::resource('avatar', 'AvatarController')->except(['index']);
 
 Route::resource('menu', 'MenuController')->except(['index']);
 
-//Provjeriti da li treba
 Route::get('item/create/{menu}/{parent?}', 'MenuItemController@create')->name('item.create');
 Route::resource('item', 'MenuItemController')->except(['create']);
 

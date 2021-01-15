@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Avatar;
-use App\Http\Helpers\PermissionHandler;
 use App\Role;
 use App\User;
+use App\Avatar;
+use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,6 @@ class UserController extends Controller
     public function index()
     {
         //
-        //PermissionHandler::notEditUsersAbort();
         $this->authorize('viewAny', User::class);
 
         $users = User::paginate(50);
@@ -42,7 +42,6 @@ class UserController extends Controller
     public function create()
     {
         //
-        //PermissionHandler::notCreateUsersAbort();
         return view('user.create');
     }
 
@@ -55,7 +54,6 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
-        //PermissionHandler::notCreateUsersAbort();
         $registerController = App::make('App\Http\Controllers\Auth\RegisterController');
         $registerController->callAction('register', [$request]);
         return redirect()->route('panel.users');
@@ -82,11 +80,6 @@ class UserController extends Controller
     public function edit(User $user)
     {
         //
-        if (Auth::id() !== $user->id)
-        {
-            PermissionHandler::notEditUsersAbort();
-        }
-
         $roles = Role::all();
         return view('user.edit', compact('user', 'roles'));
     }
@@ -101,46 +94,29 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         //
-        if (Auth::id() !== $user->id)
-        {
-            PermissionHandler::notEditUsersAbort();
-        }
-
-        $validData = $request->validate([
-            'name' => 'required|string|max:255',
-            'role' => 'required|integer',
-        ]);
+        Validator::validate($request, 'user_name');
 
         if ($request->password !== null)
         {
-            $passwordValid = $request->validate([
-                'password' => 'required|string|min:8|confirmed',
-            ]);
-            $user->password = Hash::make($passwordValid['password']);
+            Validator::validate($request, 'user_password');
+            $user->password = Hash::make($request->password);
         }
 
         if ($user->email !== $request->email)
         {
-            $emailValid = $request->validate([
-                'email' => 'string|email|unique:users|max:255',
-            ]);
-            $user->email = $emailValid['email'];
+            Validator::validate($request, 'user_email');
+            $user->email = $request->email;
         }
         else
         {
-            $emailValid = $request->validate([
-                'email' => 'string|email|max:255',
-            ]);
-            $user->email = $emailValid['email'];
+            $user->email = $request->email;
         }
 
         if ($request->file('image'))
         {
-            $imageValid = $request->validate([
-                'image' => 'mimes:jpeg,jpg,png,gif'
-            ]);
+            Validator::validate($request, 'user_avatar');
             $image = new Avatar();
-            $image->image_path = $imageValid['image']->store('public/avatars');
+            $image->image_path = $request->file('image')->store('public/avatars');
             $image->save();
             // delete old avatar if not default
             if ($user->image !== null)
@@ -153,10 +129,11 @@ class UserController extends Controller
             $user->image_id = $image->id;
         }
 
-        $user->name = $validData['name'];
+        $user->name = $request->name;
 
         if (PermissionHandler::isUserEditor()) {
-            $user->role_id = $validData['role'];
+            Validator::validate($request, 'user_role');
+            $user->role_id = $request->role;
         }
 
         $user->save();
@@ -173,14 +150,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
-        if (Auth::id() !== $user->id) {
-            PermissionHandler::notDeleteUsersAbort();
-        }
-
         $user->delete();
         return redirect()->route('panel.users');
     }
-
-    // articles() vraca article usera ako je user writer (view od article index)
-
 }

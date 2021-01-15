@@ -24,21 +24,10 @@ class CommentController extends Controller
     public function index()
     {
         //
-        //PermissionHandler::noCommentEditorAbort();
         $this->authorize('viewAny', Comment::class);
 
         $comments = Comment::paginate(50);
         return view('comment.index', compact('comments'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -132,11 +121,10 @@ class CommentController extends Controller
     }
 
    /**
-    * @param  \Illuminate\Http\Request  $request
     * @param  \App\Comment  $comment
     * @return \Illuminate\Http\Response
     */
-    public function delete(Request $request, Comment $comment)
+    public function delete(Comment $comment)
     {
         // Default way to delete comments, this is a non destructive of deleting comments in order to preserve child comments.
         $this->authorize('update', $comment);
