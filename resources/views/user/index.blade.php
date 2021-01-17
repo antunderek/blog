@@ -36,13 +36,23 @@
                             <td>{{ $user->created_at }}</td>
                             <td>{{ $user->updated_at }}</td>
                             <td>
+                                @if (!$user->trashed())
                                 <a href="{{ route('user.edit', $user) }}" class="btn btn-primary">Edit</a>
-                                @if ($currentUserRole->delete_user)
-                                <form method="POST" action="{{ route('user.destroy', $user) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
+                                    @if ($currentUserRole->delete_user)
+                                    <form method="POST" action="{{ route('user.destroy', $user) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                    @endif
+                                @else
+                                    @if ($currentUserRole->delete_user)
+                                        <form method="POST" action="{{ route('user.restore', $user) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-primary">Restore</button>
+                                        </form>
+                                    @endif
                                 @endif
                             </td>
                         </tr>

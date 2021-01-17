@@ -161,17 +161,24 @@ class ArticleController extends Controller
         return redirect()->route('article.index');
     }
 
+
+    public function restore($id)
+    {
+        Article::withTrashed()->find($id)->restore();
+        return redirect()->back();
+    }
+
     public function allArticles()
     {
         $this->authorize('panelArticles', Article::class);
-        $articles = Article::paginate(50);
+        $articles = Article::withTrashed()->paginate(50);
         return view('panel.articles', compact('articles'));
     }
 
     public function userArticles()
     {
         $this->authorize('panelUserArticles', Article::class);
-        $articles = Article::where('user_id', Auth::id())->paginate(50);
+        $articles = Article::withTrashed()->where('user_id', Auth::id())->paginate(10);
         return view('panel.articles', compact('articles'));
     }
 

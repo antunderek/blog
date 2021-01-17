@@ -29,7 +29,7 @@ class UserController extends Controller
         //
         $this->authorize('viewAny', User::class);
 
-        $users = User::paginate(50);
+        $users = User::withTrashed()->paginate(50);
         $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
         return view('user.index', compact('users', 'currentUserRole'));
     }
@@ -152,5 +152,11 @@ class UserController extends Controller
         //
         $user->delete();
         return redirect()->route('panel.users');
+    }
+
+    public function restore($id)
+    {
+        User::withTrashed()->find($id)->restore();
+        return redirect()->back();
     }
 }

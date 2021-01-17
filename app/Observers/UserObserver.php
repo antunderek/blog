@@ -92,6 +92,8 @@ class UserObserver
     public function restored(User $user)
     {
         //
+        $user->image_id = Avatar::where('default', true)->first()->pluck('id')[0];
+        $user->save();
     }
 
     /**

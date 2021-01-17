@@ -17,10 +17,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::put('article/deleted/{id}/restore', 'ArticleController@restore')->name('article.restore');
 Route::resource('article', 'ArticleController')->except(['allArticles', 'userArticles']);
 
 Route::resource('role', 'RoleController')->except(['index', 'default']);
 
+Route::put('user/deleted/{id}/restore', 'UserController@restore')->name('user.restore');
 Route::resource('user', 'UserController')->except(['index']);
 
 Route::put('comment/{comment}/delete', 'CommentController@delete')->name('comment.delete');

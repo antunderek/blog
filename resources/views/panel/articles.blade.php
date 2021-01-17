@@ -36,13 +36,24 @@
                             <td>{{ $article->created_at }}</td>
                             <td>{{ $article->updated_at }}</td>
                             <td>
-                                <a href="{{ route('article.edit', $article) }}" class="btn btn-primary">Edit</a>
-                                <button>Hide</button>
-                                <form method="POST" action="{{ route('article.destroy', $article) }}">
-                                @csrf
-                                @method('DELETE')
-                                    <button type="submit" class="btn btn-primary">Delete</button>
-                                </form>
+                                @if (!$article->trashed())
+                                    <a href="{{ route('article.edit', $article) }}" class="btn btn-primary">Edit</a>
+
+                                    <button>Hide</button>
+
+                                    <form method="POST" action="{{ route('article.destroy', $article) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                        <button type="submit" class="btn btn-primary">Delete</button>
+                                    </form>
+
+                                @else
+                                    <form method="POST" action="{{ route('article.restore', $article) }}">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-primary">Restore</button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
