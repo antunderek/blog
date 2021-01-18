@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helpers\Validator;
+use App\Http\Traits\SearchTrait;
 use App\Menu;
 use App\MenuItem;
 use Illuminate\Http\Request;
 
 class MenuItemController extends Controller
 {
+    use SearchTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -23,7 +26,7 @@ class MenuItemController extends Controller
     {
         //
         $this->authorize('viewAny', MenuItem::class);
-        $items = MenuItem::paginate(50);
+        $items = MenuItem::paginate(30);
         return view('menu_items.index', compact('items'));
     }
 
@@ -116,5 +119,14 @@ class MenuItemController extends Controller
         //
         $item->delete();
         return redirect()->back();
+    }
+
+    public function searchMenuItems(Request $request)
+    {
+        $this->authorize('viewAny', MenuItem::class);
+        $columns = ['id', 'menu_id', 'parent_id', 'item', 'link', 'created_at', 'updated_at'];
+        $query = MenuItem::select();
+        $items = $this->search($query, $columns, $request->keyword, true, 30);
+        return view('menu_items.index', compact('items'));
     }
 }

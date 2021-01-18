@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\SearchTrait;
 use App\Role;
 use App\User;
 use App\Avatar;
@@ -14,11 +15,14 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    use SearchTrait;
+
     public function __construct()
     {
         $this->middleware('auth')->except('show');
         $this->authorizeResource(User::class, 'user');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +33,7 @@ class UserController extends Controller
         //
         $this->authorize('viewAny', User::class);
 
-        $users = User::withTrashed()->paginate(50);
+        $users = User::withTrashed()->paginate(30);
         $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
         return view('user.index', compact('users', 'currentUserRole'));
     }
@@ -48,7 +52,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -62,7 +66,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\User  $user
+     * @param \App\User $user
      * @return \Illuminate\Http\Response
      */
     public function show(User $user)
@@ -74,7 +78,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\User  $user
+     * @param \App\User $user
      * @return \Illuminate\Http\Response
      */
     public function edit(User $user)
@@ -87,8 +91,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
+     * @param \Illuminate\Http\Request $request
+     * @param \App\User $user
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
@@ -96,33 +100,26 @@ class UserController extends Controller
         //
         Validator::validate($request, 'user_name');
 
-        if ($request->password !== null)
-        {
+        if ($request->password !== null) {
             Validator::validate($request, 'user_password');
             $user->password = Hash::make($request->password);
         }
 
-        if ($user->email !== $request->email)
-        {
+        if ($user->email !== $request->email) {
             Validator::validate($request, 'user_email');
             $user->email = $request->email;
-        }
-        else
-        {
+        } else {
             $user->email = $request->email;
         }
 
-        if ($request->file('image'))
-        {
+        if ($request->file('image')) {
             Validator::validate($request, 'user_avatar');
             $image = new Avatar();
             $image->image_path = $request->file('image')->store('public/avatars');
             $image->save();
             // delete old avatar if not default
-            if ($user->image !== null)
-            {
-                if(!$user->image->default)
-                {
+            if ($user->image !== null) {
+                if (!$user->image->default) {
                     $user->image->delete();
                 }
             }
@@ -144,7 +141,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\User  $user
+     * @param \App\User $user
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user)
@@ -158,5 +155,15 @@ class UserController extends Controller
     {
         User::withTrashed()->find($id)->restore();
         return redirect()->back();
+    }
+
+    public function searchUsers(Request $request)
+    {
+        $this->authorize('viewAny', User::class);
+        $columns = ['id', 'name', 'email', 'role_id', 'created_at', 'updated_at', 'deleted_at'];
+        $query = User::withTrashed()->select();
+        $users = $this->search($query, $columns, $request->keyword, true, 30);
+        $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
+        return view('user.index', compact('users', 'currentUserRole'));
     }
 }

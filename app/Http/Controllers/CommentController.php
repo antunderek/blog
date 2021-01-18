@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Comment;
 use App\Http\Helpers\PermissionHandler;
 use App\Http\Helpers\Validator;
+use App\Http\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 
 class CommentController extends Controller
 {
+    use SearchTrait;
+
     public function __construct()
     {
         $this->middleware('auth')->except('show');
@@ -133,5 +136,29 @@ class CommentController extends Controller
         $comment->save();
 
         return redirect()->back();
+    }
+
+    public function searchComments(Request $request)
+    {
+        $this->authorize('viewAny', Comment::class);
+
+        $columns = ['id', 'article_id', 'user_id', 'parent_id', 'comment', 'created_at', 'updated_at'];
+        $query = Comment::select();
+        $comments = $this->search($query, $columns, $request->keyword, true, 50);
+        return view('comment.index', compact('comments'));
+    }
+
+    public function userComments()
+    {
+        $comments = Comment::where('user_id', Auth::id())->paginate(50);
+        return view('comment.index', compact('comments'));
+    }
+
+    public function searchUserComments(Request $request)
+    {
+        $columns = ['id', 'article_id', 'parent_id', 'comment', 'created_at', 'updated_at'];
+        $query = Comment::select();
+        $comments = $this->idRestrictedSearch($query, $columns, $request->keyword, true, 50);
+        return view('comment.index', compact('comments'));
     }
 }

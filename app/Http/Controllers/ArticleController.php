@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Article;
 use App\Gallery;
+use App\Http\Traits\SearchTrait;
 use App\Role;
 use App\Http\Helpers\Validator;
 use App\Http\Traits\ArticleGalleryTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
 class ArticleController extends Controller
 {
     use ArticleGalleryTrait;
+    use SearchTrait;
 
     public function __construct()
     {
@@ -161,25 +164,61 @@ class ArticleController extends Controller
         return redirect()->route('article.index');
     }
 
-
     public function restore($id)
     {
         Article::withTrashed()->find($id)->restore();
         return redirect()->back();
     }
 
+    public function searchIndex(Request $request)
+    {
+        // Front page articles
+        $columns = ['id', 'title', 'text', 'created_at', 'updated_at'];
+        $query = Article::select();
+        $articles = $this->search($query, $columns, $request->keyword, true, 10);
+        $writer = false;
+        if (Auth::check())
+        {
+            $writer = Role::where('id', Auth::user()->role_id)->first()->pluck('writer');
+        }
+        return view('article.index', compact('articles', 'writer'));
+    }
+
     public function allArticles()
     {
         $this->authorize('panelArticles', Article::class);
-        $articles = Article::withTrashed()->paginate(50);
+        $articles = Article::withTrashed()->paginate(30);
+        return view('panel.articles', compact('articles'));
+    }
+
+    public function searchAllArticles(Request $request)
+    {
+        // Panel for article editors only, includes soft deleted objects
+        $this->authorize('panelArticles', Article::class);
+
+        $columns = ['id', 'user_id', 'title', 'text', 'created_at', 'updated_at', 'deleted_at'];
+        $query = Article::withTrashed()->select();
+        $articles = $this->search($query, $columns, $request->keyword, true, 30);
         return view('panel.articles', compact('articles'));
     }
 
     public function userArticles()
     {
         $this->authorize('panelUserArticles', Article::class);
-        $articles = Article::withTrashed()->where('user_id', Auth::id())->paginate(10);
+        $articles = Article::withTrashed()->where('user_id', Auth::id())->paginate(30);
         return view('panel.articles', compact('articles'));
+    }
+
+    public function searchUserArticles(Request $request)
+    {
+        // Panel user articles only
+        $this->authorize('panelUserArticles', Article::class);
+
+        $columns = ['id', 'title', 'text', 'created_at', 'updated_at', 'deleted_at'];
+        $query = Article::withTrashed()->select();
+        $articles = $this->idRestrictedSearch($query, $columns, $request->keyword, true, 30);
+        $user = true;
+        return view('panel.articles', compact('articles', 'user'));
     }
 
     private function createStoreImage(Request $request) {

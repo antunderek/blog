@@ -9,6 +9,11 @@
                 <a href="{{ route('panel.users') }}">users</a>
                 <br>
 
+                <form method="GET" action="{{ route('panel.users.search') }}" class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+
                 <a href="{{ route('user.create') }}" class="btn btn-primary">New user</a>
                 <table class="table">
                     <thead>
