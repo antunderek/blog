@@ -10,11 +10,19 @@
 
 <div class="card" style="width: 18rem;">
     <div class="card-body">
-        <a href="{{ route('panel.comments') }}">Comments</a>
+        <a href="{{ route('panel.comments.user') }}">User comments</a>
     </div>
 </div>
 
-@if (\App\Http\Helpers\PermissionHandler::isWriter() || \App\Http\Helpers\PermissionHandler::isArticleEditor())
+@if (\App\Http\Helpers\PermissionHandler::isWriter())
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <a href="{{ route('panel.articles.user') }}">User articles</a>
+        </div>
+    </div>
+@endif
+
+@if (\App\Http\Helpers\PermissionHandler::isArticleEditor())
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <a href="{{ route('panel.articles') }}">Articles</a>
@@ -26,6 +34,14 @@
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <a href="{{ route('panel.users') }}">Users</a>
+        </div>
+    </div>
+@endif
+
+@if (\App\Http\Helpers\PermissionHandler::isCommentEditor())
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <a href="{{ route('panel.comments') }}">Comments</a>
         </div>
     </div>
 @endif
@@ -59,6 +75,12 @@
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <a href="{{ route('panel.menu') }}" class="card-link">Menu</a>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <a href="{{ route('panel.menuitem') }}" class="card-link">Menu items</a>
         </div>
     </div>
 
