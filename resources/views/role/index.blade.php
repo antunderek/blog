@@ -3,6 +3,11 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
+                <form method="GET" action="{{ route('panel.roles.search') }}" class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+
                 <table class="table">
                 <thead>
                 <th>Id</th>

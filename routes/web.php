@@ -48,6 +48,7 @@ Route::get('/panel/articles/user', 'ArticleController@userArticles')->name('pane
 Route::get('/panel/articles/user/search', 'ArticleController@searchUserArticles')->name('panel.articles.user.search');
 
 Route::get('/panel/roles', 'RoleController@index')->name('panel.roles');
+Route::get('/panel/roles/search', 'RoleController@searchRoles')->name('panel.roles.search');
 
 Route::get('/panel/users', 'UserController@index')->name('panel.users');
 Route::get('/panel/users/search', 'UserController@searchUsers')->name('panel.users.search');
@@ -58,10 +59,13 @@ Route::get('/panel/comments/user', 'CommentController@userComments')->name('pane
 Route::get('/panel/comments/user/search', 'CommentController@searchUserComments')->name('panel.comments.user.search');
 
 Route::get('/panel/gallery', 'GalleryController@index')->name('panel.gallery');
+Route::get('/panel/gallery/search', 'GalleryController@searchGallery')->name('panel.gallery.search');
 
 Route::get('/panel/avatar', 'AvatarController@index')->name('panel.avatar');
+Route::get('/panel/avatar/search', 'AvatarController@searchAvatar')->name('panel.avatar.search');
 
 Route::get('/panel/menu', 'MenuController@index')->name('panel.menu');
+Route::get('/panel/menu/search', 'MenuController@searchMenus')->name('panel.menu.search');
 
 Route::get('/panel/menuitem', 'MenuItemController@index')->name('panel.menuitem');
 Route::get('/panel/menuitem/search', 'MenuItemController@searchMenuItems')->name('panel.menuitem.search');

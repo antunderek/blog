@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Gallery;
 use App\Http\Helpers\Validator;
 use App\Http\Traits\ArticleGalleryTrait;
+use App\Http\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
     use ArticleGalleryTrait;
+    use SearchTrait;
 
     public function __construct()
     {
@@ -113,5 +115,14 @@ class GalleryController extends Controller
         $gallery->delete();
 
         return redirect()->route('panel.gallery');
+    }
+
+    public function searchGallery(Request $request)
+    {
+        $this->authorize('viewAny', Gallery::class);
+        $columns = ['id', 'image_path'];
+        $query = Gallery::select();
+        $images = $this->search($query, $columns, $request->keyword, true, 30);
+        return view('gallery.index', compact('images'));
     }
 }

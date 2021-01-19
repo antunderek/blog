@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\SearchTrait;
 use App\Http\Traits\UserAvatarTrait;
 use App\User;
 use App\Avatar;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 class AvatarController extends Controller
 {
     use UserAvatarTrait;
+    use SearchTrait;
 
     public function __construct()
     {
@@ -152,6 +154,15 @@ class AvatarController extends Controller
         User::where('image_id', null)->update(['image_id' => $defaultAvatar->id]);
 
         return redirect()->route('panel.avatar');
+    }
+
+    public function searchAvatar(Request $request)
+    {
+        $this->authorize('viewAny', Avatar::class);
+        $columns = ['id', 'image_path', 'default'];
+        $query = Avatar::select();
+        $images = $this->search($query, $columns, $request->keyword, true, 30);
+        return view('avatar.index', compact('images'));
     }
 
     private function unsetDefaultAvatar()

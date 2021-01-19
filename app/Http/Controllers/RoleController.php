@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helpers\Validator;
+use App\Http\Traits\SearchTrait;
 use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
+    use SearchTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -110,6 +113,16 @@ class RoleController extends Controller
         //
         Role::where('id', $role->id)->first()->delete();
         return redirect()->route('panel.roles');
+    }
+
+    public function searchRoles(Request $request)
+    {
+        $this->authorize('viewAny', Role::class);
+        $columns = ['id', 'role'];
+        $query = Role::select();
+        $roles = $this->search($query, $columns, $request->keyword);
+        $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
+        return view('role.index', compact('roles', 'currentUserRole'));
     }
 
     private function setRoles(Request $request, Role $role)

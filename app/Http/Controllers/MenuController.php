@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\SearchTrait;
 use App\Menu;
 use App\Role;
 use App\Http\Helpers\Validator;
@@ -9,6 +10,8 @@ use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
+    use SearchTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -127,5 +130,15 @@ class MenuController extends Controller
         //
         $menu->delete();
         return redirect()->route('panel.menu');
+    }
+
+    public function searchMenus(Request $request)
+    {
+        $this->authorize('viewAny', Menu::class);
+
+        $columns = ['id', 'title'];
+        $query = Menu::select();
+        $menus = $this->search($query, $columns, $request->keyword);
+        return view('menu.index', compact('menus'));
     }
 }
