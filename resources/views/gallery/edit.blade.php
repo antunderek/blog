@@ -4,14 +4,22 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Register') }}</div>
+                    <div class="card-header">Edit</div>
 
                     <div class="card-body">
                         <form method="POST" action="{{ route('gallery.update', $gallery) }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
-                            <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($gallery->image_path)) }}">
+                            <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($gallery->image_path)) }}">
+
+                            <div class="form-group row">
+                                <label for="image" class="col-md-4 col-form-label text-md-right">Select image</label>
+
+                                <div class="col-md-6">
+                                    <input id="image" type="file" name="image">
+                                </div>
+                            </div>
 
                             <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">Image path</label>

@@ -12,7 +12,7 @@
             @endif
         </div>
         @if ($comment->user !== null)
-            <img style="width: 64px; height: 64px" src="{{ url(\App\Http\Helpers\FileHandler::returnImagePublicPath($comment->user->image_path, 'avatars/')) }}">
+            <img style="width: 64px; height: 64px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($comment->user->image->image_path, 'avatars/')) }}">
         @endif
         {{ $comment->comment }}
         @if (\Illuminate\Support\Facades\Auth::user())

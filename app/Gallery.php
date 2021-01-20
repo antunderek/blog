@@ -7,11 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Gallery extends Model
 {
     //
-    /*public function articles()
-    {
-        $this->hasMany(Article::class);
-    }*/
-
     public function article() {
         $this->belongsTo(Article::class);
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DefaultRole;
 use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\Validator;
 use App\Role;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,8 @@ class DefaultRoleController extends Controller
     public function edit()
     {
         //
-        PermissionHandler::notEditRolesAbort();
+        $this->authorize('update', DefaultRole::class);
+
         $roles = Role::all();
         return view('default_role.edit', compact('roles'));
     }
@@ -36,7 +38,10 @@ class DefaultRoleController extends Controller
     public function update(Request $request)
     {
         //
-        PermissionHandler::notEditRolesAbort();
+        $this->authorize('update', DefaultRole::class);
+        Validator::validate($request, 'default_role');
+
+
         $defaultRole = DefaultRole::first();
         if (!$defaultRole)
         {

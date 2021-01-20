@@ -2,8 +2,6 @@
 
 namespace App\Http\Helpers;
 
-use App\Article;
-
 class FileHandler
 {
     public static function getFileName($imageURL)
@@ -12,13 +10,24 @@ class FileHandler
         return end($explodedURL);
     }
 
-    public static function returnImagePublicPath($imageURL, string $path="")
+    public static function getImage($imageURL, string $path="images/")
     {
         if ($imageURL == null)
         {
             return '';
         }
         $fileName = self::getFileName($imageURL);
-        return "storage/images/$path$fileName";
+        return "storage/$path$fileName";
+    }
+
+    public static function imageSize($image)
+    {
+        return MiscellaneousMethods::bytesToHuman($image->getSize());
+    }
+
+    public static function imageResolution($image)
+    {
+        $imageSizeArr = getimagesize($image);
+        return $resolution = "{$imageSizeArr[0]}x{$imageSizeArr[1]}";
     }
 }

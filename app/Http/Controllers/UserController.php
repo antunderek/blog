@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Helpers\PermissionHandler;
+use App\Http\Traits\SearchTrait;
 use App\Role;
 use App\User;
+use App\Avatar;
+use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -12,10 +15,14 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    use SearchTrait;
+
     public function __construct()
     {
         $this->middleware('auth')->except('show');
+        $this->authorizeResource(User::class, 'user');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,8 +31,9 @@ class UserController extends Controller
     public function index()
     {
         //
-        PermissionHandler::notEditUsersAbort();
-        $users = User::all();
+        $this->authorize('viewAny', User::class);
+
+        $users = User::withTrashed()->paginate(30);
         $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
         return view('user.index', compact('users', 'currentUserRole'));
     }
@@ -38,20 +46,18 @@ class UserController extends Controller
     public function create()
     {
         //
-        PermissionHandler::notCreateUsersAbort();
         return view('user.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //
-        PermissionHandler::notCreateUsersAbort();
         $registerController = App::make('App\Http\Controllers\Auth\RegisterController');
         $registerController->callAction('register', [$request]);
         return redirect()->route('panel.users');
@@ -60,7 +66,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\User  $user
+     * @param \App\User $user
      * @return \Illuminate\Http\Response
      */
     public function show(User $user)
@@ -72,17 +78,12 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\User  $user
+     * @param \App\User $user
      * @return \Illuminate\Http\Response
      */
     public function edit(User $user)
     {
         //
-        if (Auth::id() !== $user->id)
-        {
-            PermissionHandler::notEditUsersAbort();
-        }
-
         $roles = Role::all();
         return view('user.edit', compact('user', 'roles'));
     }
@@ -90,58 +91,46 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
+     * @param \Illuminate\Http\Request $request
+     * @param \App\User $user
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
     {
         //
-        if (Auth::id() !== $user->id)
-        {
-            PermissionHandler::notEditUsersAbort();
+        Validator::validate($request, 'user_name');
+
+        if ($request->password !== null) {
+            Validator::validate($request, 'user_password');
+            $user->password = Hash::make($request->password);
         }
 
-        $validData = $request->validate([
-            'name' => 'required|string|max:255',
-            'role' => 'required|integer',
-        ]);
-
-        if ($request->password !== null)
-        {
-            $passwordValid = $request->validate([
-                'password' => 'required|string|min:8|confirmed',
-            ]);
-            $user->password = Hash::make($passwordValid['password']);
+        if ($user->email !== $request->email) {
+            Validator::validate($request, 'user_email');
+            $user->email = $request->email;
+        } else {
+            $user->email = $request->email;
         }
 
-        if ($user->email !== $request->email)
-        {
-            $emailValid = $request->validate([
-                'email' => 'string|email|unique:users|max:255',
-            ]);
-            $user->email = $emailValid['email'];
-        }
-        else
-        {
-            $emailValid = $request->validate([
-                'email' => 'string|email|max:255',
-            ]);
-            $user->email = $emailValid['email'];
-        }
-
-        if ($request->file('image'))
-        {
-            $imageValid = $request->validate([
-                'image' => 'mimes:jpeg,jpg,png,gif'
-            ]);
-            $user->image_path = $imageValid['image']->store('public/images/avatars');
+        if ($request->file('image')) {
+            Validator::validate($request, 'user_avatar');
+            $image = new Avatar();
+            $image->image_path = $request->file('image')->store('public/avatars');
+            $image->save();
+            // delete old avatar if not default
+            if ($user->image !== null) {
+                if (!$user->image->default) {
+                    $user->image->delete();
+                }
+            }
+            $user->image_id = $image->id;
         }
 
-        $user->name = $validData['name'];
+        $user->name = $request->name;
 
         if (PermissionHandler::isUserEditor()) {
-            $user->role_id = $validData['role'];
+            Validator::validate($request, 'user_role');
+            $user->role_id = $request->role;
         }
 
         $user->save();
@@ -152,20 +141,29 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\User  $user
+     * @param \App\User $user
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user)
     {
         //
-        if (Auth::id() !== $user->id) {
-            PermissionHandler::notDeleteUsersAbort();
-        }
-
-        //User::where('id', $user->id)->first()->delete();
         $user->delete();
         return redirect()->route('panel.users');
     }
 
-    // articles() vraca article usera ako je user writer (view od article index)
+    public function restore($id)
+    {
+        User::withTrashed()->find($id)->restore();
+        return redirect()->back();
+    }
+
+    public function searchUsers(Request $request)
+    {
+        $this->authorize('viewAny', User::class);
+        $columns = ['id', 'name', 'email', 'role_id', 'created_at', 'updated_at', 'deleted_at'];
+        $query = User::withTrashed()->select();
+        $users = $this->search($query, $columns, $request->keyword, true, 30);
+        $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
+        return view('user.index', compact('users', 'currentUserRole'));
+    }
 }

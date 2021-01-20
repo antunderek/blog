@@ -4,15 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Article;
 use App\Gallery;
-use App\Http\Helpers\PermissionHandler;
-
+use App\Http\Traits\SearchTrait;
 use App\Role;
+use App\Http\Helpers\Validator;
+use App\Http\Traits\ArticleGalleryTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
 class ArticleController extends Controller
 {
+    use ArticleGalleryTrait;
+    use SearchTrait;
+
     public function __construct()
     {
         $this->middleware('auth')->except('index', 'show');
@@ -31,7 +37,8 @@ class ArticleController extends Controller
         {
             $writer = Role::where('id', Auth::user()->role_id)->first()->pluck('writer');
         }
-        $articles = Article::all();
+        $articles = Article::paginate(10);
+
         return view('article.index', compact('articles', 'writer'));
     }
 
@@ -43,7 +50,8 @@ class ArticleController extends Controller
     public function create()
     {
         //
-        PermissionHandler::notWriterAbort();
+        $this->authorize('create', Article::class);
+
         return view('article.create');
     }
 
@@ -56,19 +64,16 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         //
-        PermissionHandler::notWriterAbort();
+        $this->authorize('create', Article::class);
+        Validator::validate($request, 'article');
 
         $article = new Article();
         $article->title = $request->title;
         $article->text = $request->text;
-        $article->user_id = Auth::user()->id;
+        $article->user_id = Auth::id();
 
         if ($request->file('image')) {
-            //$article->image_path = $request->file('image')->store('public/images');
-            $image = new Gallery();
-            $image->image_path = $request->file('image')->store('public/images');
-            $image->save();
-            $article->image_id = $image->id;
+            $article->image_id = $this->createStoreImage($request);
         }
 
         $article->save();
@@ -97,7 +102,7 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         //
-        PermissionHandler::noEditingPermissionsAbort($article);
+        $this->authorize('update', $article);
 
         return view('article.edit', compact('article'));
     }
@@ -112,33 +117,29 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         //
-        PermissionHandler::noEditingPermissionsAbort($article);
+        $this->authorize('update', $article);
+        Validator::validate($request, 'article');
 
         $article->title = $request->title;
         $article->text = $request->text;
-        $article->user_id = Auth::user()->id;
+        $article->user_id = Auth::id();
 
         if ($request->file('image'))
         {
             if ($article->image !== null)
             {
-                //$article->image_path = $request->file('image')->store('images');
                 $image = Gallery::where('id', $article->image_id)->get()->first();
+                Storage::delete($image->image_path);
                 $image->image_path = $request->file('image')->store('public/images');
                 $image->save();
                 $article->image_id = $image->id;
             }
             else {
-                // Repeating code
-                $image = new Gallery();
-                $image->image_path = $request->file('image')->store('public/images');
-                $image->save();
-                $article->image_id = $image->id;
+                $article->image_id = $this->createStoreImage($request);
             }
         }
 
         $article->save();
-
 
         return redirect()->route('article.index');
     }
@@ -152,13 +153,77 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         //
-        PermissionHandler::noDestroyPermissionsAbort($article);
+        $this->authorize('delete', $article);
         Article::where('id', $article->id)->delete();
 
         if (URL::previous() === URL::route('panel.articles'))
         {
             return redirect()->back();
         }
+
         return redirect()->route('article.index');
+    }
+
+    public function restore($id)
+    {
+        Article::withTrashed()->find($id)->restore();
+        return redirect()->back();
+    }
+
+    public function searchIndex(Request $request)
+    {
+        // Front page articles
+        $columns = ['id', 'title', 'text', 'created_at', 'updated_at'];
+        $query = Article::select();
+        $articles = $this->search($query, $columns, $request->keyword, true, 10);
+        $writer = false;
+        if (Auth::check())
+        {
+            $writer = Role::where('id', Auth::user()->role_id)->first()->pluck('writer');
+        }
+        return view('article.index', compact('articles', 'writer'));
+    }
+
+    public function allArticles()
+    {
+        $this->authorize('panelArticles', Article::class);
+        $articles = Article::withTrashed()->paginate(30);
+        return view('panel.articles', compact('articles'));
+    }
+
+    public function searchAllArticles(Request $request)
+    {
+        // Panel for article editors only, includes soft deleted objects
+        $this->authorize('panelArticles', Article::class);
+
+        $columns = ['id', 'user_id', 'title', 'text', 'created_at', 'updated_at', 'deleted_at'];
+        $query = Article::withTrashed()->select();
+        $articles = $this->search($query, $columns, $request->keyword, true, 30);
+        return view('panel.articles', compact('articles'));
+    }
+
+    public function userArticles()
+    {
+        $this->authorize('panelUserArticles', Article::class);
+        $articles = Article::withTrashed()->where('user_id', Auth::id())->paginate(30);
+        return view('panel.articles', compact('articles'));
+    }
+
+    public function searchUserArticles(Request $request)
+    {
+        // Panel user articles only
+        $this->authorize('panelUserArticles', Article::class);
+
+        $columns = ['id', 'title', 'text', 'created_at', 'updated_at', 'deleted_at'];
+        $query = Article::withTrashed()->select();
+        $articles = $this->idRestrictedSearch($query, $columns, $request->keyword, true, 30);
+        $user = true;
+        return view('panel.articles', compact('articles', 'user'));
+    }
+
+    private function createStoreImage(Request $request) {
+        $image = new Gallery();
+        $image = $this->storeParameters($request, $image);
+        return $image->id;
     }
 }

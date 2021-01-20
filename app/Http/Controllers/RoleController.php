@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\Validator;
+use App\Http\Traits\SearchTrait;
 use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
+    use SearchTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
+        $this->authorizeResource(Role::class, 'role');
     }
 
     /**
@@ -22,7 +26,7 @@ class RoleController extends Controller
     public function index()
     {
         //
-        PermissionHandler::noRoleEditorAbort();
+        $this->authorize('viewAny', Role::class);
 
         $roles = Role::all();
         $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
@@ -37,7 +41,6 @@ class RoleController extends Controller
     public function create()
     {
         //
-        PermissionHandler::notCreateRolesAbort();
         return view('role.create');
     }
 
@@ -50,23 +53,10 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
-        PermissionHandler::notCreateRolesAbort();
+        Validator::validate($request, 'role');
 
         $role = new Role();
-        $role->role = $request->role;
-        $role->writer = (int)$request->writer;
-        $role->edit_article = (int)$request->edit_article;
-        $role->delete_article = (int)$request->delete_article;
-
-        $role->create_role = (int)$request->create_role;
-        $role->edit_role = (int)$request->edit_role;
-        $role->delete_role = (int)$request->delete_role;
-
-        $role->create_user = (int)$request->create_user;
-        $role->edit_user = (int)$request->edit_user;
-        $role->delete_user = (int)$request->delete_user;
-
-        $role->save();
+        $this->setRoles($request, $role);
 
         return redirect()->route('panel.roles');
     }
@@ -80,7 +70,6 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         //
-        PermissionHandler::noRoleEditorAbort();
         return view('role.show', compact('role'));
     }
 
@@ -93,7 +82,6 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         //
-        PermissionHandler::notEditRolesAbort();
         return view('role.edit', compact('role'));
     }
 
@@ -107,22 +95,9 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         //
-        PermissionHandler::notEditRolesAbort();
+        Validator::validate($request, 'role');
 
-        $role->role = $request->role;
-        $role->writer = (int)$request->writer;
-        $role->edit_article = (int)$request->edit_article;
-        $role->delete_article = (int)$request->delete_article;
-
-        $role->create_role = (int)$request->create_role;
-        $role->edit_role = (int)$request->edit_role;
-        $role->delete_role = (int)$request->delete_role;
-
-        $role->create_user = (int)$request->create_user;
-        $role->edit_user = (int)$request->edit_user;
-        $role->delete_user = (int)$request->delete_user;
-
-        $role->save();
+        $this->setRoles($request, $role);
 
         return redirect()->route('panel.roles');
     }
@@ -136,8 +111,46 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         //
-        PermissionHandler::notDeleteRolesAbort();
         Role::where('id', $role->id)->first()->delete();
         return redirect()->route('panel.roles');
+    }
+
+    public function searchRoles(Request $request)
+    {
+        $this->authorize('viewAny', Role::class);
+        $columns = ['id', 'role'];
+        $query = Role::select();
+        $roles = $this->search($query, $columns, $request->keyword);
+        $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
+        return view('role.index', compact('roles', 'currentUserRole'));
+    }
+
+    private function setRoles(Request $request, Role $role)
+    {
+        $role->role = $request->role;
+        $role->writer = (int)$request->writer;
+        $role->edit_article = (int)$request->edit_article;
+        $role->delete_article = (int)$request->delete_article;
+
+        $role->create_role = (int)$request->create_role;
+        $role->edit_role = (int)$request->edit_role;
+        $role->delete_role = (int)$request->delete_role;
+
+        $role->create_user = (int)$request->create_user;
+        $role->edit_user = (int)$request->edit_user;
+        $role->delete_user = (int)$request->delete_user;
+
+        $role->edit_comment = (int)$request->edit_user;
+        $role->delete_comment = (int)$request->delete_user;
+
+        $role->create_media = (int)$request->create_media;
+        $role->edit_media = (int)$request->edit_media;
+        $role->delete_media = (int)$request->delete_media;
+
+        $role->create_menu = (int)$request->create_menu;
+        $role->edit_menu = (int)$request->edit_menu;
+        $role->delete_menu = (int)$request->delete_menu;
+
+        $role->save();
     }
 }

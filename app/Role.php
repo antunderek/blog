@@ -13,4 +13,13 @@ class Role extends Model
     {
         $this->hasMany(User::class);
     }
+
+    public function default() {
+        return $this->belongsTo(DefaultRole::class, 'id', 'role_id');
+    }
+
+    public function menus()
+    {
+        return $this->belongsToMany(Menu::class, 'menus_roles', 'role_id', 'menu_id');
+    }
 }

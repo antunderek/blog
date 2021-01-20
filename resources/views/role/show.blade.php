@@ -31,5 +31,29 @@
 <label for="">Can delete any user</label>
 @include('includes.role.show', ['name' => 'delete_user', 'value' => $role->delete_user])
 
+<label for="">Can edit existing comments</label>
+@include('includes.role.create', ['name' => 'edit_comment', 'value' => $role->edit_comment])
+
+<label for="">Can delete any comment</label>
+@include('includes.role.create', ['name' => 'delete_comment', 'value' => $role->delete_comment])
+
+<label for="">Can create media</label>
+@include('includes.role.create', ['name' => 'create_media', 'value' => $role->create_media])
+
+<label for="">Can edit existing media</label>
+@include('includes.role.create', ['name' => 'edit_media', 'value' => $role->edit_media])
+
+<label for="">Can delete media</label>
+@include('includes.role.create', ['name' => 'delete_media', 'value' => $role->delete_media])
+
+<label for="">Can create menus</label>
+@include('includes.role.create', ['name' => 'create_menu', 'value' => $role->create_menu])
+
+<label for="">Can edit existing menus</label>
+@include('includes.role.create', ['name' => 'edit_menu', 'value' => $role->edit_menu])
+
+<label for="">Can delete menus</label>
+@include('includes.role.create', ['name' => 'delete_menu', 'value' => $role->delete_menu])
+
 <a class="btn btn-primary" href="{{ route('role.edit', $role) }}">Edit</a>
 @endsection

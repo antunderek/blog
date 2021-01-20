@@ -22,6 +22,17 @@ class RoleCreator
         $role->edit_user = false;
         $role->delete_user = false;
 
+        $role->edit_comment = false;
+        $role->delete_comment = false;
+
+        $role->create_media = false;
+        $role->edit_media = false;
+        $role->delete_media = false;
+
+        $role->create_menu = false;
+        $role->edit_menu = false;
+        $role->delete_menu = false;
+
         $role->save();
         return $role;
     }
@@ -41,6 +52,17 @@ class RoleCreator
         $role->create_user = true;
         $role->edit_user = true;
         $role->delete_user = true;
+
+        $role->edit_comment = true;
+        $role->delete_comment = true;
+
+        $role->create_media = true;
+        $role->edit_media = true;
+        $role->delete_media = true;
+
+        $role->create_menu = true;
+        $role->edit_menu = true;
+        $role->delete_menu = true;
 
         $role->save();
         return $role;

@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Avatar;
 use App\DefaultRole;
 use App\Http\Helpers\UserCreator;
 use App\Role;
@@ -21,8 +22,10 @@ class UserObserver
         if (!$user->role_id)
         {
             $user->role_id = DefaultRole::first()->pluck('role_id')[0];
-            $user->save();
         }
+
+        $user->image_id = Avatar::where('default', true)->first()->pluck('id')[0];
+        $user->save();
     }
 
     /**
@@ -35,6 +38,11 @@ class UserObserver
     {
         // Isto kao i createad(), provjera da li postoji superuser, ako ne stvoriti novog
         $superuserRoleId = Role::where('role', 'superuser')->pluck('id')[0];
+        $superuserUser = User::where('email', 'superuser@email.com')->get()->first();
+        if ($superuserUser->role_id !== $superuserRoleId) {
+            $superuserUser->role_id = $superuserRoleId;
+            $superuserUser->save();
+        }
 
         if (!$user->role_id)
         {
@@ -65,6 +73,14 @@ class UserObserver
                 UserCreator::CreateSuperuser();
             }
         }
+
+        if ($user->image !== null)
+        {
+            if(!$user->image->default)
+            {
+                $user->image->delete();
+            }
+        }
     }
 
     /**
@@ -76,6 +92,8 @@ class UserObserver
     public function restored(User $user)
     {
         //
+        $user->image_id = Avatar::where('default', true)->first()->pluck('id')[0];
+        $user->save();
     }
 
     /**

@@ -3,15 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Gallery;
-use App\Http\Helpers\PermissionHandler;
+use App\Http\Helpers\Validator;
+use App\Http\Traits\ArticleGalleryTrait;
+use App\Http\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
+    use ArticleGalleryTrait;
+    use SearchTrait;
+
     public function __construct()
     {
-        $this->middleware('auth')->except('show');
+        $this->middleware('auth');
+        $this->authorizeResource(Gallery::class, 'gallery');
     }
 
     /**
@@ -22,8 +28,8 @@ class GalleryController extends Controller
     public function index()
     {
         //
-        PermissionHandler::noGalleryEditorAbort();
-        $images = Gallery::all();
+        $this->authorize('viewAny', Gallery::class);
+        $images = Gallery::paginate(30);
         return view('gallery.index', compact('images'));
     }
 
@@ -35,7 +41,7 @@ class GalleryController extends Controller
     public function create()
     {
         //
-        PermissionHandler::notCreateGalleryAbort();
+        return view('gallery.create');
     }
 
     /**
@@ -47,15 +53,11 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         //
-        PermissionHandler::notCreateGalleryAbort();
+        Validator::validate($request, 'gallery');
 
-        if ($request->file('image')) {
-            $image = new Gallery();
-            $image->image_path = $request->file('image')->store('public/images');
-            $image->save();
-        }
-
-        return redirect()->back();
+        $image = new Gallery();
+        $this->storeParameters($request, $image);
+        return redirect()->route('panel.gallery');
     }
 
     /**
@@ -79,7 +81,6 @@ class GalleryController extends Controller
     public function edit(Gallery $gallery)
     {
         //
-        PermissionHandler::notEditGalleryAbort();
         return view('gallery.edit', compact('gallery'));
     }
 
@@ -87,19 +88,18 @@ class GalleryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Gallery  $image
+     * @param  \App\Gallery  $gallery
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Gallery $image)
+    public function update(Request $request, Gallery $gallery)
     {
         //
-        PermissionHandler::notEditGalleryAbort();
-        if ($request->file('image')) {
-            $image->image_path = $request->file('image')->store('public/images');
-            $image->save();
-        }
+        Validator::validate($request, 'gallery');
 
-        return redirect()->back();
+        Storage::delete($gallery->image_path);
+        $this->storeParameters($request, $gallery);
+
+        return redirect()->route('panel.gallery');
     }
 
     /**
@@ -111,10 +111,18 @@ class GalleryController extends Controller
     public function destroy(Gallery $gallery)
     {
         //
-        PermissionHandler::notDeleteGalleryAbort();
         Storage::delete($gallery->image_path);
         $gallery->delete();
 
         return redirect()->route('panel.gallery');
+    }
+
+    public function searchGallery(Request $request)
+    {
+        $this->authorize('viewAny', Gallery::class);
+        $columns = ['id', 'image_path'];
+        $query = Gallery::select();
+        $images = $this->search($query, $columns, $request->keyword, true, 30);
+        return view('gallery.index', compact('images'));
     }
 }
