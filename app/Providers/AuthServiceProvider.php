@@ -18,7 +18,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Avatar' => 'App\Policies\AvatarPolicy',
 
         'App\Menu' => 'App\Policies\MenuPolicy',
-        'App\MenuItem' => 'App\Policies\MenuItemPolicy',
+        'App\MenuItem' => 'App\Policies\MenuPolicy',
 
         'App\Role' => 'App\Policies\RolePolicy',
         'App\DefaultRole' => 'App\Policies\DefaultRolePolicy',

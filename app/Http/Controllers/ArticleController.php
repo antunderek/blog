@@ -10,7 +10,7 @@ use App\Http\Helpers\Validator;
 use App\Http\Traits\ArticleGalleryTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+//use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
@@ -130,8 +130,7 @@ class ArticleController extends Controller
             {
                 $image = Gallery::where('id', $article->image_id)->get()->first();
                 Storage::delete($image->image_path);
-                $image->image_path = $request->file('image')->store('public/images');
-                $image->save();
+                $this->storeParameters($request, $image);
                 $article->image_id = $image->id;
             }
             else {
@@ -196,7 +195,7 @@ class ArticleController extends Controller
         // Panel for article editors only, includes soft deleted objects
         $this->authorize('panelArticles', Article::class);
 
-        $columns = ['id', 'user_id', 'title', 'text', 'created_at', 'updated_at', 'deleted_at'];
+        $columns = ['id', 'title', 'text'];
         $query = Article::withTrashed()->select();
         $articles = $this->search($query, $columns, $request->keyword, true, 30);
         return view('panel.articles', compact('articles'));
@@ -214,7 +213,7 @@ class ArticleController extends Controller
         // Panel user articles only
         $this->authorize('panelUserArticles', Article::class);
 
-        $columns = ['id', 'title', 'text', 'created_at', 'updated_at', 'deleted_at'];
+        $columns = ['id', 'title', 'text'];
         $query = Article::withTrashed()->select();
         $articles = $this->idRestrictedSearch($query, $columns, $request->keyword, true, 30);
         $user = true;

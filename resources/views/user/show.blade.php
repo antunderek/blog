@@ -8,7 +8,13 @@
 
                     <div class="card-body">
                             @if ($user->image !== null)
-                                <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                @if (\App\Http\Helpers\PermissionHandler::isMediaEditor())
+                                    <a href="{{ route('avatar.show', $user->image) }}">
+                                        <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                    </a>
+                                @else
+                                    <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                @endif
                             @endif
 
                             <div class="form-group row">

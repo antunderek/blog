@@ -3,10 +3,8 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <form method="GET" action="{{ route('panel.roles.search') }}" class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+
+                @include('includes.search.search', ['routeName' => 'panel.roles.search'])
 
                 <table class="table">
                 <thead>
@@ -38,7 +36,7 @@
                 @foreach($roles as $role)
                     <tr>
                         <td><a href="{{ route('role.show', $role) }}">{{ $role->id }}</td>
-                        <td>{{ $role->role }}</td>
+                        <td><a href="{{ route('role.show', $role) }}">{{ $role->role }}</a></td>
                         <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->writer) }}</td>
                         <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_article) }}</td>
                         <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_article) }}</td>

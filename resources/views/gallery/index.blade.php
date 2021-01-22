@@ -3,10 +3,8 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <form method="GET" action="{{ route('panel.gallery.search') }}" class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+
+                @include('includes.search.search', ['routeName' => 'panel.gallery.search'])
 
                 <table class="table">
                     <a href="{{ route('gallery.create') }}" class="btn btn-primary">Upload image</a>
@@ -22,7 +20,9 @@
                     @foreach($images as $image)
                         <tr data-url="{{ route('gallery.show', $image) }}">
                             <td>
-                                <img src="{{ url(\App\Http\Helpers\FileHandler::getImage($image->image_path)) }}" style="width: 10vw">
+                                <a href="{{ route('gallery.show', $image) }}">
+                                    <img src="{{ url(\App\Http\Helpers\FileHandler::getImage($image->image_path)) }}" style="width: 10vw">
+                                </a>
                             </td>
                             <td><a href="{{ route('gallery.show', $image) }}">{{ $image->id }}</td>
                             <td><a href="{{ route('gallery.show', $image) }}">{{ $image->image_path }}</a></td>

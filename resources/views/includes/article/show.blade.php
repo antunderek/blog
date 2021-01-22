@@ -6,7 +6,7 @@
     </div>
     <div class="card-body">
         @if ($article->user !== null)
-            <p>Author: {{ $article->user->name }}, Created at: {{ $article->created_at }}, Last updated: {{ $article->updated_at }}</p>
+            <p>Author: <a href="{{ route('user.show', $article->user) }}">{{ $article->user->name }}</a>, Created at: {{ $article->created_at }}, Last updated: {{ $article->updated_at }}</p>
         @else
             <p>Author: deleted, Created at: {{ $article->created_at }}, Last updated: {{ $article->updated_at }}</p>
         @endif

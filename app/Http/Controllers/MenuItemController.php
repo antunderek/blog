@@ -124,7 +124,7 @@ class MenuItemController extends Controller
     public function searchMenuItems(Request $request)
     {
         $this->authorize('viewAny', MenuItem::class);
-        $columns = ['id', 'menu_id', 'parent_id', 'item', 'link', 'created_at', 'updated_at'];
+        $columns = ['id', 'menu_id', 'parent_id', 'item', 'link'];
         $query = MenuItem::select();
         $items = $this->search($query, $columns, $request->keyword, true, 30);
         return view('menu_items.index', compact('items'));

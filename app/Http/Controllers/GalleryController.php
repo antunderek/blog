@@ -53,7 +53,7 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         //
-        Validator::validate($request, 'gallery');
+        //Validator::validate($request, 'gallery');
 
         $image = new Gallery();
         $this->storeParameters($request, $image);
