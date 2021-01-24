@@ -24,12 +24,18 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($user = null)
     {
         //
         $this->authorize('viewAny', Comment::class);
 
-        $comments = Comment::paginate(50);
+        if ($user == null)
+        {
+            $comments = Comment::paginate(50);
+        }
+        else {
+            $comments = Comment::where('user_id', $user)->paginate(50);
+        }
         return view('comment.index', compact('comments'));
     }
 

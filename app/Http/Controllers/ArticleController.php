@@ -183,10 +183,19 @@ class ArticleController extends Controller
         return view('article.index', compact('articles', 'writer'));
     }
 
-    public function allArticles()
+    public function allArticles($user = null)
     {
         $this->authorize('panelArticles', Article::class);
-        $articles = Article::withTrashed()->paginate(30);
+
+        if ($user == null)
+        {
+            $articles= Article::withTrashed()->paginate(30);
+        }
+        else {
+            $articles= Article::withTrashed()->where('user_id', $user)->paginate(30);
+        }
+
+        //$articles = Article::withTrashed()->paginate(30);
         return view('panel.articles', compact('articles'));
     }
 

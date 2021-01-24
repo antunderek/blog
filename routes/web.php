@@ -43,10 +43,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/panel', 'PanelController@index')->name('panel.index');
 
-Route::get('/panel/articles', 'ArticleController@allArticles')->name('panel.articles');
-Route::get('/panel/articles/search', 'ArticleController@searchAllArticles')->name('panel.articles.search');
+
 Route::get('/panel/articles/user', 'ArticleController@userArticles')->name('panel.articles.user');
 Route::get('/panel/articles/user/search', 'ArticleController@searchUserArticles')->name('panel.articles.user.search');
+Route::get('/panel/articles/search', 'ArticleController@searchAllArticles')->name('panel.articles.search');
+Route::get('/panel/articles/{user?}', 'ArticleController@allArticles')->name('panel.articles');
+
 
 Route::get('/panel/roles', 'RoleController@index')->name('panel.roles');
 Route::get('/panel/roles/search', 'RoleController@searchRoles')->name('panel.roles.search');
@@ -54,10 +56,11 @@ Route::get('/panel/roles/search', 'RoleController@searchRoles')->name('panel.rol
 Route::get('/panel/users', 'UserController@index')->name('panel.users');
 Route::get('/panel/users/search', 'UserController@searchUsers')->name('panel.users.search');
 
-Route::get('/panel/comments', 'CommentController@index')->name('panel.comments');
-Route::get('/panel/comments/search', 'CommentController@searchComments')->name('panel.comments.search');
+//Route::get('/panel/comments', 'CommentController@index')->name('panel.comments');
 Route::get('/panel/comments/user', 'CommentController@userComments')->name('panel.comments.user');
 Route::get('/panel/comments/user/search', 'CommentController@searchUserComments')->name('panel.comments.user.search');
+Route::get('/panel/comments/search', 'CommentController@searchComments')->name('panel.comments.search');
+Route::get('/panel/comments/{user?}', 'CommentController@index')->name('panel.comments');
 
 Route::get('/panel/gallery', 'GalleryController@index')->name('panel.gallery');
 Route::get('/panel/gallery/search', 'GalleryController@searchGallery')->name('panel.gallery.search');
