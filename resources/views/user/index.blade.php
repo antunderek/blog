@@ -9,10 +9,7 @@
                 <a href="{{ route('panel.users') }}">users</a>
                 <br>
 
-                <form method="GET" action="{{ route('panel.users.search') }}" class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+                @include('includes.search.search', ['routeName' => 'panel.users.search'])
 
                 <a href="{{ route('user.create') }}" class="btn btn-primary">New user</a>
                 <table class="table">
@@ -22,6 +19,8 @@
                     <th>Role</th>
                     <th>Username</th>
                     <th>Email</th>
+                    <th>Comments</th>
+                    <th>Articles</th>
                     <th>Created at</th>
                     <th>Last edited</th>
                     <th>Actions</th>
@@ -31,13 +30,21 @@
                         <tr>
                             <td>
                                 @if ($user->image !== null)
-                                    <img style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                    <a href="{{ route('user.show', $user) }}">
+                                        <img style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                    </a>
                                 @endif
                             </td>
                             <td><a href="{{ route('user.show', $user) }}">{{ $user->id }}</td>
                             <td><a href="{{ route('role.show', $user->role_id) }}">{{ \App\Role::where('id', $user->role_id)->pluck('role')->first() }}</a></td>
                             <td><a href="{{ route('user.show', $user) }}">{{ $user->name }}</a></td>
                             <td><a href="{{ route('user.show', $user) }}">{{ $user->email}}</a></td>
+                            <td><a href="{{ route('panel.comments', $user) }}">{{ $user->comments->count()}}</a></td>
+                            <td>
+                                @if ($user->role->writer)
+                                    <a href="{{ route('panel.articles', $user) }}">{{ $user->articles->count()}}</a>
+                                @endif
+                            </td>
                             <td>{{ $user->created_at }}</td>
                             <td>{{ $user->updated_at }}</td>
                             <td>

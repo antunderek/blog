@@ -22,6 +22,12 @@
     </div>
 @endif
 
+</div>
+
+<hr>
+
+<div class="container d-flex flex-row flex-wrap">
+
 @if (\App\Http\Helpers\PermissionHandler::isArticleEditor())
     <div class="card" style="width: 18rem;">
         <div class="card-body">

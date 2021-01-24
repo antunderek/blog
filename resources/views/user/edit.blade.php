@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Register') }}</div>
+                    <div class="card-header">Edit</div>
 
                     <div class="card-body">
 
@@ -13,7 +13,13 @@
                             @method('PUT')
 
                             @if ($user->image !== null)
-                                <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                @if (\App\Http\Helpers\PermissionHandler::isMediaEditor())
+                                    <a href="{{ route('avatar.show', $user->image) }}">
+                                        <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                    </a>
+                                @else
+                                    <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                @endif
                             @endif
 
                             <div class="form-group row">

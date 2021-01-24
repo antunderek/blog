@@ -24,12 +24,18 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($user = null)
     {
         //
         $this->authorize('viewAny', Comment::class);
 
-        $comments = Comment::paginate(50);
+        if ($user == null)
+        {
+            $comments = Comment::paginate(50);
+        }
+        else {
+            $comments = Comment::where('user_id', $user)->paginate(50);
+        }
         return view('comment.index', compact('comments'));
     }
 
@@ -142,7 +148,7 @@ class CommentController extends Controller
     {
         $this->authorize('viewAny', Comment::class);
 
-        $columns = ['id', 'article_id', 'user_id', 'parent_id', 'comment', 'created_at', 'updated_at'];
+        $columns = ['id', 'article_id', 'user_id', 'parent_id', 'comment'];
         $query = Comment::select();
         $comments = $this->search($query, $columns, $request->keyword, true, 50);
         return view('comment.index', compact('comments'));
@@ -156,7 +162,7 @@ class CommentController extends Controller
 
     public function searchUserComments(Request $request)
     {
-        $columns = ['id', 'article_id', 'parent_id', 'comment', 'created_at', 'updated_at'];
+        $columns = ['id', 'article_id', 'parent_id', 'comment'];
         $query = Comment::select();
         $comments = $this->idRestrictedSearch($query, $columns, $request->keyword, true, 50);
         return view('comment.index', compact('comments'));

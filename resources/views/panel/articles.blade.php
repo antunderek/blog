@@ -3,16 +3,11 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
+
                 @if (\Illuminate\Support\Facades\Request::routeIs('panel.articles.user*'))
-                    <form method="GET" action="{{ route('panel.articles.user.search') }}" class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+                    @include('includes.search.search', ['routeName' => 'panel.articles.user.search'])
                 @else
-                    <form method="GET" action="{{ route('panel.articles.search') }}" class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+                    @include('includes.search.search', ['routeName' => 'panel.articles.search'])
                 @endif
 
                 <table class="table">
@@ -32,7 +27,9 @@
                         <tr data-url="{{ route('article.show', $article) }}">
                             <td>
                                 @if ($article->image !== null)
-                                    <img src="{{ url(\App\Http\Helpers\FileHandler::getImage($article->image->image_path)) }}" style="width: 10vw">
+                                    <a href="{{ route('article.show', $article) }}">
+                                        <img src="{{ url(\App\Http\Helpers\FileHandler::getImage($article->image->image_path)) }}" style="width: 10vw">
+                                    </a>
                                 @else
                                     No image
                                 @endif

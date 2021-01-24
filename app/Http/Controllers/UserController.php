@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Traits\SearchTrait;
+use App\Http\Traits\UserAvatarTrait;
 use App\Role;
 use App\User;
 use App\Avatar;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    use UserAvatarTrait;
     use SearchTrait;
 
     public function __construct()
@@ -115,7 +117,7 @@ class UserController extends Controller
         if ($request->file('image')) {
             Validator::validate($request, 'user_avatar');
             $image = new Avatar();
-            $image->image_path = $request->file('image')->store('public/avatars');
+            $image = $this->setPathResolutionSizeAvatar($request, $image);
             $image->save();
             // delete old avatar if not default
             if ($user->image !== null) {
@@ -160,7 +162,7 @@ class UserController extends Controller
     public function searchUsers(Request $request)
     {
         $this->authorize('viewAny', User::class);
-        $columns = ['id', 'name', 'email', 'role_id', 'created_at', 'updated_at', 'deleted_at'];
+        $columns = ['id', 'name', 'email'];
         $query = User::withTrashed()->select();
         $users = $this->search($query, $columns, $request->keyword, true, 30);
         $currentUserRole = Role::where('id', Auth::user()->role_id)->first();

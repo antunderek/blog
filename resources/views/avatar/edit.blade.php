@@ -11,7 +11,9 @@
                             @csrf
                             @method('PUT')
 
-                            <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
+                            <a href="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
+                                <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
+                            </a>
 
                             <div class="form-group row">
                                 <label for="image" class="col-md-4 col-form-label text-md-right">Change avatar</label>
@@ -46,6 +48,22 @@
 
                                 <div class="col-md-6">
                                     <p>{{ $avatar->name() }}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="name" class="col-md-4 col-form-label text-md-right">Resolution</label>
+
+                                <div class="col-md-6">
+                                    <p>{{ $avatar->resolution }}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="name" class="col-md-4 col-form-label text-md-right">Size</label>
+
+                                <div class="col-md-6">
+                                    <p>{{ $avatar->size }}</p>
                                 </div>
                             </div>
 

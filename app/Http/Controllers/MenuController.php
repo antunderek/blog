@@ -79,7 +79,8 @@ class MenuController extends Controller
     public function show(Menu $menu)
     {
         //
-        return view('menu.show', compact('menu'));
+        $roles = Role::all();
+        return view('menu.show', compact('menu', 'roles'));
     }
 
     /**

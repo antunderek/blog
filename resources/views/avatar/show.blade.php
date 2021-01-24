@@ -7,7 +7,21 @@
                     <div class="card-header">Show</div>
 
                     <div class="card-body">
-                        <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
+                        <a href="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
+                            <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
+                        </a>
+
+                        <div class="form-group row">
+                            <label for="default" class="col-md-4 col-form-label text-md-right">Default</label>
+
+                            <div class="col-md-6">
+                                @if ($avatar->default)
+                                    <input id="default" type="checkbox" name="default" value="1" checked disabled>
+                                @else
+                                    <input id="default" type="checkbox" name="default" value="1" disabled>
+                                @endif
+                            </div>
+                        </div>
 
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">Image path</label>

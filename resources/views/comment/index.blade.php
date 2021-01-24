@@ -3,16 +3,11 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
+
                 @if (\Illuminate\Support\Facades\Request::routeIs('panel.comments.user*'))
-                    <form method="GET" action="{{ route('panel.comments.user.search') }}" class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+                    @include('includes.search.search', ['routeName' => 'panel.comments.user.search'])
                 @else
-                    <form method="GET" action="{{ route('panel.comments.search') }}" class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+                    @include('includes.search.search', ['routeName' => 'panel.comments.search'])
                 @endif
 
                 <table class="table">
@@ -31,7 +26,7 @@
                         <tr>
                             <td><a href="{{ route('comment.show', $comment) }}">{{ $comment->id }}</td>
                             @if (App\Article::where('id', $comment->article_id)->get()->count() !== 0)
-                                <td><a href="{{ route('article.show', App\Article::where('id', $comment->article_id)->get()[0]) }}">{{ $comment->article_id }}</a></td>
+                                <td><a href="{{ route('article.show', App\Article::where('id', $comment->article_id)->get()[0]) }}#comment-{{ $comment->id }}">{{ $comment->article_id }}</a></td>
                             @else
                                 <td>Temp deleted</td>
                             @endif
@@ -50,7 +45,7 @@
                                     null
                                 @endif
                             </td>
-                            <td>{{ $comment->comment }}</td>
+                            <td><a href="{{ route('comment.show', $comment) }}">{{ $comment->comment }}</a></td>
                             <td>{{ $comment->created_at }}</td>
                             <td>{{ $comment->updated_at }}</td>
                             <td>
