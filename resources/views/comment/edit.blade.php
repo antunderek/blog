@@ -28,7 +28,7 @@
 
                                 <div class="col-md-6">
                                     @if (App\Article::where('id', $comment->article_id)->get()->count() !== 0)
-                                        <td><a href="{{ route('article.show', App\Article::where('id', $comment->article_id)->get()[0]) }}">{{ $comment->article_id }}</a></td>
+                                        <td><a href="{{ route('article.show', App\Article::where('id', $comment->article_id)->get()[0]) }}#comment-{{ $comment->id }}">{{ $comment->article_id }}</a></td>
                                     @else
                                         <td>Temp deleted</td>
                                     @endif

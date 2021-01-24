@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Edit</div>
+                    <div class="card-header">Show</div>
 
                     <div class="card-body">
                         <div class="form-group row">
@@ -24,7 +24,7 @@
 
                             <div class="col-md-6">
                                 @if (App\Article::where('id', $comment->article_id)->get()->count() !== 0)
-                                    <td><a href="{{ route('article.show', App\Article::where('id', $comment->article_id)->get()[0]) }}">{{ $comment->article_id }}</a></td>
+                                    <td><a href="{{ route('article.show', App\Article::where('id', $comment->article_id)->get()[0]) }}#comment-{{ $comment->id }}">{{ $comment->article_id }}</a></td>
                                 @else
                                     <td>Temp deleted</td>
                                 @endif

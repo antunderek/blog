@@ -39,6 +39,12 @@
                             <td><a href="{{ route('role.show', $user->role_id) }}">{{ \App\Role::where('id', $user->role_id)->pluck('role')->first() }}</a></td>
                             <td><a href="{{ route('user.show', $user) }}">{{ $user->name }}</a></td>
                             <td><a href="{{ route('user.show', $user) }}">{{ $user->email}}</a></td>
+                            <td><a href="">{{ $user->comments->count()}}</a></td>
+                            <td>
+                                @if ($user->role->writer)
+                                    <a href="">{{ $user->articles->count()}}</a>
+                                @endif
+                            </td>
                             <td>{{ $user->created_at }}</td>
                             <td>{{ $user->updated_at }}</td>
                             <td>
