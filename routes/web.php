@@ -11,15 +11,16 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
 
 Auth::routes();
 
 Route::get('article/search', 'ArticleController@searchIndex')->name('article.search');
 Route::put('article/deleted/{id}/restore', 'ArticleController@restore')->name('article.restore');
-Route::resource('article', 'ArticleController')->except(['allArticles', 'userArticles']);
+Route::get('/', 'ArticleController@index')->name('article.index');
+Route::resource('article', 'ArticleController')->except(['index', 'allArticles', 'userArticles']);
 
 Route::resource('role', 'RoleController')->except(['index', 'default']);
 

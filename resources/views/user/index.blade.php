@@ -19,6 +19,8 @@
                     <th>Role</th>
                     <th>Username</th>
                     <th>Email</th>
+                    <th>Comments</th>
+                    <th>Articles</th>
                     <th>Created at</th>
                     <th>Last edited</th>
                     <th>Actions</th>
