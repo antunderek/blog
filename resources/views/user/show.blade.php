@@ -25,6 +25,30 @@
                                 </div>
                             </div>
 
+                            @if (\App\Http\Helpers\PermissionHandler::isUserEditor() || ($user->id === \Illuminate\Support\Facades\Auth::id()))
+                                <div class="form-group row">
+                                    <label for="comments" class="col-md-4 col-form-label text-md-right">Comments</label>
+
+                                    <div class="col-md-6">
+                                        @if ($user->id === \Illuminate\Support\Facades\Auth::id())
+                                            <a href="{{ route('panel.comments.user') }}">{{ $user->comments->count()}}</a>
+                                        @else
+                                            <a href="{{ route('panel.comments', $user) }}">{{ $user->comments->count()}}</a>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if ($user->role->writer)
+                                <div class="form-group row">
+                                    <label for="articles" class="col-md-4 col-form-label text-md-right">Articles</label>
+
+                                    <div class="col-md-6">
+                                        <a href="{{ route('panel.articles', $user) }}">{{ $user->articles->count()}}</a>
+                                    </div>
+                                </div>
+                            @endif
+
                         @if (\App\Http\Helpers\PermissionHandler::isUserEditor() || ($user->id === \Illuminate\Support\Facades\Auth::id()))
                             <div class="form-group row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>

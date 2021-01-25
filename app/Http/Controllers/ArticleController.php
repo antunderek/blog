@@ -10,7 +10,6 @@ use App\Http\Helpers\Validator;
 use App\Http\Traits\ArticleGalleryTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-//use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
@@ -195,7 +194,6 @@ class ArticleController extends Controller
             $articles= Article::withTrashed()->where('user_id', $user)->paginate(30);
         }
 
-        //$articles = Article::withTrashed()->paginate(30);
         return view('panel.articles', compact('articles'));
     }
 

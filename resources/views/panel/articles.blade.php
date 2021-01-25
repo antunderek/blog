@@ -48,8 +48,6 @@
                                 @if (!$article->trashed())
                                     <a href="{{ route('article.edit', $article) }}" class="btn btn-primary">Edit</a>
 
-                                    <button>Hide</button>
-
                                     <form method="POST" action="{{ route('article.destroy', $article) }}">
                                     @csrf
                                     @method('DELETE')

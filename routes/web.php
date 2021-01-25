@@ -56,7 +56,6 @@ Route::get('/panel/roles/search', 'RoleController@searchRoles')->name('panel.rol
 Route::get('/panel/users', 'UserController@index')->name('panel.users');
 Route::get('/panel/users/search', 'UserController@searchUsers')->name('panel.users.search');
 
-//Route::get('/panel/comments', 'CommentController@index')->name('panel.comments');
 Route::get('/panel/comments/user', 'CommentController@userComments')->name('panel.comments.user');
 Route::get('/panel/comments/user/search', 'CommentController@searchUserComments')->name('panel.comments.user.search');
 Route::get('/panel/comments/search', 'CommentController@searchComments')->name('panel.comments.search');
