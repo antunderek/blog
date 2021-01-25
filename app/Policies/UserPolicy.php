@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use phpDocumentor\Reflection\Types\True_;
 
 class UserPolicy
 {
@@ -30,7 +31,6 @@ class UserPolicy
     public function view(User $user)
     {
         //
-        return true;
     }
 
     /**
@@ -83,12 +83,17 @@ class UserPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\User  $user
-     * @param  \App\User  $model
+     * @param  string $id
      * @return mixed
      */
-    public function restore(User $user, User $model)
+    public function restore(User $user, string $id)
     {
         //
+        if (!$user->role->delete_user)
+        {
+            return false;
+        }
+        return true;
     }
 
     /**

@@ -8,7 +8,7 @@
 
                     <div class="card-body">
                             @if ($user->image !== null)
-                                @if (\App\Http\Helpers\PermissionHandler::isMediaEditor())
+                                @if (\Illuminate\Support\Facades\Auth::check() && \App\Http\Helpers\PermissionHandler::isMediaEditor())
                                     <a href="{{ route('avatar.show', $user->image) }}">
                                         <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
                                     </a>
@@ -25,7 +25,7 @@
                                 </div>
                             </div>
 
-                            @if (\App\Http\Helpers\PermissionHandler::isUserEditor() || ($user->id === \Illuminate\Support\Facades\Auth::id()))
+                            @if (\Illuminate\Support\Facades\Auth::check() && (\App\Http\Helpers\PermissionHandler::isUserEditor() || ($user->id === \Illuminate\Support\Facades\Auth::id())))
                                 <div class="form-group row">
                                     <label for="comments" class="col-md-4 col-form-label text-md-right">Comments</label>
 
@@ -44,12 +44,18 @@
                                     <label for="articles" class="col-md-4 col-form-label text-md-right">Articles</label>
 
                                     <div class="col-md-6">
-                                        <a href="{{ route('panel.articles', $user) }}">{{ $user->articles->count()}}</a>
+                                        @if (\Illuminate\Support\Facades\Auth::check() && $user->id === \Illuminate\Support\Facades\Auth::id())
+                                            <a href="{{ route('panel.articles.user') }}">{{ $user->articles->count()}}</a>
+                                        @elseif (\Illuminate\Support\Facades\Auth::check() && \App\Http\Helpers\PermissionHandler::isArticleEditor())
+                                            <a href="{{ route('panel.articles', $user) }}">{{ $user->articles->count()}}</a>
+                                        @else
+                                            <a href="{{ route('article.index', $user) }}">{{ $user->articles->count()}}</a>
+                                        @endif
                                     </div>
                                 </div>
                             @endif
 
-                        @if (\App\Http\Helpers\PermissionHandler::isUserEditor() || ($user->id === \Illuminate\Support\Facades\Auth::id()))
+                        @if (\Illuminate\Support\Facades\Auth::check() && (\App\Http\Helpers\PermissionHandler::isUserEditor() || ($user->id === \Illuminate\Support\Facades\Auth::id())))
                             <div class="form-group row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 

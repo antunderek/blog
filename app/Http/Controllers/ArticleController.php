@@ -28,7 +28,7 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($user = null)
     {
         //
         $writer = false;
@@ -36,7 +36,15 @@ class ArticleController extends Controller
         {
             $writer = Role::where('id', Auth::user()->role_id)->first()->pluck('writer');
         }
-        $articles = Article::paginate(10);
+        // Order by updated_at
+        if ($user == null)
+        {
+            $articles = Article::paginate(10);
+        }
+        else
+        {
+            $articles = Article::where('user_id', $user)->paginate(10);
+        }
 
         return view('article.index', compact('articles', 'writer'));
     }
@@ -154,16 +162,19 @@ class ArticleController extends Controller
         $this->authorize('delete', $article);
         Article::where('id', $article->id)->delete();
 
-        if (URL::previous() === URL::route('panel.articles'))
-        {
-            return redirect()->back();
-        }
-
-        return redirect()->route('article.index');
+        return redirect()->route('panel.articles');
     }
 
-    public function restore($id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param string $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore(string $id)
     {
+        $article = Article::withTrashed()->find($id);
+        $this->authorize('restore', $article);
         Article::withTrashed()->find($id)->restore();
         return redirect()->back();
     }
