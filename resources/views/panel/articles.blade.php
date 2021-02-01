@@ -10,6 +10,7 @@
                     @include('includes.search.search', ['routeName' => 'panel.articles.search'])
                 @endif
 
+                <div class="table-responsive-sm">
                 <table class="table">
                     <a href="{{ route('article.create') }}" class="btn btn-primary">New article</a>
                     <thead>
@@ -41,7 +42,7 @@
                                 <td><a href="{{ route('user.show', $article->user_id) }}">{{ \App\User::where('id', $article->user_id)->pluck('name')->first() }}</a></td>
                             @endif
                             <td><a href="{{ route('article.show', $article) }}">{{ $article->title }}</a></td>
-                            <td><a href="{{ route('article.show', $article) }}">{{ \Illuminate\Support\Str::limit($article->text, 150, $end="...") }}</a></td>
+                            <td><a href="{{ route('article.show', $article) }}">{{ \Illuminate\Support\Str::limit($article->text, 50, $end="...") }}</a></td>
                             <td>{{ $article->created_at }}</td>
                             <td>{{ $article->updated_at }}</td>
                             <td>
@@ -66,6 +67,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                </div>
                 <a href="{{ route('article.create') }}" class="btn btn-primary">New article</a>
                 {{ $articles->links() }}
             </div>

@@ -11,7 +11,6 @@ use App\Http\Traits\ArticleGalleryTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
 
 class ArticleController extends Controller
 {
@@ -20,7 +19,7 @@ class ArticleController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except('index', 'show');
+        $this->middleware('auth')->except('index', 'show', 'searchIndex');
     }
 
     /**
@@ -39,11 +38,11 @@ class ArticleController extends Controller
         // Order by updated_at
         if ($user == null)
         {
-            $articles = Article::paginate(10);
+            $articles = Article::orderBy('created_at', 'desc')->paginate(10);
         }
         else
         {
-            $articles = Article::where('user_id', $user)->paginate(10);
+            $articles = Article::where('user_id', $user)->orderBy('created_at', 'desc')->paginate(10);
         }
 
         return view('article.index', compact('articles', 'writer'));
