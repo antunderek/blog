@@ -23,13 +23,13 @@
                 @endif
             </div>
             <div style="display: inline">
-                <p style="margin-left: 6vw; word-wrap: break-word; margin-top: 0.5vw">{{ $comment->comment }}</p>
+                <p style="margin-left: 75px; word-wrap: break-word; margin-top: 0.5vw">{{ $comment->comment }}</p>
             </div>
         </div>
 
-        <button class="btn dropdown" style="display: flex; margin-left: 6vw" onclick="toggleForm('reply-form-{{ $comment->id }}')">Reply</button>
+        <button class="btn dropdown" style="display: flex; margin-left: 75px" onclick="toggleForm('reply-form-{{ $comment->id }}')">Reply</button>
 
-        <div id="reply-form-{{ $comment->id }}" style="margin-left: 6vw; display: none">
+        <div id="reply-form-{{ $comment->id }}" style="margin-left: 75px; margin-top: 10px; display: none">
             <form method="post" action="{{ route('comment.store') }}">
                 @csrf
                 <div style="width: 50%">
@@ -38,7 +38,7 @@
 
                 <input id="article" type="hidden" name="article" value="{{ $article->id }}">
                 <input id="parent" type="hidden" name="parent" value="{{ $comment->id }}">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" style="margin-top: 5px">
                     Post
                 </button>
             </form>
