@@ -10,23 +10,6 @@
                 <thead>
                 <th>Id</th>
                 <th>Role</th>
-                <th>Writer</th>
-                <th>Edit articles</th>
-                <th>Delete articles</th>
-                <th>Create roles</th>
-                <th>Edit roles</th>
-                <th>Delete roles</th>
-                <th>Create users</th>
-                <th>Edit users</th>
-                <th>Delete users</th>
-                <th>Edit comments</th>
-                <th>Delete comments</th>
-                <th>Edit media</th>
-                <th>Delete media</th>
-                <th>Create media</th>
-                <th>Edit menus</th>
-                <th>Delete menus</th>
-                <th>Create menus</th>
                 <th>Created at</th>
                 <th>Updated at</th>
                 <th>Default</th>
@@ -37,23 +20,7 @@
                     <tr>
                         <td><a href="{{ route('role.show', $role) }}">{{ $role->id }}</td>
                         <td><a href="{{ route('role.show', $role) }}">{{ $role->role }}</a></td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->writer) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_article) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_article) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->create_role) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_role) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_role) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->create_user) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_user) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_user) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_comment) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_comment) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->create_media) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_media) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_media) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->create_menu) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->edit_menu) }}</td>
-                        <td>{{ \App\Http\Helpers\MiscellaneousMethods::booleanYesNo($role->delete_menu) }}</td>
+
                         <td>{{ $role->created_at }}</td>
                         <td>{{ $role->updated_at }}</td>
                         <td>
