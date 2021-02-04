@@ -153,6 +153,9 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+        if ($user->name === 'superuser' && ($user->role->role === 'superuser')) {
+            return redirect()->back();
+        }
         $this->authorize('delete', $user);
         $user->delete();
         return redirect()->route('panel.users');

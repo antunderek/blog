@@ -1,9 +1,16 @@
 <div class="card" style="margin-top: 1vw">
+    @if ($description)
+        <a href="{{ route('article.show', $article) }}" style="color: black; text-decoration: none;">
+    @endif
     <div style="height: {{ $imgHeight }}vw; overflow: hidden; object-fit: cover; background-color: whitesmoke">
         @if ($article->image !== null)
             <img class="card-img-top text-hide" style="align-self: center; object-fit: cover; overflow: hidden; height: {{ $imgHeight }}vw" src="{{ url(\App\Http\Helpers\FileHandler::getImage($article->image->image_path)) }}" alt="Card image cap">
         @endif
     </div>
+    @if ($description)
+        </a>
+    @endif
+    </a>
     <div class="card-body">
         <div style="display: flex; gap: 1vw">
             @if ($article->user !== null)
@@ -17,10 +24,14 @@
             @endif
         </div>
 
-        <h5 class="card-title">{{ $article->title }}</h5>
+        @if ($description)
+            <a href="{{ route('article.show', $article) }}" style="color: black; text-decoration: none;"><h5 class="card-title">{{ $article->title }}</h5></a>
+        @else
+            <h5 class="card-title">{{ $article->title }}</h5>
+        @endif
 
         @if ($description)
-            <a href="{{ route('article.show', $article) }}">{!! \Illuminate\Support\Str::limit($article->text, 500, $end="...") !!}</a>
+            <a href="{{ route('article.show', $article) }}" style="color: black; text-decoration: none;">{!! \Illuminate\Support\Str::limit(strip_tags($article->text), 500, $end="...") !!}</a>
         @else
             <p class="card-text">{!! $article->text !!}</p>
         @endif

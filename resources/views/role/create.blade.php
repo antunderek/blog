@@ -1,66 +1,182 @@
 @extends('layouts.app')
 @section('content')
-<form method="POST" action="{{ route('role.store') }}">
-    @csrf
-    @method('POST')
-    <label for="role">Role</label>
-    <input id="title" type="text" name="role" required>
-    <br>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">Show</div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('role.store') }}">
+                            @csrf
+                            @method('POST')
+                            <label for="role">Role</label>
+                            <input id="title" type="text" name="role" required>
+                            <br>
 
-    <label for="writer">User can create, edit and delete articles that they own:</label>
-    @include('includes.role.create', ['name' => 'writer'])
+                            <table class="table">
 
-    <label for="">Can edit any article:</label>
-    @include('includes.role.create', ['name' => 'edit_article'])
+                                <tr>
+                                    <td>
+                                        <label for="writer">User can create, edit and delete articles that they own:</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'writer'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can delete any article:</label>
-    @include('includes.role.create', ['name' => 'delete_article'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can edit any article:</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'edit_article'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can create a new role</label>
-    @include('includes.role.create', ['name' => 'create_role'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can delete any article:</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'delete_article'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can edit existing roles:</label>
-    @include('includes.role.create', ['name' => 'edit_role'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can create a new role</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'create_role'])
+                                    </td>
+                                </tr>
 
-    <label for="writer">Can delete any role</label>
-    @include('includes.role.create', ['name' => 'delete_role'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can edit existing roles:</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'edit_role'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can create a new user</label>
-    @include('includes.role.create', ['name' => 'create_user'])
+                                <tr>
+                                    <td>
+                                        <label for="writer">Can delete any role</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'delete_role'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can edit existing users:</label>
-    @include('includes.role.create', ['name' => 'edit_user'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can create a new user</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'create_user'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can delete any user</label>
-    @include('includes.role.create', ['name' => 'delete_user'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can edit existing users:</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'edit_user'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can edit existing comments</label>
-    @include('includes.role.create', ['name' => 'edit_comment'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can delete any user</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'delete_user'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can delete any comment</label>
-    @include('includes.role.create', ['name' => 'delete_comment'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can edit existing comments</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'edit_comment'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can create media</label>
-    @include('includes.role.create', ['name' => 'create_media'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can delete any comment</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'delete_comment'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can edit existing media</label>
-    @include('includes.role.create', ['name' => 'edit_media'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can create media</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'create_media'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can delete media</label>
-    @include('includes.role.create', ['name' => 'delete_media'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can edit existing media</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'edit_media'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can create menus</label>
-    @include('includes.role.create', ['name' => 'create_menu'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can delete media</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'delete_media'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can edit existing menus</label>
-    @include('includes.role.create', ['name' => 'edit_menu'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can create menus</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'create_menu'])
+                                    </td>
+                                </tr>
 
-    <label for="">Can delete menus</label>
-    @include('includes.role.create', ['name' => 'delete_menu'])
+                                <tr>
+                                    <td>
+                                        <label for="">Can edit existing menus</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'edit_menu'])
+                                    </td>
+                                </tr>
 
+                                <tr>
+                                    <td>
+                                        <label for="">Can delete menus</label>
+                                    </td>
+                                    <td>
+                                        @include('includes.role.create', ['name' => 'delete_menu'])
+                                    </td>
+                                </tr>
 
-    <button type="submit">
-        Save
-    </button>
-</form>
+                            </table>
+
+                            <button type="submit">
+                                Save
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

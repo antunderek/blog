@@ -2,7 +2,7 @@
 @section('content')
     <div class="container-fluid" style="display: flex; justify-content: center; flex-direction: column; align-items: center">
         <div style="width: 80vw">
-        @include('includes.article.show', ['imgHeight' => 48, 'description' => false])
+            @include('includes.article.show', ['imgHeight' => 48, 'description' => false])
         </div>
         <div class="card" style="width: 80vw">
             <div class="card-body">

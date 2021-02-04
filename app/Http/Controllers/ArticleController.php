@@ -90,12 +90,17 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Article $article
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article)
+    public function show($article)
     {
         //
+        $article = Article::withTrashed()->where('id', $article)->first();
+        $trashed = Article::onlyTrashed()->where('id', $article)->first();
+        if ($trashed && !(Auth::id() === $article->user_id && Auth::user()->role->writer || Auth::user()->role->edit_article))
+        {
+            abort(404);
+        }
         return view('article.show', compact('article'));
     }
 
@@ -161,6 +166,9 @@ class ArticleController extends Controller
         $this->authorize('delete', $article);
         Article::where('id', $article->id)->delete();
 
+        if (!Auth::user()->role->edit_article) {
+            return redirect()->route('panel.articles.user');
+        }
         return redirect()->route('panel.articles');
     }
 
