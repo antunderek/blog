@@ -21,7 +21,9 @@
                     <thead>
                     <th>Image</th>
                     <th>Id</th>
-                    <th>Role</th>
+                    @if (\App\Http\Helpers\PermissionHandler::isRoleEditor())
+                        <th>Role</th>
+                    @endif
                     <th>Username</th>
                     <th>Email</th>
                     <th>Comments</th>
@@ -36,12 +38,18 @@
                             <td>
                                 @if ($user->image !== null)
                                     <a href="{{ route('user.show', $user) }}">
-                                        <img style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                        <div style="display: flex">
+                                            <div style="height: 128px; width: 128px; overflow: hidden; object-fit: cover; background-color: whitesmoke">
+                                                <img class="card-img-top" style="align-self: center; object-fit: cover; overflow: hidden; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                            </div>
+                                        </div>
                                     </a>
                                 @endif
                             </td>
                             <td><a href="{{ route('user.show', $user) }}">{{ $user->id }}</td>
-                            <td><a href="{{ route('role.show', $user->role_id) }}">{{ \App\Role::where('id', $user->role_id)->pluck('role')->first() }}</a></td>
+                            @if (\App\Http\Helpers\PermissionHandler::isRoleEditor())
+                                <td><a href="{{ route('role.show', $user->role_id) }}">{{ \App\Role::where('id', $user->role_id)->pluck('role')->first() }}</a></td>
+                            @endif
                             <td><a href="{{ route('user.show', $user) }}">{{ $user->name }}</a></td>
                             <td><a href="{{ route('user.show', $user) }}">{{ $user->email}}</a></td>
                             <td><a href="{{ route('panel.comments', $user) }}">{{ $user->comments->count()}}</a></td>

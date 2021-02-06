@@ -10,7 +10,11 @@
                             @if ($user->image !== null)
                                 @if (\Illuminate\Support\Facades\Auth::check() && \App\Http\Helpers\PermissionHandler::isMediaEditor())
                                     <a href="{{ route('avatar.show', $user->image) }}">
-                                        <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                        <div class="offset-md-4" style="display: flex; margin-bottom: 20px">
+                                            <div style="height: 128px; width: 128px; overflow: hidden; object-fit: cover; background-color: whitesmoke">
+                                                <img class="card-img-top" style="align-self: center; object-fit: cover; overflow: hidden; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">
+                                            </div>
+                                        </div>
                                     </a>
                                 @else
                                     <img class="offset-md-4 my-xl-3" style="width: 128px; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($user->image->image_path, 'avatars/')) }}">

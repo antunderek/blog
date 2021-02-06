@@ -7,10 +7,11 @@
                     <div class="card-header">Edit</div>
 
                     <div class="card-body">
-                        <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 20px">
-                            <div style="height: 256px; width: 256px; overflow: hidden; object-fit: cover; background-color: whitesmoke">
+
+                        <div style="width: 100%; display: flex; margin-bottom: 20px">
+                            <div class="offset-md-4" style="height: 128px; width: 128px; overflow: hidden; object-fit: cover; background-color: whitesmoke">
                                 <a href="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
-                                    <img class="card-img-top" style="align-self: center; object-fit: cover; overflow: hidden; height: 256px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
+                                    <img class="card-img-top" style="align-self: center; object-fit: cover; overflow: hidden; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($avatar->image_path, 'avatars/')) }}">
                                 </a>
                             </div>
                         </div>
@@ -83,6 +84,7 @@
                             </div>
                         </form>
 
+                        @if (\Illuminate\Support\Facades\Auth::user()->role->delete_media)
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4" style="display: inline-flex; margin-top: 10px">
                                 <form method="POST" action="{{ route('avatar.destroy', $avatar) }}">
@@ -97,6 +99,7 @@
                                 </form>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>

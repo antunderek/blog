@@ -27,7 +27,11 @@
                         <tr data-url="{{ route('avatar.show', $image) }}">
                             <td>
                                 <a href="{{ route('avatar.show', $image) }}">
-                                    <img src="{{ url(\App\Http\Helpers\FileHandler::getImage($image->image_path, 'avatars/')) }}" style="width: 10vw">
+                                    <div style="width: 100%; display: flex; margin-bottom: 20px">
+                                        <div style="height: 128px; width: 128px; overflow: hidden; object-fit: cover; background-color: whitesmoke">
+                                                <img class="card-img-top" style="align-self: center; object-fit: cover; overflow: hidden; height: 128px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($image->image_path, 'avatars/')) }}">
+                                        </div>
+                                    </div>
                                 </a>
                             </td>
                             <td><a href="{{ route('avatar.show', $image) }}">{{ $image->id }}</td>
@@ -46,16 +50,19 @@
                                     </svg>
                                     Edit
                                 </a>
-                                <form method="POST" action="{{ route('avatar.destroy', $image) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                        </svg>
-                                        Delete
-                                    </button>
-                                </form>
+
+                                @if (\Illuminate\Support\Facades\Auth::user()->role->delete_media)
+                                    <form method="POST" action="{{ route('avatar.destroy', $image) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
