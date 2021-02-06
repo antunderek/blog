@@ -22,7 +22,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except('show');
-        $this->authorizeResource(User::class, 'user');
+        //$this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -48,6 +48,7 @@ class UserController extends Controller
     public function create()
     {
         //
+        $this->authorize('create', User::class);
         return view('user.create');
     }
 
@@ -60,6 +61,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
+        $this->authorize('create', User::class);
         $registerController = App::make('App\Http\Controllers\Auth\RegisterController');
         $registerController->callAction('register', [$request]);
         return redirect()->route('panel.users');
@@ -86,6 +88,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         //
+        $this->authorize('update', $user);
         $roles = Role::all();
         return view('user.edit', compact('user', 'roles'));
     }
@@ -100,6 +103,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         //
+        $this->authorize('update', $user);
         Validator::validate($request, 'user_name');
 
         if ($request->password !== null) {
@@ -149,12 +153,23 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+        if ($user->name === 'superuser' && ($user->role->role === 'superuser')) {
+            return redirect()->back();
+        }
+        $this->authorize('delete', $user);
         $user->delete();
         return redirect()->route('panel.users');
     }
 
-    public function restore($id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  string $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore(string $id)
     {
+        $this->authorize('restore', [User::class, $id]);
         User::withTrashed()->find($id)->restore();
         return redirect()->back();
     }

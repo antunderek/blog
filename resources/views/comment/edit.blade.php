@@ -72,28 +72,44 @@
                            <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                                        </svg>
                                         Save changes
                                     </button>
                                 </div>
                             </div>
                         </form>
 
-                        <div class="col-md-6 offset-md-4" style="display: inline-flex; margin-top: 2vw">
-                            @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
-                                <form method="POST" action="{{ route('comment.delete', ['comment' => $comment]) }}">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="btn btn-warning" style="margin-right: 1vw">Delete</button>
-                                </form>
-                            @endif
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4" style="display: inline-flex; margin-top: 10px">
+                                @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
+                                    <form method="POST" action="{{ route('comment.delete', ['comment' => $comment]) }}">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-warning" style="margin-right: 1vw">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endif
 
-                            @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment)
-                                <form method="POST" action="{{ route('comment.destroy', $comment) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Destroy</button>
-                                </form>
-                            @endif
+                                @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment)
+                                    <form method="POST" action="{{ route('comment.destroy', $comment) }}">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit" class="btn btn-danger">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-octagon-fill" viewBox="0 0 16 16">
+                                                <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
+                                            </svg>
+                                            Destroy
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

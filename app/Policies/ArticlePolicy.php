@@ -89,6 +89,11 @@ class ArticlePolicy
     public function restore(User $user, Article $article)
     {
         //
+        if (($article->user_id !== $user->id || !$user->role->writer) && !$user->role->delete_article)
+        {
+            return false;
+        }
+        return true;
     }
 
     /**

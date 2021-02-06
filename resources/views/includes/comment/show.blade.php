@@ -1,45 +1,49 @@
 @foreach ($comments as $comment)
-    <div style="padding: 1vw">
-        <div>
+    <div style="padding-left: 2vw; padding-top: 1vw">
+        <div style="display: flex; gap: 1vw">
             @if ($comment->user !== null)
-                <b id="comment-{{ $comment->id }}" style="padding-right: 1vw">{{ $comment->user->name }}</b>
+                <a href="{{ route('user.show', $comment->user) }}">
+                    <b id="comment-{{ $comment->id }}" style="padding-right: 0.5vw">{{ $comment->user->name }}</b>
+                </a>
             @else
-                <b style="padding-right: 1vw">deleted<b>
+                <b style="padding-right: 1vw">deleted</b>
             @endif
-            {{ $comment->created_at }}
+            Created: {{ $comment->created_at }}
             @if ($comment->created_at != $comment->updated_at)
-                Edited: {{ $comment->updated_at}}
+                <b>Edited:</b> {{ $comment->updated_at}}
             @endif
+
+            @include('includes.comment.dropdown')
         </div>
-        @if ($comment->user !== null)
-            <img style="width: 64px; height: 64px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($comment->user->image->image_path, 'avatars/')) }}">
-        @endif
-        <p>{{ $comment->comment }}</p>
-        @if (\Illuminate\Support\Facades\Auth::user())
-            @if (\Illuminate\Support\Facades\Auth::user()->role->edit_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
-                <a href="{{ route('comment.edit', $comment) }}" class="btn btn-primary">Edit</a>
-            @endif
-        @endif
 
-        @if (\Illuminate\Support\Facades\Auth::user())
-            @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
-                <form method="POST" action="{{ route('comment.delete', ['comment' => $comment]) }}">
-                    @csrf
-                    @method('PUT')
-                    <button type="submit" class="btn btn-warning">Delete</button>
-                </form>
-            @endif
-        @endif
-        <form method="post" action="{{ route('comment.store') }}">
-            @csrf
-            <input id="comment" type="text" name="comment">
+        <div style="display: inline">
+            <div style="float: left">
+                @if ($comment->user !== null)
+                    <img style="width: 64px; height: 64px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($comment->user->image->image_path, 'avatars/')) }}">
+                @endif
+            </div>
+            <div style="display: inline">
+                <p style="margin-left: 75px; word-wrap: break-word; margin-top: 0.5vw">{{ $comment->comment }}</p>
+            </div>
+        </div>
 
-            <input id="article" type="hidden" name="article" value="{{ $article->id }}">
-            <input id="parent" type="hidden" name="parent" value="{{ $comment->id }}">
-            <button type="submit" class="btn btn-primary">
-                Reply
-            </button>
-        </form>
+        <button class="btn dropdown" style="display: flex; margin-left: 75px" onclick="toggleForm('reply-form-{{ $comment->id }}')">Reply</button>
+
+        <div id="reply-form-{{ $comment->id }}" style="margin-left: 75px; margin-top: 10px; display: none">
+            <form method="post" action="{{ route('comment.store') }}">
+                @csrf
+                <div style="width: 50%">
+                    <textarea id="comment" type="text" class="form-control" rows="2" name="comment"></textarea>
+                </div>
+
+                <input id="article" type="hidden" name="article" value="{{ $article->id }}">
+                <input id="parent" type="hidden" name="parent" value="{{ $comment->id }}">
+                <button type="submit" class="btn btn-primary" style="margin-top: 5px">
+                    Post
+                </button>
+            </form>
+        </div>
+
         <div style="border-left: 1px solid" class="md-6">
             @include('includes.comment.show', ['comments' => $comment->replies])
         </div>

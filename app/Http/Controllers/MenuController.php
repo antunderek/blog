@@ -117,7 +117,8 @@ class MenuController extends Controller
         }
 
         $menu->save();
-        return view('menu.show', compact('menu'));
+        $roles = Role::all();
+        return view('menu.show', compact('menu', 'roles'));
     }
 
     /**

@@ -17,7 +17,7 @@ class CreateArticlesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('title');
-            $table->mediumText('text');
+            $table->mediumText('text')->nullable();
             $table->unsignedBigInteger('image_id')->nullable();
             $table->timestamps();
             $table->softDeletes();

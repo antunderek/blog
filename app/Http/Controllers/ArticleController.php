@@ -10,9 +10,7 @@ use App\Http\Helpers\Validator;
 use App\Http\Traits\ArticleGalleryTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-//use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
 
 class ArticleController extends Controller
 {
@@ -21,7 +19,7 @@ class ArticleController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except('index', 'show');
+        $this->middleware('auth')->except('index', 'show', 'searchIndex');
     }
 
     /**
@@ -29,7 +27,7 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($user = null)
     {
         //
         $writer = false;
@@ -37,7 +35,15 @@ class ArticleController extends Controller
         {
             $writer = Role::where('id', Auth::user()->role_id)->first()->pluck('writer');
         }
-        $articles = Article::paginate(10);
+        // Order by updated_at
+        if ($user == null)
+        {
+            $articles = Article::orderBy('created_at', 'desc')->paginate(10);
+        }
+        else
+        {
+            $articles = Article::where('user_id', $user)->orderBy('created_at', 'desc')->paginate(10);
+        }
 
         return view('article.index', compact('articles', 'writer'));
     }
@@ -84,12 +90,17 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Article $article
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article)
+    public function show($article)
     {
         //
+        $article = Article::withTrashed()->where('id', $article)->first();
+        $trashed = Article::onlyTrashed()->where('id', $article)->first();
+        if ($trashed && !(Auth::id() === $article->user_id && Auth::user()->role->writer || Auth::user()->role->edit_article))
+        {
+            abort(404);
+        }
         return view('article.show', compact('article'));
     }
 
@@ -155,16 +166,22 @@ class ArticleController extends Controller
         $this->authorize('delete', $article);
         Article::where('id', $article->id)->delete();
 
-        if (URL::previous() === URL::route('panel.articles'))
-        {
-            return redirect()->back();
+        if (!Auth::user()->role->edit_article) {
+            return redirect()->route('panel.articles.user');
         }
-
-        return redirect()->route('article.index');
+        return redirect()->route('panel.articles');
     }
 
-    public function restore($id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param string $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore(string $id)
     {
+        $article = Article::withTrashed()->find($id);
+        $this->authorize('restore', $article);
         Article::withTrashed()->find($id)->restore();
         return redirect()->back();
     }
@@ -195,7 +212,6 @@ class ArticleController extends Controller
             $articles= Article::withTrashed()->where('user_id', $user)->paginate(30);
         }
 
-        //$articles = Article::withTrashed()->paginate(30);
         return view('panel.articles', compact('articles'));
     }
 
