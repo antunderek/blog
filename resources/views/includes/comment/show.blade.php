@@ -19,7 +19,11 @@
         <div style="display: inline">
             <div style="float: left">
                 @if ($comment->user !== null)
-                    <img style="width: 64px; height: 64px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($comment->user->image->image_path, 'avatars/')) }}">
+                    <div style="width: 100%; display: flex; margin-bottom: 20px">
+                        <div style="height: 64px; width: 64px; overflow: hidden; object-fit: cover; background-color: whitesmoke">
+                            <img class="card-img-top" style="align-self: center; object-fit: cover; overflow: hidden; height: 64px" src="{{ url(\App\Http\Helpers\FileHandler::getImage($comment->user->image->image_path, 'avatars/')) }}">
+                        </div>
+                    </div>
                 @endif
             </div>
             <div style="display: inline">
