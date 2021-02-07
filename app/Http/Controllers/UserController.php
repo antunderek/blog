@@ -22,7 +22,6 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except('show');
-        //$this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -64,7 +63,7 @@ class UserController extends Controller
         $this->authorize('create', User::class);
         $registerController = App::make('App\Http\Controllers\Auth\RegisterController');
         $registerController->callAction('register', [$request]);
-        return redirect()->route('panel.users');
+        return redirect()->route('panel.users')->with('success', 'User created');
     }
 
     /**
@@ -153,12 +152,12 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
-        if ($user->name === 'superuser' && ($user->role->role === 'superuser')) {
-            return redirect()->back();
+        if ($user->email === 'superuser@email.com' && ($user->role->role === 'superuser')) {
+            return redirect()->back()->with('warning', "User with the superuser@email.com email and superuser role can't be deleted.");
         }
         $this->authorize('delete', $user);
         $user->delete();
-        return redirect()->route('panel.users');
+        return redirect()->route('panel.users')->with('success', 'User successfully soft deleted.');
     }
 
     /**
@@ -171,7 +170,7 @@ class UserController extends Controller
     {
         $this->authorize('restore', [User::class, $id]);
         User::withTrashed()->find($id)->restore();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'User successfully restored.');
     }
 
     public function searchUsers(Request $request)

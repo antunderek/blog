@@ -56,7 +56,7 @@
                                     </svg>
                                     Edit
                                 </a>
-                                @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
+                                @if (\Illuminate\Support\Facades\Auth::user()->role->edit_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
                                     <form method="POST" action="{{ route('comment.delete', ['comment' => $comment]) }}">
                                         @csrf
                                         @method('PUT')

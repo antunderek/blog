@@ -21,7 +21,9 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    use RegistersUsers {
+        redirectPath as laravelRedirectPath;
+    }
 
     /**
      * Where to redirect users after registration.
@@ -38,6 +40,11 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    public function redirectPath() {
+        session()->flash('success', 'Successfully registered.');
+        return $this->laravelRedirectPath();
     }
 
     /**

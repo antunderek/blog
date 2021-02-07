@@ -106,7 +106,7 @@ class CommentController extends Controller
 
         $comment->save();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Comment updated');
     }
 
     /**
@@ -124,9 +124,9 @@ class CommentController extends Controller
 
         if (URL::previous() !== URL::route('comment.show', $comment))
         {
-            return redirect()->route('panel.comments');
+            return redirect()->route('panel.comments')->with('success', 'Comment destroyed');
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Comment destroyed');
     }
 
    /**
@@ -141,7 +141,7 @@ class CommentController extends Controller
         $comment->comment = "Comment has been deleted.";
         $comment->save();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Comment deleted');
     }
 
     public function searchComments(Request $request)

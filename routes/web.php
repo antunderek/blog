@@ -42,7 +42,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/panel', 'PanelController@index')->name('panel.index');
 
-
 Route::get('/panel/articles/user', 'ArticleController@userArticles')->name('panel.articles.user');
 Route::get('/panel/articles/user/search', 'ArticleController@searchUserArticles')->name('panel.articles.user.search');
 Route::get('/panel/articles/search', 'ArticleController@searchAllArticles')->name('panel.articles.search');

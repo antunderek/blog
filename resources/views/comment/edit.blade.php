@@ -83,7 +83,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4" style="display: inline-flex; margin-top: 10px">
-                                @if (\Illuminate\Support\Facades\Auth::user()->role->delete_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
+                                @if (\Illuminate\Support\Facades\Auth::user()->role->edit_comment || ($comment->user_id === \Illuminate\Support\Facades\Auth::id()))
                                     <form method="POST" action="{{ route('comment.delete', ['comment' => $comment]) }}">
                                         @csrf
                                         @method('PUT')

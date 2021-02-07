@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -18,7 +19,23 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    use AuthenticatesUsers {
+        redirectPath as laravelRedirectPath;
+        logout as laravelLogout;
+    }
+
+    public function redirectPath() {
+        session()->flash('success', 'Successfully logged in.');
+        return $this->laravelRedirectPath();
+    }
+
+    public function logout(Request $request) {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        return $this->loggedOut($request) ?: redirect('/')->with('success', 'Successfully logged out');
+    }
 
     /**
      * Where to redirect users after login.

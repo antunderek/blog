@@ -84,7 +84,7 @@ class ArticleController extends Controller
 
         $article->save();
 
-        return redirect()->route('article.index');
+        return redirect()->route('article.index')->with('success', 'Article successfully created.');
     }
 
     /**
@@ -151,7 +151,7 @@ class ArticleController extends Controller
 
         $article->save();
 
-        return redirect()->route('article.index');
+        return redirect()->route('article.index')->with('success', 'Successfully updated article');
     }
 
     /**
@@ -167,9 +167,9 @@ class ArticleController extends Controller
         Article::where('id', $article->id)->delete();
 
         if (!Auth::user()->role->edit_article) {
-            return redirect()->route('panel.articles.user');
+            return redirect()->route('panel.articles.user')->with('success', 'Successfully deleted article');
         }
-        return redirect()->route('panel.articles');
+        return redirect()->route('panel.articles')->with('success', 'Successfully deleted article');
     }
 
     /**
@@ -183,7 +183,7 @@ class ArticleController extends Controller
         $article = Article::withTrashed()->find($id);
         $this->authorize('restore', $article);
         Article::withTrashed()->find($id)->restore();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Successfully restored article');
     }
 
     public function searchIndex(Request $request)
