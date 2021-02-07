@@ -32,11 +32,13 @@ class RoleObserver
         if (!Role::where('role', 'superuser')->first())
         {
             RoleCreator::SuperuserRole();
+            session()->flash('info', 'superuser role created.');
         }
 
         if (!Role::where('role', 'default_user')->first())
         {
             RoleCreator::DefaultUserRole();
+            session()->flash('info', 'default_user role created.');
         }
     }
 
@@ -49,14 +51,19 @@ class RoleObserver
     public function deleted(Role $role)
     {
         //
+        session()->flash('success', 'Role successfully deleted.');
         if (!Role::where('role', 'superuser')->first())
         {
             RoleCreator::SuperuserRole();
+            session()->forget('success');
+            session()->flash('warning', 'Superuser role has to exists, superuser role recreated.');
         }
 
         if (!Role::where('role', 'default_user')->first())
         {
             RoleCreator::DefaultUserRole();
+            session()->forget('success');
+            session()->flash('warning', 'Default_role role has to exists, default_role role recreated.');
         }
 
         $defaultRole = DefaultRole::get();
@@ -65,6 +72,7 @@ class RoleObserver
             $defaultRole = new DefaultRole();
             $defaultRole->role_id = Role::where('role', 'default_user')->pluck('id')[0];
             $defaultRole->save();
+            session()->flash('info', 'Default role set to default_user');
         }
         else
         {

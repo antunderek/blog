@@ -62,7 +62,7 @@ class MenuItemController extends Controller
 
         $item->save();
 
-        return redirect()->route('menu.edit', $item->menu_id);
+        return redirect()->route('menu.edit', $item->menu_id)->with('success', 'Menu item successfully created.');
     }
 
     /**
@@ -105,7 +105,7 @@ class MenuItemController extends Controller
         $item->link = $request->link;
 
         $item->save();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Menu item successfully updated.');
     }
 
     /**
@@ -118,7 +118,7 @@ class MenuItemController extends Controller
     {
         //
         $item->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Menu item successfully deleted.');
     }
 
     public function searchMenuItems(Request $request)

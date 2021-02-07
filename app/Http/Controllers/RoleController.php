@@ -58,7 +58,7 @@ class RoleController extends Controller
         $role = new Role();
         $this->setRoles($request, $role);
 
-        return redirect()->route('panel.roles');
+        return redirect()->route('panel.roles')->with('success', 'Role successfully created.');
     }
 
     /**
@@ -99,7 +99,7 @@ class RoleController extends Controller
 
         $this->setRoles($request, $role);
 
-        return redirect()->route('panel.roles');
+        return redirect()->route('panel.roles')->with('success', 'Role successfully updated.');
     }
 
     /**

@@ -57,7 +57,7 @@ class GalleryController extends Controller
 
         $image = new Gallery();
         $this->storeParameters($request, $image);
-        return redirect()->route('panel.gallery')->with(['success' => 'Image uploaded']);
+        return redirect()->route('panel.gallery')->with('success', 'Image successfully uploaded');
     }
 
     /**
@@ -99,7 +99,7 @@ class GalleryController extends Controller
         Storage::delete($gallery->image_path);
         $this->storeParameters($request, $gallery);
 
-        return redirect()->route('panel.gallery');
+        return redirect()->route('panel.gallery')->with('success', 'Image successfully updated.');
     }
 
     /**
@@ -114,7 +114,7 @@ class GalleryController extends Controller
         Storage::delete($gallery->image_path);
         $gallery->delete();
 
-        return redirect()->route('panel.gallery');
+        return redirect()->route('panel.gallery')->with('success', 'Image successfully deleted');
     }
 
     public function searchGallery(Request $request)

@@ -67,7 +67,7 @@ class AvatarController extends Controller
         }
         $avatar->save();
 
-        return redirect()->route('panel.avatar');
+        return redirect()->route('panel.avatar')->with('success', 'Avatar successfully uploaded.');
     }
 
     /**
@@ -114,6 +114,7 @@ class AvatarController extends Controller
             $avatar = $this->setPathResolutionSizeAvatar($request, $avatar);
 
             $avatar->save();
+            session()->flash('success', 'Avatar successfully updated.');
         }
 
         // If default
@@ -121,6 +122,7 @@ class AvatarController extends Controller
             $this->unsetDefaultAvatar();
             $avatar->default = true;
             $avatar->save();
+            session()->flash('success', 'Avatar successfully updated.');
         }
 
         // If no longer default avatar
@@ -145,10 +147,12 @@ class AvatarController extends Controller
         //
         Storage::delete($avatar->image_path);
         $avatar->delete();
+        session()->flash('success', 'Avatar successfully deleted.');
 
         if ($avatar->default == true)
         {
             AvatarCreator::defaultAvatar();
+            session()->forget('success');
         }
         $defaultAvatar = Avatar::where('default', true)->get()->first();
         User::where('image_id', null)->update(['image_id' => $defaultAvatar->id]);
