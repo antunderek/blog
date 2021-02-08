@@ -79,7 +79,7 @@ class RoleObserver
             $defaultRole = DefaultRole::first();
         }
 
-        User::where('role_id', null)->update(['role_id' => $defaultRole->role_id]);
+        User::withTrashed()->where('role_id', null)->update(['role_id' => $defaultRole->role_id]);
     }
 
     /**
