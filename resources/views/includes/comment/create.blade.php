@@ -2,6 +2,7 @@
     <div class="card-body">
         <h5>New comment:</h5>
         <div style="margin: 1vw">
+            @if (\Illuminate\Support\Facades\Auth::check())
             <form method="post" action="{{ route('comment.store') }}">
                 @csrf
                 <textarea id="comment" type="text" class="form-control" rows="3" name="comment"></textarea>
@@ -12,6 +13,10 @@
                     </button>
                 </div>
             </form>
+            @else
+                Login in order to post comments
+                <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+            @endif
         </div>
     </div>
 </div>

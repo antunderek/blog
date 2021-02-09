@@ -31,22 +31,26 @@
             </div>
         </div>
 
-        <button class="btn dropdown" style="display: flex; margin-left: 75px" onclick="toggleForm('reply-form-{{ $comment->id }}')">Reply</button>
+        @if (\Illuminate\Support\Facades\Auth::check())
+            <button class="btn dropdown" style="display: flex; margin-left: 75px" onclick="toggleForm('reply-form-{{ $comment->id }}')">Reply</button>
 
-        <div id="reply-form-{{ $comment->id }}" style="margin-left: 75px; margin-top: 10px; display: none">
-            <form method="post" action="{{ route('comment.store') }}">
-                @csrf
-                <div style="width: 50%">
-                    <textarea id="comment" type="text" class="form-control" rows="2" name="comment"></textarea>
-                </div>
+            <div id="reply-form-{{ $comment->id }}" style="margin-left: 75px; margin-top: 10px; display: none">
+                <form method="post" action="{{ route('comment.store') }}">
+                    @csrf
+                    <div style="width: 50%">
+                        <textarea id="comment" type="text" class="form-control" rows="2" name="comment"></textarea>
+                    </div>
 
-                <input id="article" type="hidden" name="article" value="{{ $article->id }}">
-                <input id="parent" type="hidden" name="parent" value="{{ $comment->id }}">
-                <button type="submit" class="btn btn-primary" style="margin-top: 5px">
-                    Post
-                </button>
-            </form>
-        </div>
+                    <input id="article" type="hidden" name="article" value="{{ $article->id }}">
+                    <input id="parent" type="hidden" name="parent" value="{{ $comment->id }}">
+                    <button type="submit" class="btn btn-primary" style="margin-top: 5px">
+                        Post
+                    </button>
+                </form>
+            </div>
+        @else
+            <a href="{{ route('login') }}" class="btn btn-primary">Reply</a>
+        @endif
 
         <div style="border-left: 1px solid" class="md-6">
             @include('includes.comment.show', ['comments' => $comment->replies])
