@@ -120,7 +120,7 @@ class ArticlePolicy
      */
     public function panelArticles(User $user)
     {
-        return $user->role->edit_article;
+        return $user->role->edit_article || $user->role->delete_article;
     }
 
     /**
