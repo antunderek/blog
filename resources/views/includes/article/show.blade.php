@@ -27,7 +27,7 @@
         @if ($description)
             <a href="{{ route('article.show', $article) }}" style="color: black; text-decoration: none;"><h5 class="card-title">{{ $article->title }}</h5></a>
         @else
-            <h5 class="card-title">{{ $article->title }}</h5>
+            <h2 class="card-title">{{ $article->title }}</h2>
         @endif
 
         @if ($description)

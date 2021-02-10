@@ -50,7 +50,7 @@
                                 <td><a href="{{ route('user.show', $article->user_id) }}">{{ \App\User::where('id', $article->user_id)->pluck('name')->first() }}</a></td>
                             @endif
                             <td><a href="{{ route('article.show', $article) }}">{{ $article->title }}</a></td>
-                            <td><a href="{{ route('article.show', $article) }}">{{ \Illuminate\Support\Str::limit($article->text, 50, $end="...") }}</a></td>
+                            <td><a href="{{ route('article.show', $article) }}">{{ \Illuminate\Support\Str::limit(strip_tags($article->text), 50, $end="...") }}</a></td>
                             <td>{{ $article->created_at }}</td>
                             <td>{{ $article->updated_at }}</td>
                             <td>

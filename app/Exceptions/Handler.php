@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\PostTooLargeException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
@@ -49,6 +50,9 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof MethodNotAllowedHttpException) {
             return abort(404);
+        }
+        if ($exception instanceof PostTooLargeException) {
+            return redirect()->back();
         }
         return parent::render($request, $exception);
     }
