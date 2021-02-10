@@ -10,6 +10,7 @@
                 @include('includes.comment.show', ['comments' => $article->comments])
             </div>
         </div>
+
         @include('includes.comment.create')
 
         <script>

@@ -61,13 +61,15 @@ class MenuController extends Controller
 
         $menu->save();
 
-        foreach ($request->roles as $role) {
-            $menu->roles()->attach($role);
+        if ($request->roles !== null) {
+            foreach ($request->roles as $role) {
+                $menu->roles()->attach($role);
+            }
         }
 
         $menu->save();
 
-        return redirect()->route('panel.menu');
+        return redirect()->route('panel.menu')->with('success', 'Menu successfully created.');
     }
 
     /**
@@ -112,13 +114,16 @@ class MenuController extends Controller
         $menu->order = $request->order;
 
         $menu->roles()->detach();
-        foreach ($request->roles as $role) {
-            $menu->roles()->attach($role);
+
+        if ($request->roles !== null) {
+            foreach ($request->roles as $role) {
+                $menu->roles()->attach($role);
+            }
         }
 
         $menu->save();
         $roles = Role::all();
-        return view('menu.show', compact('menu', 'roles'));
+        return redirect()->route('menu.show', compact('menu', 'roles'))->with('success', 'Menu successfully updated.');
     }
 
     /**
@@ -131,7 +136,7 @@ class MenuController extends Controller
     {
         //
         $menu->delete();
-        return redirect()->route('panel.menu');
+        return redirect()->route('panel.menu')->with('success', 'Menu successfully deleted.');
     }
 
     public function searchMenus(Request $request)

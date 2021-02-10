@@ -37,11 +37,17 @@ class UserObserver
     public function updated(User $user)
     {
         // Isto kao i createad(), provjera da li postoji superuser, ako ne stvoriti novog
+        session()->flash('success', 'User successfully updated.');
+
         $superuserRoleId = Role::where('role', 'superuser')->pluck('id')[0];
         $superuserUser = User::where('email', 'superuser@email.com')->get()->first();
-        if ($superuserUser->role_id !== $superuserRoleId) {
-            $superuserUser->role_id = $superuserRoleId;
-            $superuserUser->save();
+        if ($superuserUser !== null) {
+            if ($superuserUser->role_id !== $superuserRoleId) {
+                $superuserUser->role_id = $superuserRoleId;
+                $superuserUser->save();
+                session()->forget('success');
+                session()->flash('warning', "You can't change role of the superuser if the email is set to the superuser@email.com.");
+            }
         }
 
         if (!$user->role_id)
@@ -52,7 +58,9 @@ class UserObserver
         if (User::where('role_id', $superuserRoleId)->count() === 0)
         {
             UserCreator::CreateSuperuser();
+            session()->flash('info', 'Default superuser created');
         }
+
     }
 
     /**

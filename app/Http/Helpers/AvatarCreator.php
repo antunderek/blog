@@ -21,10 +21,12 @@ class AvatarCreator
             }
             $defaultAvatar = new Avatar();
             $defaultAvatar->image_path = $destinationFile;
+            session()->flash('info', 'Default avatar created.');
         }
 
         $defaultAvatar->default = true;
         $defaultAvatar->save();
+        session()->flash('warning', 'Default avatar set to default.');
 
         User::where('image_id', null)->update(['image_id' => $defaultAvatar->id]);
 

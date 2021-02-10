@@ -75,6 +75,7 @@
             </div>
         </nav>
 
+        @include('includes.messages.alerts')
         <main class="py-4">
             @yield('content')
         </main>

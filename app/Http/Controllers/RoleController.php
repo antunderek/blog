@@ -58,7 +58,7 @@ class RoleController extends Controller
         $role = new Role();
         $this->setRoles($request, $role);
 
-        return redirect()->route('panel.roles');
+        return redirect()->route('panel.roles')->with('success', 'Role successfully created.');
     }
 
     /**
@@ -99,7 +99,7 @@ class RoleController extends Controller
 
         $this->setRoles($request, $role);
 
-        return redirect()->route('panel.roles');
+        return redirect()->back()->with('success', 'Role successfully updated.');
     }
 
     /**
@@ -140,8 +140,8 @@ class RoleController extends Controller
         $role->edit_user = (int)$request->edit_user;
         $role->delete_user = (int)$request->delete_user;
 
-        $role->edit_comment = (int)$request->edit_user;
-        $role->delete_comment = (int)$request->delete_user;
+        $role->edit_comment = (int)$request->edit_comment;
+        $role->delete_comment = (int)$request->delete_comment;
 
         $role->create_media = (int)$request->create_media;
         $role->edit_media = (int)$request->edit_media;
