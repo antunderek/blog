@@ -29,7 +29,7 @@ class GalleryController extends Controller
     {
         //
         $this->authorize('viewAny', Gallery::class);
-        $images = Gallery::paginate(30);
+        $images = Gallery::get();
         return view('gallery.index', compact('images'));
     }
 

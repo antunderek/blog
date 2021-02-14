@@ -34,7 +34,7 @@ class UserController extends Controller
         //
         $this->authorize('viewAny', User::class);
 
-        $users = User::withTrashed()->paginate(30);
+        $users = User::withTrashed()->get();
         $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
         return view('user.index', compact('users', 'currentUserRole'));
     }
@@ -172,15 +172,5 @@ class UserController extends Controller
         $this->authorize('restore', [User::class, $id]);
         User::withTrashed()->find($id)->restore();
         return redirect()->back()->with('success', 'User successfully restored.');
-    }
-
-    public function searchUsers(Request $request)
-    {
-        $this->authorize('viewAny', User::class);
-        $columns = ['id', 'name', 'email'];
-        $query = User::withTrashed()->select();
-        $users = $this->search($query, $columns, $request->keyword, true, 30);
-        $currentUserRole = Role::where('id', Auth::user()->role_id)->first();
-        return view('user.index', compact('users', 'currentUserRole'));
     }
 }

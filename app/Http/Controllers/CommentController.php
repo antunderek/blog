@@ -31,10 +31,10 @@ class CommentController extends Controller
 
         if ($user == null)
         {
-            $comments = Comment::paginate(50);
+            $comments = Comment::all();
         }
         else {
-            $comments = Comment::where('user_id', $user)->paginate(50);
+            $comments = Comment::where('user_id', $user);
         }
         return view('comment.index', compact('comments'));
     }
@@ -156,7 +156,7 @@ class CommentController extends Controller
 
     public function userComments()
     {
-        $comments = Comment::where('user_id', Auth::id())->paginate(50);
+        $comments = Comment::where('user_id', Auth::id())->get();
         return view('comment.index', compact('comments'));
     }
 
