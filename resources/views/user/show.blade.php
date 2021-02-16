@@ -61,9 +61,9 @@
                                             <a href="{{ route('panel.articles.user') }}">{{ $user->articles->count()}}</a>
                                         @elseif (\Illuminate\Support\Facades\Auth::check() && \App\Http\Helpers\PermissionHandler::isArticleEditor())
                                             <a href="{{ route('panel.articles', $user) }}">{{ $user->articles->count()}}</a>
-                                       @endif
-                                    @else
+                                        @else
                                         <a href="{{ route('article.index', $user) }}">{{ $user->articles->count()}}</a>
+                                        @endif
                                     @endif
                                 </div>
                             </div>

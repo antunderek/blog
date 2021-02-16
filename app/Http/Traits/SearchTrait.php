@@ -14,7 +14,7 @@ trait SearchTrait
         }
         if ($paginate && ($paginateBy > 0))
         {
-            return $query->paginate($paginateBy);
+            return $query->orderBy('created_at', 'desc')->paginate($paginateBy);
         }
         return $query->get();
     }

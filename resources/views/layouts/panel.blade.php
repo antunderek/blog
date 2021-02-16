@@ -27,11 +27,12 @@
 <!-- Page Wrapper -->
 <div id="wrapper">
 
+
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('article.index') }}">
             <i class="fas fa-fw fa-home"></i>
             <div class="sidebar-brand-text mx-3">Blog</div>
         </a>
@@ -39,6 +40,7 @@
         <!-- Divider -->
         <hr class="sidebar-divider my-0">
 
+    @if (\Illuminate\Support\Facades\Auth::check())
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
             <a class="nav-link" href="{{ route('panel.index') }}">
@@ -76,9 +78,7 @@
                 <div id="collapseArticles" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{{ route('panel.articles.user') }}">My articles</a>
-                        @if (\App\Http\Helpers\PermissionHandler::isWriter())
-                            <a class="collapse-item" href="{{ route('article.create') }}">Create new</a>
-                        @endif
+                        <a class="collapse-item" href="{{ route('article.create') }}">Create new</a>
                     </div>
                 </div>
             </li>
@@ -135,8 +135,8 @@
                     <div id="collapseAllArticles" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item" href="{{ route('panel.articles') }}">All articles</a>
-                            <a class="collapse-item" href="{{ route('panel.articles.user') }}">My articles</a>
                             @if (\App\Http\Helpers\PermissionHandler::isWriter())
+                                <a class="collapse-item" href="{{ route('panel.articles.user') }}">My articles</a>
                                 <a class="collapse-item" href="{{ route('article.create') }}">Create new</a>
                             @endif
                         </div>
@@ -208,18 +208,20 @@
                     </div>
                 </div>
             </li>
-    @endif
 
-    <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+        @endif
 
         <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
 
+        @endif
     </ul>
     <!-- End of Sidebar -->
+
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -235,19 +237,6 @@
                     <i class="fa fa-bars"></i>
                 </button>
 
-                <!-- Topbar Search -->
-                <form
-                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                               aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -276,8 +265,21 @@
                         </div>
                     </li>
 
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                        @if (Route::has('register'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            </li>
+                        @endif
+                    @else
+                        <div style="display: flex; align-items: center">
+                            @include('includes.nav.nav', $navMenus)
+                        </div>
 
-                    <!-- Nav Item - User Information -->
+                        <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -303,7 +305,7 @@
                             </a>
                         </div>
                     </li>
-
+                    @endguest
                 </ul>
 
             </nav>
