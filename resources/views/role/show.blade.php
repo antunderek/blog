@@ -1,6 +1,10 @@
 @extends('layouts.panel')
 @section('content')
-<div class="container">
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Roles</h1>
+
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
