@@ -1,7 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.panel')
 @section('content')
-    <div class="container-fluid" style="display: flex; justify-content: center; flex-direction: column; align-items: center">
-        <div class="card" style="width: 80vw">
+    <div class="container-fluid" style="display: flex; justify-content: center; flex-direction: column">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Articles</h1>
+
+        <div class="card" style="width: 80vw; align-self: center">
             <div class="card-header">Edit</div>
 
             <div style="height: 48vw; overflow: hidden; object-fit: cover; background-color: whitesmoke">

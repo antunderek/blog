@@ -31,7 +31,7 @@ class AvatarController extends Controller
     {
         //
         $this->authorize('viewAny', Avatar::class);
-        $images = Avatar::paginate(30);
+        $images = Avatar::get();
 
         return view('avatar.index', compact('images'));
     }

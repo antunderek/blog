@@ -206,10 +206,10 @@ class ArticleController extends Controller
 
         if ($user == null)
         {
-            $articles= Article::withTrashed()->paginate(30);
+            $articles= Article::withTrashed()->get();
         }
         else {
-            $articles= Article::withTrashed()->where('user_id', $user)->paginate(30);
+            $articles= Article::withTrashed()->where('user_id', $user)->get();
         }
 
         return view('panel.articles', compact('articles'));
@@ -223,13 +223,14 @@ class ArticleController extends Controller
         $columns = ['id', 'title', 'text'];
         $query = Article::withTrashed()->select();
         $articles = $this->search($query, $columns, $request->keyword, true, 30);
+
         return view('panel.articles', compact('articles'));
     }
 
     public function userArticles()
     {
         $this->authorize('panelUserArticles', Article::class);
-        $articles = Article::withTrashed()->where('user_id', Auth::id())->paginate(30);
+        $articles = Article::withTrashed()->where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
         return view('panel.articles', compact('articles'));
     }
 

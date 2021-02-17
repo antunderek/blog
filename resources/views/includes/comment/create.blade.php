@@ -1,4 +1,4 @@
-<div class="card" style="width: 80vw">
+<div class="card">
     <div class="card-body">
         <h5>New comment:</h5>
         <div style="margin: 1vw">

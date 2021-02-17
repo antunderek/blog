@@ -26,7 +26,7 @@ class MenuItemController extends Controller
     {
         //
         $this->authorize('viewAny', MenuItem::class);
-        $items = MenuItem::paginate(30);
+        $items = MenuItem::get();
         return view('menu_items.index', compact('items'));
     }
 

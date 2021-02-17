@@ -54,6 +54,9 @@ class Handler extends ExceptionHandler
         if ($exception instanceof PostTooLargeException) {
             return redirect()->back();
         }
+        if ($exception instanceof \ErrorException) {
+            return abort(404);
+        }
         return parent::render($request, $exception);
     }
 }
